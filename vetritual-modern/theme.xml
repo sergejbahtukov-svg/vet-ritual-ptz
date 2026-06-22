@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE theme PUBLIC "wa-app-theme" "http://www.webasyst.com/wa-content/xml/wa-app-theme.dtd">
+<theme id="vetritual-modern" vendor="custom" app="site" version="1.0">
+  <name locale="ru_RU">Vet Ritual Modern</name>
+  <name locale="en_US">Vet Ritual Modern</name>
+  <files>
+    <file path="index.html">
+      <description locale="ru_RU">РћР±С‰РёР№ РєР°СЂРєР°СЃ СЃР°Р№С‚Р°</description>
+    </file>
+    <file path="header.html" />
+    <file path="footer.html" />
+    <file path="page.html">
+      <description locale="ru_RU">РЎС‚СЂР°РЅРёС†Р° СЃР°Р№С‚Р°</description>
+    </file>
+    <file path="home.html">
+      <description locale="ru_RU">Р“Р»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р° СЃ РїРµСЂРµРЅРµСЃРµРЅРЅС‹Рј СЃРѕРґРµСЂР¶Р°РЅРёРµРј</description>
+    </file>
+    <file path="about.html">
+      <description locale="ru_RU">РћР±С‰РёР№ С€Р°Р±Р»РѕРЅ СЂР°Р·РґРµР»Р° В«Рћ РЅР°СЃВ»</description>
+    </file>
+    <file path="error.html">
+      <description locale="ru_RU">РЎС‚СЂР°РЅРёС†Р° РѕС€РёР±РєРё</description>
+    </file>
+    <file path="css/theme.css">
+      <description locale="ru_RU">РЎС‚РёР»Рё С‚РµРјС‹</description>
+    </file>
+    <file path="js/theme.js">
+      <description locale="ru_RU">РРЅС‚РµСЂР°РєС‚РёРІ С‚РµРјС‹</description>
+    </file>
+    <file path="js/integrations.js">
+      <description locale="ru_RU">Подключения аналитики и пикселей</description>
+    </file>
+    <file path="img/logo-mark.svg" />
+    <file path="site.webmanifest" />
+    <file path="img/favicon.ico" />
+    <file path="img/favicon.svg" />
+    <file path="img/apple-touch-icon.png" />
+    <file path="img/android-chrome-192x192.png" />
+    <file path="img/android-chrome-512x512.png" />
+    <file path="img/og-default.png" />
+    <file path="img/og-home.png" />
+    <file path="img/og-about.png" />
+    <file path="img/og-euthanasia.png" />
+    <file path="img/og-cremation.png" />
+    <file path="img/og-transport.png" />
+    <file path="img/hero-heaven.png" />
+    <file path="img/hero-mobile-cloud.png" />
+    <file path="img/hero-pets-mobile.png" />
+    <file path="img/service-euthanasia.png" />
+    <file path="img/service-cremation.png" />
+    <file path="img/service-transport-owner.png" />
+    <file path="img/page-hero-services.png" />
+    <file path="img/page-hero-euthanasia.png" />
+    <file path="img/page-hero-cats.png" />
+    <file path="img/page-hero-dogs.png" />
+    <file path="img/page-hero-cremation.png" />
+    <file path="img/page-hero-common-cremation.png" />
+    <file path="img/page-hero-individual-cremation.png" />
+    <file path="img/page-hero-transport.png" />
+    <file path="img/dogs-angel-mirrored.png" />
+  </files>
+  <settings>
+    <setting var="divider_integrations" control_type="group_divider" icon_class="fas fa-code">
+      <value/>
+      <name locale="ru_RU">SEO, аналитика и внешние подключения</name>
+      <name locale="en_US">SEO, analytics and external integrations</name>
+      <description locale="ru_RU">Для счетчиков и пикселей используйте ID-поля. HTML-вставки ниже нужны только для доверенных сервисов, которых нет в списке.</description>
+    </setting>
+    <setting var="vr_theme_color" control_type="color">
+      <value>#fffdf8</value>
+      <name locale="ru_RU">Цвет браузерной панели</name>
+      <name locale="en_US">Browser theme color</name>
+    </setting>
+    <setting var="vr_yandex_verification" control_type="text">
+      <value/>
+      <name locale="ru_RU">Верификация Яндекса</name>
+      <description locale="ru_RU">Только значение content без meta-тега.</description>
+    </setting>
+    <setting var="vr_google_verification" control_type="text">
+      <value/>
+      <name locale="ru_RU">Верификация Google Search Console</name>
+      <description locale="ru_RU">Только значение content без meta-тега.</description>
+    </setting>
+    <setting var="vr_bing_verification" control_type="text">
+      <value/>
+      <name locale="ru_RU">Верификация Bing Webmaster</name>
+      <description locale="ru_RU">Только значение content без meta-тега.</description>
+    </setting>
+    <setting var="vr_mailru_verification" control_type="text">
+      <value/>
+      <name locale="ru_RU">Верификация Mail.ru / VK</name>
+      <description locale="ru_RU">Только значение content без meta-тега.</description>
+    </setting>
+    <setting var="vr_analytics_notice" control_type="paragraph">
+      <value>Заполните нужные ID, и тема сама подключит корректные скрипты. Режим «после согласия cookie» ждет localStorage-ключ ниже; вызвать загрузку вручную можно через window.vrAcceptAnalytics().</value>
+      <name locale="ru_RU">Подсказка по аналитике</name>
+    </setting>
+    <setting var="vr_analytics_load_mode" control_type="select">
+      <value>disabled</value>
+      <name locale="ru_RU">Режим загрузки аналитики</name>
+      <options>
+        <option value="disabled"><name locale="ru_RU">Отключено</name></option>
+        <option value="always"><name locale="ru_RU">Загружать сразу</name></option>
+        <option value="after_cookie_accept"><name locale="ru_RU">После согласия cookie</name></option>
+      </options>
+    </setting>
+    <setting var="vr_analytics_cookie_key" control_type="text">
+      <value>vr_cookie_consent</value>
+      <name locale="ru_RU">Ключ хранения согласия cookie</name>
+      <description locale="ru_RU">Используется режимом «после согласия cookie». Значение в localStorage: 1, true, yes или accepted.</description>
+    </setting>
+    <setting var="vr_yandex_metrika_id" control_type="text">
+      <value/>
+      <name locale="ru_RU">ID счетчика Яндекс.Метрики</name>
+      <description locale="ru_RU">Только номер счетчика.</description>
+    </setting>
+    <setting var="vr_yandex_metrika_webvisor" control_type="checkbox">
+      <value>0</value>
+      <name locale="ru_RU">Включить Вебвизор Яндекса</name>
+    </setting>
+    <setting var="vr_yandex_metrika_ecommerce" control_type="checkbox">
+      <value>0</value>
+      <name locale="ru_RU">Включить ecommerce dataLayer Яндекса</name>
+    </setting>
+    <setting var="vr_ga4_measurement_id" control_type="text">
+      <value/>
+      <name locale="ru_RU">ID потока GA4</name>
+      <description locale="ru_RU">Например: G-XXXXXXXXXX.</description>
+    </setting>
+    <setting var="vr_gtm_container_id" control_type="text">
+      <value/>
+      <name locale="ru_RU">ID контейнера Google Tag Manager</name>
+      <description locale="ru_RU">Например: GTM-XXXXXXX.</description>
+    </setting>
+    <setting var="vr_vk_pixel_id" control_type="text">
+      <value/>
+      <name locale="ru_RU">ID пикселя VK Рекламы</name>
+      <description locale="ru_RU">Например: VK-RTRG-XXXXXX-XXXXX.</description>
+    </setting>
+    <setting var="vr_meta_pixel_id" control_type="text">
+      <value/>
+      <name locale="ru_RU">ID пикселя Meta</name>
+      <description locale="ru_RU">Только числовой ID пикселя.</description>
+    </setting>
+    <setting var="vr_topmailru_counter_id" control_type="text">
+      <value/>
+      <name locale="ru_RU">ID счетчика Top.Mail.ru / myTarget</name>
+      <description locale="ru_RU">Только числовой ID счетчика.</description>
+    </setting>
+    <setting var="vr_tiktok_pixel_id" control_type="text">
+      <value/>
+      <name locale="ru_RU">ID TikTok Pixel</name>
+      <description locale="ru_RU">Например: CXXXXXXXXXXXXXXX.</description>
+    </setting>
+    <setting var="vr_custom_head_html" control_type="text">
+      <value/>
+      <name locale="ru_RU">HTML перед закрытием head</name>
+      <description locale="ru_RU">Для проверочных meta-тегов, чатов или редких сервисов. Вставляйте только доверенный код.</description>
+    </setting>
+    <setting var="vr_body_start_html" control_type="text">
+      <value/>
+      <name locale="ru_RU">HTML сразу после открытия body</name>
+      <description locale="ru_RU">Для noscript-вставок и тег-менеджеров. Вставляйте только доверенный код.</description>
+    </setting>
+    <setting var="vr_body_end_html" control_type="text">
+      <value/>
+      <name locale="ru_RU">HTML перед закрытием body</name>
+      <description locale="ru_RU">Для виджетов, callback-сервисов и скриптов, которые должны грузиться в конце страницы.</description>
+    </setting>
+  </settings>
+</theme>
+

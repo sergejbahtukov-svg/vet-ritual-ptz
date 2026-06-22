@@ -1,0 +1,103 @@
+{assign var=vr_page_url value=''}
+{if isset($page.url)}
+  {assign var=vr_page_url value=$page.url}
+{/if}
+
+{if $vr_page_url == '' || $vr_page_url == '/'}
+  {include file="home.html"}
+{else}
+  {assign var=vr_page_hero_class value='vr-page-hero'}
+  {assign var=vr_page_lead value='Бережная организация прощания, консультация и выезд специалиста в любое время суток.'}
+
+  {if $vr_page_url == 'o-nas' || $vr_page_url == 'o-nas/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--about'}
+    {assign var=vr_page_lead value='О службе, которая помогает владельцам питомцев пройти тяжелый момент спокойно и без лишней суеты.'}
+  {elseif $vr_page_url == 'uslugi' || $vr_page_url == 'uslugi/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--services'}
+    {assign var=vr_page_lead value='Все основные направления помощи: усыпление, кремация и вывоз животных по Петрозаводску и Карелии.'}
+  {elseif $vr_page_url == 'usyplenie-zhivotnyh' || $vr_page_url == 'usyplenie-zhivotnyh/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--euthanasia'}
+    {assign var=vr_page_lead value='Безболезненная процедура на дому, консультация специалиста и время на спокойное прощание.'}
+  {elseif $vr_page_url == 'usyplenie-koshek' || $vr_page_url == 'usyplenie-koshek/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--cats'}
+    {assign var=vr_page_lead value='Помощь на дому в привычной для кошки обстановке, без лишнего стресса и ожидания.'}
+  {elseif $vr_page_url == 'usyplenie-sobak' || $vr_page_url == 'usyplenie-sobak/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--dogs'}
+    {assign var=vr_page_lead value='Выезд специалиста, поддержка владельца и бережное сопровождение крупного или малого питомца.'}
+  {elseif $vr_page_url == 'krematsyja-zhyvotnyh' || $vr_page_url == 'krematsyja-zhyvotnyh/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--cremation'}
+    {assign var=vr_page_lead value='Общая или индивидуальная кремация с понятными условиями, аккуратной транспортировкой и консультацией.'}
+  {elseif $vr_page_url == 'obschaja-krematsyja' || $vr_page_url == 'obschaja-krematsyja/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--common-cremation'}
+    {assign var=vr_page_lead value='Достойный формат прощания без выдачи праха, с соблюдением санитарных и ветеринарных требований.'}
+  {elseif $vr_page_url == 'individualnaja-krematsyja' || $vr_page_url == 'individualnaja-krematsyja/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--individual-cremation'}
+    {assign var=vr_page_lead value='Отдельная кремация питомца с возвратом урны и видео-подтверждением по договоренности.'}
+  {elseif $vr_page_url == 'vyvoz-zhivotnyh' || $vr_page_url == 'vyvoz-zhivotnyh/' || $vr_page_url == 'vyvoz-umershih-zhivotnyh' || $vr_page_url == 'vyvoz-umershih-zhivotnyh/' || $vr_page_url == 'vyvoz-umershikh-zhivotnyh' || $vr_page_url == 'vyvoz-umershikh-zhivotnyh/' || $vr_page_url == 'vyvoz-tela-zhivotnogo' || $vr_page_url == 'vyvoz-tela-zhivotnogo/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--transport'}
+    {assign var=vr_page_lead value='Законная и безопасная транспортировка тела животного из дома или клиники в крематорий.'}
+  {elseif $vr_page_url == 'tseny' || $vr_page_url == 'tseny/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--prices'}
+    {assign var=vr_page_lead value='Стоимость зависит от услуги, веса животного, района выезда и выбранного формата кремации.'}
+  {elseif $vr_page_url == 'kontakty' || $vr_page_url == 'kontakty/'}
+    {assign var=vr_page_hero_class value='vr-page-hero vr-page-hero--contacts'}
+    {assign var=vr_page_lead value='Свяжитесь с нами в любое время суток: ответим спокойно, быстро и по делу.'}
+  {/if}
+
+  <section class="{$vr_page_hero_class}">
+    <div class="vr-shell">
+      <p class="vr-kicker">Круглосуточно в Петрозаводске</p>
+      <h1>{$page.name|escape}</h1>
+      <p>{$vr_page_lead|escape}</p>
+      <a class="vr-button" href="tel:+79535331600">Позвонить сейчас</a>
+    </div>
+  </section>
+
+  {if $vr_page_url == 'o-nas' || $vr_page_url == 'o-nas/'}
+    {include file="about.html"}
+  {elseif $vr_page_url == 'kontakty' || $vr_page_url == 'kontakty/'}
+    <section class="vr-section vr-section--contact">
+      <div class="vr-shell vr-contact">
+        <div>
+          <p class="vr-kicker">Контакты</p>
+          <h2>Позвоните в любое время суток</h2>
+          <p>Ответим спокойно, уточним ситуацию, подскажем подходящий формат услуги и согласуем выезд специалиста по Петрозаводску, Прионежскому району и дальним районам Карелии.</p>
+        </div>
+        <div class="vr-contact__panel">
+          <a class="vr-phone-large" href="tel:+79535331600">+7 953 533-16-00</a>
+          <span>Работаем круглосуточно, без выходных</span>
+          <span>Республика Карелия, г. Петрозаводск, пр. Энергетиков, 33</span>
+          <a class="vr-button" href="tel:+79535331600">Получить консультацию</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="vr-section">
+      <div class="vr-shell vr-feature-grid">
+        <article class="vr-feature-card">
+          <h3>Что можно уточнить</h3>
+          <ul>
+            <li>стоимость услуги по весу питомца;</li>
+            <li>срок приезда специалиста;</li>
+            <li>формат общей или индивидуальной кремации;</li>
+            <li>возможность видеофиксации или личного присутствия.</li>
+          </ul>
+        </article>
+        <article class="vr-feature-card">
+          <h3>Как проходит обращение</h3>
+          <p>Вы звоните, называете адрес и примерный вес животного. Мы спокойно объясняем варианты, согласуем время приезда и заранее проговариваем стоимость без скрытых условий.</p>
+        </article>
+        <article class="vr-feature-card">
+          <h3>Зона выезда</h3>
+          <p>Петрозаводск, Прионежский район и другие районы Карелии по согласованию. Дальний выезд рассчитывается отдельно по расстоянию.</p>
+        </article>
+      </div>
+    </section>
+  {else}
+    <section class="vr-section">
+      <div class="vr-shell vr-text-page">
+        {$page.content}
+      </div>
+    </section>
+  {/if}
+{/if}

@@ -1,0 +1,135 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{$wa->title()|escape}</title>
+  <meta name="description" content="{$wa->meta('description')|escape}">
+  {assign var="vr_og_image" value="og-default.png"}
+  {if isset($page.url)}
+    {if $page.url == '' || $page.url == '/'}
+      {assign var="vr_og_image" value="og-home.png"}
+    {elseif $page.url == 'o-nas' || $page.url == 'o-nas/'}
+      {assign var="vr_og_image" value="og-about.png"}
+    {elseif $page.url == 'usyplenie-zhivotnyh' || $page.url == 'usyplenie-zhivotnyh/' || $page.url == 'usyplenie-koshek' || $page.url == 'usyplenie-koshek/' || $page.url == 'usyplenie-sobak' || $page.url == 'usyplenie-sobak/'}
+      {assign var="vr_og_image" value="og-euthanasia.png"}
+    {elseif $page.url == 'krematsyja-zhyvotnyh' || $page.url == 'krematsyja-zhyvotnyh/' || $page.url == 'obschaja-krematsyja' || $page.url == 'obschaja-krematsyja/' || $page.url == 'individualnaja-krematsyja' || $page.url == 'individualnaja-krematsyja/'}
+      {assign var="vr_og_image" value="og-cremation.png"}
+    {elseif $page.url == 'vyvoz-zhivotnyh' || $page.url == 'vyvoz-zhivotnyh/'}
+      {assign var="vr_og_image" value="og-transport.png"}
+    {/if}
+  {/if}
+  <link rel="icon" href="{$wa_theme_url}img/favicon.ico" sizes="any">
+  <link rel="icon" href="{$wa_theme_url}img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{$wa_theme_url}img/apple-touch-icon.png">
+  <link rel="manifest" href="{$wa_theme_url}site.webmanifest">
+  {assign var="vr_theme_color" value=$theme_settings.vr_theme_color|default:'#fffdf8'|strip_tags|trim}
+  <meta name="theme-color" content="{$vr_theme_color|escape}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="{$wa->title()|escape}">
+  <meta property="og:description" content="{$wa->meta('description')|escape}">
+  <meta property="og:image" content="{$wa_theme_url}img/{$vr_og_image}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{$wa->title()|escape}">
+  <meta name="twitter:description" content="{$wa->meta('description')|escape}">
+  <meta name="twitter:image" content="{$wa_theme_url}img/{$vr_og_image}">
+  {$wa->head()}
+  {assign var="vr_yandex_verification" value=$theme_settings.vr_yandex_verification|default:''|strip_tags|trim}
+  {assign var="vr_google_verification" value=$theme_settings.vr_google_verification|default:''|strip_tags|trim}
+  {assign var="vr_bing_verification" value=$theme_settings.vr_bing_verification|default:''|strip_tags|trim}
+  {assign var="vr_mailru_verification" value=$theme_settings.vr_mailru_verification|default:''|strip_tags|trim}
+  {assign var="vr_custom_head_html" value=$theme_settings.vr_custom_head_html|default:''|trim}
+  {if !empty($vr_yandex_verification)}
+    <meta name="yandex-verification" content="{$vr_yandex_verification|escape}">
+  {/if}
+  {if !empty($vr_google_verification)}
+    <meta name="google-site-verification" content="{$vr_google_verification|escape}">
+  {/if}
+  {if !empty($vr_bing_verification)}
+    <meta name="msvalidate.01" content="{$vr_bing_verification|escape}">
+  {/if}
+  {if !empty($vr_mailru_verification)}
+    <meta name="mailru-verification" content="{$vr_mailru_verification|escape}">
+  {/if}
+  {if !empty($vr_custom_head_html)}
+    {$vr_custom_head_html}
+  {/if}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="{$wa_theme_url}css/theme.css?v=1.0">
+</head>
+<body class="vr-site">
+  {assign var="vr_body_start_html" value=$theme_settings.vr_body_start_html|default:''|trim}
+  {assign var="vr_analytics_load_mode" value=$theme_settings.vr_analytics_load_mode|default:'disabled'|strip_tags|trim}
+  {assign var="vr_gtm_container_id" value=$theme_settings.vr_gtm_container_id|default:''|strip_tags|trim}
+  {assign var="vr_yandex_metrika_id" value=$theme_settings.vr_yandex_metrika_id|default:''|strip_tags|trim}
+  {assign var="vr_vk_pixel_id" value=$theme_settings.vr_vk_pixel_id|default:''|strip_tags|trim}
+  {assign var="vr_meta_pixel_id" value=$theme_settings.vr_meta_pixel_id|default:''|strip_tags|trim}
+  {if !empty($vr_body_start_html)}
+    {$vr_body_start_html}
+  {/if}
+  {if $vr_analytics_load_mode == 'always'}
+    {if !empty($vr_gtm_container_id)}
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={$vr_gtm_container_id|escape}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    {/if}
+    {if !empty($vr_yandex_metrika_id)}
+      <noscript><div><img src="https://mc.yandex.ru/watch/{$vr_yandex_metrika_id|escape}" style="position:absolute;left:-9999px;" alt="" width="1" height="1"></div></noscript>
+    {/if}
+    {if !empty($vr_vk_pixel_id)}
+      <noscript><img src="https://vk.com/rtrg?p={$vr_vk_pixel_id|escape}" style="position:fixed;left:-999px;" alt="" width="1" height="1"></noscript>
+    {/if}
+    {if !empty($vr_meta_pixel_id)}
+      <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={$vr_meta_pixel_id|escape}&amp;ev=PageView&amp;noscript=1" alt=""></noscript>
+    {/if}
+  {/if}
+  {include file="header.html"}
+
+  <main>
+    {$content}
+  </main>
+
+  {include file="footer.html"}
+
+  <div class="vr-cookie-banner" data-vr-cookie-banner hidden>
+    <div class="vr-cookie-banner__body">
+      <p><strong>Мы используем cookie</strong></p>
+      <p>Они помогают сайту работать стабильно, запоминать согласие и улучшать качество сервиса. Продолжая пользоваться сайтом, вы соглашаетесь с использованием cookie.</p>
+    </div>
+    <button class="vr-cookie-banner__button" type="button" data-vr-cookie-accept>Хорошо</button>
+  </div>
+
+  <script src="{$wa_theme_url}js/theme.js?v=1.0" defer></script>
+  {assign var="vr_body_end_html" value=$theme_settings.vr_body_end_html|default:''|trim}
+  {assign var="vr_analytics_cookie_key" value=$theme_settings.vr_analytics_cookie_key|default:'vr_cookie_consent'|strip_tags|trim}
+  {assign var="vr_yandex_metrika_webvisor" value=$theme_settings.vr_yandex_metrika_webvisor|default:0}
+  {assign var="vr_yandex_metrika_ecommerce" value=$theme_settings.vr_yandex_metrika_ecommerce|default:0}
+  {assign var="vr_ga4_measurement_id" value=$theme_settings.vr_ga4_measurement_id|default:''|strip_tags|trim}
+  {assign var="vr_topmailru_counter_id" value=$theme_settings.vr_topmailru_counter_id|default:''|strip_tags|trim}
+  {assign var="vr_tiktok_pixel_id" value=$theme_settings.vr_tiktok_pixel_id|default:''|strip_tags|trim}
+  {if ($vr_analytics_load_mode == 'always' || $vr_analytics_load_mode == 'after_cookie_accept') && (!empty($vr_yandex_metrika_id) || !empty($vr_ga4_measurement_id) || !empty($vr_gtm_container_id) || !empty($vr_vk_pixel_id) || !empty($vr_meta_pixel_id) || !empty($vr_topmailru_counter_id) || !empty($vr_tiktok_pixel_id))}
+    <script
+      src="{$wa_theme_url}js/integrations.js?v=1.0"
+      defer
+      data-mode="{$vr_analytics_load_mode|escape}"
+      data-cookie-key="{$vr_analytics_cookie_key|escape}"
+      data-ym-id="{$vr_yandex_metrika_id|escape}"
+      data-ym-webvisor="{if !empty($vr_yandex_metrika_webvisor)}1{else}0{/if}"
+      data-ym-ecommerce="{if !empty($vr_yandex_metrika_ecommerce)}1{else}0{/if}"
+      data-ga4-id="{$vr_ga4_measurement_id|escape}"
+      data-gtm-id="{$vr_gtm_container_id|escape}"
+      data-vk-id="{$vr_vk_pixel_id|escape}"
+      data-meta-id="{$vr_meta_pixel_id|escape}"
+      data-topmailru-id="{$vr_topmailru_counter_id|escape}"
+      data-tiktok-id="{$vr_tiktok_pixel_id|escape}"></script>
+  {/if}
+  <script>
+    window.vrCookieConsentKey = "{$vr_analytics_cookie_key|escape:'javascript'}";
+  </script>
+  {if !empty($vr_body_end_html)}
+    {$vr_body_end_html}
+  {/if}
+</body>
+</html>
+
