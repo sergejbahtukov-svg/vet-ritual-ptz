@@ -40,4 +40,9 @@
 - Added critical-open-item refresh in `memory/CRITICAL_REMEDIATION_ACTIONS.md` for gate closure.
 - Current global state: `ready_for_build` remains blocked until `agent-skill-scout` official clearance.
 
-## 2026-07-20 15:33 | Orchestrator | 2026-07-20 | WordPress migration | Gate closure | eady_for_build moved to TRUE by gent-skill-scout; build slice 1 unlocked; next: gent-theme-builder.
+## 2026-07-20 15:33 | Orchestrator | 2026-07-20 | WordPress migration | Gate closure | eady_for_build moved to TRUE by gent-skill-scout; build slice 1 unlocked; next: gent-theme-builder.## 2026-07-20 | Orchestrator | 2026-07-20  | WordPress migration | End-to-end run | Full build artifacts validated by static pass | Tests blocked by missing local endpoint accessibility
+- Theme scaffold confirmed complete under `wordpress-theme/vetritual-modern`.
+- Per request, executed one-pass validation: file checklist, PHP lint, and smoke URL connectivity checks.
+- Static QA passed: required templates/files and syntax.
+- Runtime smoke checks blocked: local endpoint `vetritual.lvh.me` unavailable from execution environment.
+- Next required step: run smoke checks in a reachable local/CI environment with local WP mount.
