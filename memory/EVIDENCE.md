@@ -31,3 +31,10 @@
 ## Примечание
 - Все URL и SEO-данные в workflow привязаны к текущей структуре Webasyst и требуют проверки по живой валидации перед переносом.
 
+- `WORDPRESS_PREPARATION_COORDINATION_PLAN.md` — единый координационный трек для сабагентов.
+- `WORDPRESS_THEME_OPTIONS_SPEC.md` — контракт по theme settings для user-friendly настройки.
+- `BUILD_TEMPLATE_LIST.md` — список целевых шаблонов и partials для сверки сборки.
+- `WORDPRESS_CAPABILITY_MATRIX.md` (обновлён) — readiness-gate перед build.
+- `WORDPRESS_PREPARATION_COORDINATION_PLAN.md` — текущая карта координации.
+- `CRITICAL_REMEDIATION_ACTIONS.md` — чеклист обязательных блокеров и порядок закрытия до build.
+- `WORDPRESS_MIGRATION_WORKFLOW.md` — расширен блоком hard-gate и критических требований AGENTS.

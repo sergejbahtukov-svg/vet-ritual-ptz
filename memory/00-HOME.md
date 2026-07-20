@@ -15,11 +15,19 @@
 
 ## Что уже зафиксировано
 - В проекте создана структура памяти:
+  - `memory/OFFER.md`
+  - `memory/AUDIENCES.md`
+  - `memory/FUNNEL.md`
+  - `memory/SITE.md`
+  - `memory/ADS.md`
+  - `memory/ANALYTICS.md`
+  - `memory/memory-cleanup-protocol.md`
+  - `memory/scripts/memory-gc.ps1`
   - `memory/WORDPRESS_MIGRATION_WORKFLOW.md`
   - `memory/WORDPRESS_SKILLS.md`
   - `memory/subagents/00-SUBAGENTS.md`
   - `memory/subagents/WORDPRESS_ASSIGNMENTS.md`
-- Документы частично нуждаются в нормализации и уточнении под исполняемый план.
+- Документы дополнены под LLM-ориентированный запуск и самопроверку.
 
 ## Базовые правила разработки
 - Версия темы и query string у ассетов держать на `1.0` до релиза.
@@ -29,6 +37,16 @@
   - `memory/WORKLOG.md`
   - `memory/DECISIONS.md`
   - `memory/EVIDENCE.md`
+- Обновление доменных карт памяти:
+  - `OFFER.md` при изменении оффера/ценников/ассортимента.
+  - `AUDIENCES.md` при смене сегментов и tone/positioning.
+  - `FUNNEL.md` при изменении пользовательских сценариев.
+  - `SITE.md` при изменении маршрутов, доменов, интеграций.
+  - `ADS.md` и `ANALYTICS.md` при изменении каналов привлечения и метрик.
+- Еженедельный maintenance:
+  - запуск `memory/scripts/memory-gc.ps1` без ключа удаления;
+  - обзор отчёта `memory-cleanup-report-*`;
+  - если есть критичные сиротние файлы — фиксировать в `DECISIONS.md` и удалять только вручную.
 
 ## Как стартовать работу
 1. Прочитать `AGENTS.md`.
@@ -38,4 +56,3 @@
    - интеграции и SEO-правила,
    - требования по аналитике и согласиям на cookie.
 4. Запустить поэтапный `memory/WORDPRESS_MIGRATION_WORKFLOW.md`.
-

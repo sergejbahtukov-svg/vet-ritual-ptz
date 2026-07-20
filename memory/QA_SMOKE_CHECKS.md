@@ -1,0 +1,49 @@
+# QA Smoke Checks (предстарт и приемка)
+
+## 1) Базовые smoke URL
+1. `/`
+2. `/uslugi/`
+3. `/usyplenie-zhivotnyh/`
+4. `/krematsyja-zhivotnyh/`
+5. `/vyvoz-zhivotnyh/`
+6. `/kontakty/`
+7. `/tseny/`
+8. `/about/` (alias redirect check)
+9. `/vyvoz-umershikh-zhivotnyh/` (alias redirect check)
+10. `/404/`
+
+## 2) Функциональная проверка контента
+1. На `/` присутствует hero + список услуг + блок цен + секция контактов.
+2. На `/o-nas/` есть раздел о компании.
+3. На `/kontakty/` есть телефон, адрес и CTA.
+4. На `/uslugi/` карточки услуг выводятся из настроек/данных.
+5. На всех URL не-404 есть корректный `<title>` и `<meta name="description">`.
+6. На `/404/` статус и robots-мета корректны.
+
+## 3) SEO/markup проверка
+1. canonical для всех non-404 страниц.
+2. presence и валидность базовых OG-тегов:
+   - `og:type`, `og:locale`, `og:title`, `og:description`, `og:image`.
+3. `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`.
+4. Проверка отсутствия duplicate-content без canonical на страницах алиасов.
+
+## 4) Accessibility + responsive
+1. Проверить 360 / 768 / 1280 по минимуму:
+   - hero и навигация,
+   - карточки услуг,
+   - цены,
+   - контакты,
+   - footer.
+2. Проверить alt-тексты у новых/обновленных изображений.
+3. Проверить `aria-label`/`aria-expanded` для кнопок меню и CTA.
+
+## 5) Cookie и интеграции
+1. Для `disabled` интеграции не загружаются.
+2. Для `always` — скрипты инициализируются без блокировки UI.
+3. Для `after_cookie_accept` — скрипт интеграций грузится после установки согласия.
+
+## 6) Acceptance критерий
+1. Все пункты базового smoke закрыты на локальном этапе.
+2. Результаты записываются в `EVIDENCE.md` и в `WORKLOG.md`.
+3. Преподготовка для rollout подтверждается в `ROLLING_PLAN.md`.
+
