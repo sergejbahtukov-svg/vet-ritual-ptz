@@ -1,0 +1,75 @@
+{
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Background",
+          "color": "#fffdf8"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#f7f1e8"
+        },
+        {
+          "slug": "ink",
+          "name": "Text",
+          "color": "#2f302b"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#687257"
+        },
+        {
+          "slug": "accent-dark",
+          "name": "Accent Deep",
+          "color": "#505a43"
+        },
+        {
+          "slug": "coral",
+          "name": "Coral",
+          "color": "#b56f55"
+        },
+        {
+          "slug": "gold",
+          "name": "Gold",
+          "color": "#c8a764"
+        }
+      ]
+    },
+    "typography": {
+      "fontSizes": [
+        {
+          "slug": "small",
+          "size": "14px",
+          "name": "Small"
+        },
+        {
+          "slug": "base",
+          "size": "16px",
+          "name": "Base"
+        },
+        {
+          "slug": "large",
+          "size": "20px",
+          "name": "Large"
+        }
+      ],
+      "lineHeight": true
+    }
+  },
+  "templateParts": [],
+  "styles": {
+    "color": {
+      "background": "var:preset|color|bg",
+      "text": "var:preset|color|ink"
+    },
+    "typography": {
+      "fontFamily": "\"Inter\", \"Segoe UI\", sans-serif"
+    }
+  }
+}

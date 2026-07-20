@@ -36,3 +36,4 @@
 3. 2026-07-20: Р”РѕР±Р°РІР»РµРЅС‹ `CONTENT_MAP.md`, `PAGE_FIELD_PLAN.md`, `ARCHITECTURE_CHECKLIST.md`, `THEME_SETTINGS_CONTRACT.md`.
 4. 2026-07-20: Р”РѕР±Р°РІР»РµРЅС‹ `SEO_MIGRATION_MATRIX.md`, `QA_SMOKE_CHECKS.md`, `ROLLING_PLAN.md`, `RISK_LOG.md`.
 
+5. 2026-07-20: Добавлены 	heme.json и wordpress-theme/vetritual-modern/inc/setup.php в wordpress-theme/vetritual-modern (закрыт минимальный WP-скелет и слой расширенной настройки темы).
