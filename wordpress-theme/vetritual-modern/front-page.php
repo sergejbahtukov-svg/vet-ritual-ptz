@@ -3,14 +3,11 @@
 <main id="primary" class="site-main">
   <?php
   $route = vr_get_route_info('home');
-  get_template_part(
-      'template-parts/content-hero',
-      null,
-      array(
-          'route' => $route,
-          'is_front_page' => true,
-      )
-  );
+  $vr_hero_route = $route;
+  $vr_is_front_page = true;
+  require get_template_directory() . '/template-parts/content-hero.php';
+  $vr_hero_route = null;
+  $vr_is_front_page = null;
   ?>
 
   <section class="vr-section" id="services">
@@ -32,4 +29,3 @@
 </main>
 
 <?php get_footer(); ?>
-

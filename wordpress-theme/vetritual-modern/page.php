@@ -8,14 +8,11 @@ $fallback_content = vr_get_route_fallback_content($slug);
 
 <main id="primary" class="site-main">
   <?php
-  get_template_part(
-      'template-parts/content-hero',
-      null,
-      array(
-          'route' => $route,
-          'is_front_page' => false,
-      )
-  );
+  $vr_hero_route = $route;
+  $vr_is_front_page = false;
+  require get_template_directory() . '/template-parts/content-hero.php';
+  $vr_hero_route = null;
+  $vr_is_front_page = null;
   ?>
 
   <section class="vr-section">
@@ -46,4 +43,3 @@ $fallback_content = vr_get_route_fallback_content($slug);
 </main>
 
 <?php get_footer(); ?>
-

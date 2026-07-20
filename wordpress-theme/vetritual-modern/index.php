@@ -1,7 +1,8 @@
 <?php
 $route = vr_get_route_info();
+$is_front_page = is_front_page() || is_home();
 
-if (is_front_page() || is_home() || $route['slug'] === 'home') {
+if ($route['slug'] === 'home' || $is_front_page) {
     require get_template_directory() . '/front-page.php';
     return;
 }
@@ -12,4 +13,3 @@ if (vr_route_is_known($route['slug']) || is_page()) {
 }
 
 require get_template_directory() . '/404.php';
-

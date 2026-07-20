@@ -3,11 +3,23 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-$route = isset($args['route']) && is_array($args['route']) ? $args['route'] : vr_get_route_info();
-$slug = isset($route['slug']) ? (string)$route['slug'] : '';
-$route_title = isset($route['title']) ? (string)$route['title'] : '';
-$route_description = isset($route['description']) ? (string)$route['description'] : '';
-$is_front_page = ! empty($args['is_front_page']);
+$route = null;
+if (isset($args) && isset($args['route']) && is_array($args['route'])) {
+    $route = $args['route'];
+} elseif (isset($vr_hero_route) && is_array($vr_hero_route)) {
+    $route = $vr_hero_route;
+} else {
+    $route = vr_get_route_info();
+}
+
+$is_front_page = false;
+if (! empty($vr_is_front_page) || (isset($args) && ! empty($args['is_front_page']))) {
+    $is_front_page = true;
+}
+
+$slug = isset($route['slug']) ? (string) $route['slug'] : '';
+$route_title = isset($route['title']) ? (string) $route['title'] : '';
+$route_description = isset($route['description']) ? (string) $route['description'] : '';
 
 $hero_title = $is_front_page
     ? vr_theme_setting('hero_title', $route_title)
@@ -20,11 +32,22 @@ if ($hero_subtitle === '') {
     $hero_subtitle = vr_theme_setting('hero_subtitle', '');
 }
 
-$hero_image = vr_theme_setting('hero_image_id', '');
-if ($hero_image === '') {
+$hero_image = '';
+$hero_attachment_id = (int) vr_theme_setting('hero_image_id', 0);
+if ($hero_attachment_id > 0) {
+    $hero_image = wp_get_attachment_image_url($hero_attachment_id, 'large');
+}
+if (empty($hero_image)) {
     $hero_image = vr_theme_setting('hero_image', '');
 }
-$hero_image_url = vr_theme_media_url($hero_image);
+if (empty($hero_image)) {
+    $hero_image = vr_theme_setting('hero_image_id', '');
+}
+if (is_string($hero_image) && preg_match('#^https?://#', $hero_image)) {
+    $hero_image_url = $hero_image;
+} else {
+    $hero_image_url = vr_theme_media_url($hero_image);
+}
 
 $hero_cta_primary = vr_theme_setting('hero_primary_cta_text', '');
 $hero_cta_primary_url = vr_theme_setting('hero_primary_cta_url', '');
@@ -44,12 +67,27 @@ $hero_class_map = array(
     'obschaja-krematsyja' => 'vr-page-hero--common-cremation',
     'individualnaja-krematsyja' => 'vr-page-hero--individual-cremation',
     'vyvoz-zhivotnyh' => 'vr-page-hero--transport',
-    'home' => 'vr-page-hero--home',
 );
-$hero_class = isset($hero_class_map[$slug]) ? $hero_class_map[$slug] : 'vr-page-hero--home';
+
+$route_hero_class = isset($route['hero_class']) && is_string($route['hero_class']) ? trim($route['hero_class']) : '';
+if ($is_front_page) {
+    $hero_class = $route_hero_class !== '' ? $route_hero_class : 'vr-hero';
+} elseif ($route_hero_class !== '') {
+    $hero_class = $route_hero_class;
+} elseif (isset($hero_class_map[$slug])) {
+    $hero_class = $hero_class_map[$slug];
+} else {
+    $hero_class = 'vr-page-hero';
+}
+
+if (! $is_front_page) {
+    if (strpos($hero_class, 'vr-page-hero') !== 0 && strpos($hero_class, 'vr-page-hero ') !== 0) {
+        $hero_class = 'vr-page-hero ' . $hero_class;
+    }
+}
 ?>
 
-<section class="vr-page-hero <?php echo esc_attr($hero_class); ?>">
+<section class="<?php echo esc_attr($hero_class); ?>">
   <div class="vr-shell">
     <div class="vr-page-hero__content">
       <?php if (! empty($hero_kicker)) : ?>
