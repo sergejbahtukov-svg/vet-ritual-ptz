@@ -1,0 +1,1043 @@
+{
+  "generatedAt": "2026-06-22T18:27:56.441Z",
+  "failed": [],
+  "consoleMessages": [
+    {
+      "vp": "360",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "vp": "768",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "vp": "1280",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ],
+  "results": [
+    {
+      "viewport": "360",
+      "name": "home",
+      "url": "http://vetritual.lvh.me/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\home-360.png",
+      "data": {
+        "title": "Vet Ritual PTZ — усыпление, кремация и вывоз животных",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nПЕТРОЗАВОДСК И КАРЕЛИЯ · 24/7\nУсыпление, кремация и вывоз животных с бережным сопровождением\nРаботаем круглосуточно, выезж",
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "bodyScrollWidth": 360,
+        "overflowX": 0,
+        "overflows": [
+          {
+            "tag": "a",
+            "cls": "vr-service-card",
+            "text": "Кремация животных Можно выбрать общую кремацию без выдачи пр",
+            "left": 319,
+            "right": 614,
+            "width": 295,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "div",
+            "cls": "vr-service-media vr-service-media--cremation",
+            "text": "",
+            "left": 320,
+            "right": 613,
+            "width": 293,
+            "display": "grid",
+            "position": "static"
+          },
+          {
+            "tag": "img",
+            "cls": "",
+            "text": "",
+            "left": 320,
+            "right": 613,
+            "width": 293,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "h3",
+            "cls": "",
+            "text": "Кремация животных",
+            "left": 336,
+            "right": 597,
+            "width": 261,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "p",
+            "cls": "",
+            "text": "Можно выбрать общую кремацию без выдачи праха или индивидуал",
+            "left": 336,
+            "right": 597,
+            "width": 261,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "span",
+            "cls": "vr-service-card__more",
+            "text": "Подробнее",
+            "left": 336,
+            "right": 597,
+            "width": 261,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "a",
+            "cls": "vr-service-card",
+            "text": "Вывоз животных Аккуратно транспортируем тело животного из до",
+            "left": 624,
+            "right": 920,
+            "width": 295,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "div",
+            "cls": "vr-service-media vr-service-media--soft vr-service-media--transport",
+            "text": "",
+            "left": 625,
+            "right": 919,
+            "width": 293,
+            "display": "grid",
+            "position": "static"
+          },
+          {
+            "tag": "img",
+            "cls": "",
+            "text": "",
+            "left": 625,
+            "right": 919,
+            "width": 293,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "h3",
+            "cls": "",
+            "text": "Вывоз животных",
+            "left": 641,
+            "right": 903,
+            "width": 261,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "p",
+            "cls": "",
+            "text": "Аккуратно транспортируем тело животного из дома или ветерина",
+            "left": 641,
+            "right": 903,
+            "width": 261,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "span",
+            "cls": "vr-service-card__more",
+            "text": "Подробнее",
+            "left": 641,
+            "right": 903,
+            "width": 261,
+            "display": "flex",
+            "position": "static"
+          }
+        ],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 360,
+          "bottom": 741,
+          "width": 360,
+          "height": 662
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 360,
+          "bottom": 79,
+          "width": 360,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": {
+          "scrollWidth": 2140,
+          "clientWidth": 346,
+          "display": "flex"
+        },
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "360",
+      "name": "euthanasia",
+      "url": "http://vetritual.lvh.me/usyplenie-zhivotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\euthanasia-360.png",
+      "data": {
+        "title": "Усыпление животных на дому",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nКРУГЛОСУТОЧНО В ПЕТРОЗАВОДСКЕ\n\nУсыпление животных\nБезболезненная процедура на дому, консультация специалиста и время на сп",
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "bodyScrollWidth": 360,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 360,
+          "bottom": 609,
+          "width": 360,
+          "height": 530
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 360,
+          "bottom": 79,
+          "width": 360,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "360",
+      "name": "cremation",
+      "url": "http://vetritual.lvh.me/krematsyja-zhyvotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\cremation-360.png",
+      "data": {
+        "title": "Кремация животных в Петрозаводске",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nКРУГЛОСУТОЧНО В ПЕТРОЗАВОДСКЕ\n\nКремация животных\nОбщая или индивидуальная кремация с понятными условиями, аккуратной транс",
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "bodyScrollWidth": 360,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 360,
+          "bottom": 623,
+          "width": 360,
+          "height": 544
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 360,
+          "bottom": 79,
+          "width": 360,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "360",
+      "name": "transport",
+      "url": "http://vetritual.lvh.me/vyvoz-zhivotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\transport-360.png",
+      "data": {
+        "title": "Вывоз умерших животных",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nКРУГЛОСУТОЧНО В ПЕТРОЗАВОДСКЕ\n\nВывоз животных\nЗаконная и безопасная транспортировка тела животного из дома или клиники в к",
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "bodyScrollWidth": 360,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 360,
+          "bottom": 609,
+          "width": 360,
+          "height": 530
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 360,
+          "bottom": 79,
+          "width": 360,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "360",
+      "name": "notfound",
+      "url": "http://vetritual.lvh.me/404-safari-check-1782152836838/",
+      "status": 404,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\notfound-360.png",
+      "data": {
+        "title": "404. Страница не найдена",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nОШИБКА 404\n\nСтраница не найдена\nСтраница не найдена\nВернуться на главную\n\nVet Ritual PTZ\nПетрозаводск и Карелия\nИнформация",
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "bodyScrollWidth": 360,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 360,
+          "bottom": 635,
+          "width": 360,
+          "height": 556
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 360,
+          "bottom": 79,
+          "width": 360,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "768",
+      "name": "home",
+      "url": "http://vetritual.lvh.me/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\home-768.png",
+      "data": {
+        "title": "Vet Ritual PTZ — усыпление, кремация и вывоз животных",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nПЕТРОЗАВОДСК И КАРЕЛИЯ · 24/7\n\nУсыпление, кремация и вывоз животных с бережным сопровождением\nРаботаем круглосуточно, выез",
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "bodyScrollWidth": 768,
+        "overflowX": 0,
+        "overflows": [
+          {
+            "tag": "a",
+            "cls": "vr-service-card",
+            "text": "Вывоз животных Аккуратно транспортируем тело животного из до",
+            "left": 764,
+            "right": 1120,
+            "width": 356,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "div",
+            "cls": "vr-service-media vr-service-media--soft vr-service-media--transport",
+            "text": "",
+            "left": 765,
+            "right": 1119,
+            "width": 354,
+            "display": "grid",
+            "position": "static"
+          },
+          {
+            "tag": "img",
+            "cls": "",
+            "text": "",
+            "left": 765,
+            "right": 1119,
+            "width": 354,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "h3",
+            "cls": "",
+            "text": "Вывоз животных",
+            "left": 789,
+            "right": 1095,
+            "width": 306,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "p",
+            "cls": "",
+            "text": "Аккуратно транспортируем тело животного из дома или ветерина",
+            "left": 789,
+            "right": 1095,
+            "width": 306,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "span",
+            "cls": "vr-service-card__more",
+            "text": "Подробнее",
+            "left": 789,
+            "right": 1095,
+            "width": 306,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "a",
+            "cls": "vr-service-card",
+            "text": "Усыпление кошек Помощь на дому в привычной для кошки обстано",
+            "left": 1136,
+            "right": 1492,
+            "width": 356,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "div",
+            "cls": "vr-service-media vr-service-media--cats",
+            "text": "",
+            "left": 1137,
+            "right": 1491,
+            "width": 354,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "img",
+            "cls": "",
+            "text": "",
+            "left": 1137,
+            "right": 1491,
+            "width": 354,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "h3",
+            "cls": "",
+            "text": "Усыпление кошек",
+            "left": 1161,
+            "right": 1467,
+            "width": 306,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "p",
+            "cls": "",
+            "text": "Помощь на дому в привычной для кошки обстановке, без поездки",
+            "left": 1161,
+            "right": 1467,
+            "width": 306,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "span",
+            "cls": "vr-service-card__more",
+            "text": "Подробнее",
+            "left": 1161,
+            "right": 1467,
+            "width": 306,
+            "display": "flex",
+            "position": "static"
+          }
+        ],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 768,
+          "bottom": 1101,
+          "width": 768,
+          "height": 1022
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 768,
+          "bottom": 79,
+          "width": 768,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": {
+          "scrollWidth": 2588,
+          "clientWidth": 728,
+          "display": "flex"
+        },
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "768",
+      "name": "euthanasia",
+      "url": "http://vetritual.lvh.me/usyplenie-zhivotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\euthanasia-768.png",
+      "data": {
+        "title": "Усыпление животных на дому",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nКРУГЛОСУТОЧНО В ПЕТРОЗАВОДСКЕ\n\nУсыпление животных\nБезболезненная процедура на дому, консультация специалиста и время на сп",
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "bodyScrollWidth": 768,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 768,
+          "bottom": 884,
+          "width": 768,
+          "height": 805
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 768,
+          "bottom": 79,
+          "width": 768,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "768",
+      "name": "cremation",
+      "url": "http://vetritual.lvh.me/krematsyja-zhyvotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\cremation-768.png",
+      "data": {
+        "title": "Кремация животных в Петрозаводске",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nКРУГЛОСУТОЧНО В ПЕТРОЗАВОДСКЕ\n\nКремация животных\nОбщая или индивидуальная кремация с понятными условиями, аккуратной транс",
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "bodyScrollWidth": 768,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 768,
+          "bottom": 884,
+          "width": 768,
+          "height": 805
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 768,
+          "bottom": 79,
+          "width": 768,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "768",
+      "name": "transport",
+      "url": "http://vetritual.lvh.me/vyvoz-zhivotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\transport-768.png",
+      "data": {
+        "title": "Вывоз умерших животных",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nКРУГЛОСУТОЧНО В ПЕТРОЗАВОДСКЕ\n\nВывоз животных\nЗаконная и безопасная транспортировка тела животного из дома или клиники в к",
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "bodyScrollWidth": 768,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 768,
+          "bottom": 884,
+          "width": 768,
+          "height": 805
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 768,
+          "bottom": 79,
+          "width": 768,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "768",
+      "name": "notfound",
+      "url": "http://vetritual.lvh.me/404-safari-check-1782152836838/",
+      "status": 404,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\notfound-768.png",
+      "data": {
+        "title": "404. Страница не найдена",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\n\nОШИБКА 404\n\nСтраница не найдена\nСтраница не найдена\n\nВернуться на главную\n\nVet Ritual PTZ\nПетрозаводск и Карелия\nИнформаци",
+        "scrollWidth": 768,
+        "clientWidth": 768,
+        "bodyScrollWidth": 768,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 768,
+          "bottom": 901,
+          "width": 768,
+          "height": 822
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 768,
+          "bottom": 79,
+          "width": 768,
+          "height": 79
+        },
+        "navDisplay": "none",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "1280",
+      "name": "home",
+      "url": "http://vetritual.lvh.me/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\home-1280.png",
+      "data": {
+        "title": "Vet Ritual PTZ — усыпление, кремация и вывоз животных",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\nО нас\nУслуги\nУсыпление животных\nУсыпление кошек\nУсыпление собак\nКремация животных\nОбщая кремация\nИндивидуальная кремация\nВы",
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "bodyScrollWidth": 1280,
+        "overflowX": 0,
+        "overflows": [
+          {
+            "tag": "a",
+            "cls": "vr-service-card",
+            "text": "Усыпление кошек Помощь на дому в привычной для кошки обстано",
+            "left": 1236,
+            "right": 1612,
+            "width": 376,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "div",
+            "cls": "vr-service-media vr-service-media--cats",
+            "text": "",
+            "left": 1237,
+            "right": 1611,
+            "width": 374,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "img",
+            "cls": "",
+            "text": "",
+            "left": 1237,
+            "right": 1611,
+            "width": 374,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "h3",
+            "cls": "",
+            "text": "Усыпление кошек",
+            "left": 1261,
+            "right": 1587,
+            "width": 326,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "p",
+            "cls": "",
+            "text": "Помощь на дому в привычной для кошки обстановке, без поездки",
+            "left": 1261,
+            "right": 1587,
+            "width": 326,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "span",
+            "cls": "vr-service-card__more",
+            "text": "Подробнее",
+            "left": 1261,
+            "right": 1587,
+            "width": 326,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "a",
+            "cls": "vr-service-card",
+            "text": "Усыпление собак Выезд специалиста, поддержка владельца и бер",
+            "left": 1628,
+            "right": 2004,
+            "width": 376,
+            "display": "flex",
+            "position": "static"
+          },
+          {
+            "tag": "div",
+            "cls": "vr-service-media vr-service-media--dogs",
+            "text": "",
+            "left": 1629,
+            "right": 2003,
+            "width": 374,
+            "display": "grid",
+            "position": "static"
+          },
+          {
+            "tag": "img",
+            "cls": "",
+            "text": "",
+            "left": 1629,
+            "right": 2003,
+            "width": 374,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "h3",
+            "cls": "",
+            "text": "Усыпление собак",
+            "left": 1653,
+            "right": 1979,
+            "width": 326,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "p",
+            "cls": "",
+            "text": "Выезд специалиста, поддержка владельца и бережное сопровожде",
+            "left": 1653,
+            "right": 1979,
+            "width": 326,
+            "display": "block",
+            "position": "static"
+          },
+          {
+            "tag": "span",
+            "cls": "vr-service-card__more",
+            "text": "Подробнее",
+            "left": 1653,
+            "right": 1979,
+            "width": 326,
+            "display": "flex",
+            "position": "static"
+          }
+        ],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 1280,
+          "bottom": 901,
+          "width": 1280,
+          "height": 822
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 1280,
+          "bottom": 79,
+          "width": 1280,
+          "height": 79
+        },
+        "navDisplay": "flex",
+        "services": {
+          "scrollWidth": 2728,
+          "clientWidth": 1160,
+          "display": "flex"
+        },
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "1280",
+      "name": "euthanasia",
+      "url": "http://vetritual.lvh.me/usyplenie-zhivotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\euthanasia-1280.png",
+      "data": {
+        "title": "Усыпление животных на дому",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\nО нас\nУслуги\nУсыпление животных\nУсыпление кошек\nУсыпление собак\nКремация животных\nОбщая кремация\nИндивидуальная кремация\nВы",
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "bodyScrollWidth": 1280,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 1280,
+          "bottom": 504,
+          "width": 1280,
+          "height": 425
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 1280,
+          "bottom": 79,
+          "width": 1280,
+          "height": 79
+        },
+        "navDisplay": "flex",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "1280",
+      "name": "cremation",
+      "url": "http://vetritual.lvh.me/krematsyja-zhyvotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\cremation-1280.png",
+      "data": {
+        "title": "Кремация животных в Петрозаводске",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\nО нас\nУслуги\nУсыпление животных\nУсыпление кошек\nУсыпление собак\nКремация животных\nОбщая кремация\nИндивидуальная кремация\nВы",
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "bodyScrollWidth": 1280,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 1280,
+          "bottom": 504,
+          "width": 1280,
+          "height": 425
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 1280,
+          "bottom": 79,
+          "width": 1280,
+          "height": 79
+        },
+        "navDisplay": "flex",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "1280",
+      "name": "transport",
+      "url": "http://vetritual.lvh.me/vyvoz-zhivotnyh/",
+      "status": 200,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\transport-1280.png",
+      "data": {
+        "title": "Вывоз умерших животных",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\nО нас\nУслуги\nУсыпление животных\nУсыпление кошек\nУсыпление собак\nКремация животных\nОбщая кремация\nИндивидуальная кремация\nВы",
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "bodyScrollWidth": 1280,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 1280,
+          "bottom": 504,
+          "width": 1280,
+          "height": 425
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 1280,
+          "bottom": 79,
+          "width": 1280,
+          "height": 79
+        },
+        "navDisplay": "flex",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    },
+    {
+      "viewport": "1280",
+      "name": "notfound",
+      "url": "http://vetritual.lvh.me/404-safari-check-1782152836838/",
+      "status": 404,
+      "screenshot": "C:\\Users\\sbaht\\OneDrive\\Документы\\вет ритуал птз\\safari-audit\\notfound-1280.png",
+      "data": {
+        "title": "404. Страница не найдена",
+        "bodyStart": "\nVet Ritual PTZ\nбережная помощь 24/7\nО нас\nУслуги\nУсыпление животных\nУсыпление кошек\nУсыпление собак\nКремация животных\nОбщая кремация\nИндивидуальная кремация\nВы",
+        "scrollWidth": 1280,
+        "clientWidth": 1280,
+        "bodyScrollWidth": 1280,
+        "overflowX": 0,
+        "overflows": [],
+        "heroRect": {
+          "top": 79,
+          "left": 0,
+          "right": 1280,
+          "bottom": 901,
+          "width": 1280,
+          "height": 822
+        },
+        "headerRect": {
+          "top": 0,
+          "left": 0,
+          "right": 1280,
+          "bottom": 79,
+          "width": 1280,
+          "height": 79
+        },
+        "navDisplay": "flex",
+        "services": null,
+        "supports": {
+          "colorMix": true,
+          "svh": true,
+          "backdrop": true,
+          "webkitBackdrop": true,
+          "mask": true,
+          "webkitMask": true,
+          "selectorIs": true
+        }
+      }
+    }
+  ]
+}

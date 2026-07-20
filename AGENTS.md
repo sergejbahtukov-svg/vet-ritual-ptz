@@ -17,6 +17,10 @@ When template changes do not appear locally, clear the compiled Webasyst cache b
 
 Keep the Webasyst theme version and asset query version at `1.0` during normal development. Do not bump `theme.xml` version or `?v=` asset query strings after individual CSS/JS/template changes; use cache clearing, hard refresh, or local browser cache controls for verification. Bump versions only when the project owner explicitly asks to prepare a deploy/release.
 
+## Deployment archive discipline
+
+Write all deployment archives strictly into `deploy-vetritual-modern/`. Do not create or update deployment archives in the project root or scatter archive artifacts across the workspace. If an old archive already exists outside `deploy-vetritual-modern/`, leave it alone unless the project owner explicitly asks to move, replace, or delete it.
+
 # Vet Ritual Modern РґР»СЏ Webasyst Site
 
 Р“РѕС‚РѕРІР°СЏ С‚РµРјР° Р»РµР¶РёС‚ РІ `vetritual-modern/`.

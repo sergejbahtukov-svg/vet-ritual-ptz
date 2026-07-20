@@ -1,0 +1,208 @@
+{
+  "results": [
+    {
+      "vp": "360",
+      "path": "/",
+      "status": 200,
+      "title": "Vet Ritual PTZ — усыпление, кремация и вывоз животных",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "360",
+      "path": "/usyplenie-zhivotnyh/",
+      "status": 200,
+      "title": "Усыпление животных на дому",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "360",
+      "path": "/krematsyja-zhyvotnyh/",
+      "status": 200,
+      "title": "Кремация животных в Петрозаводске",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "360",
+      "path": "/vyvoz-zhivotnyh/",
+      "status": 200,
+      "title": "Вывоз умерших животных",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "360",
+      "path": "/404-safari-check-final/",
+      "status": 404,
+      "title": "404. Страница не найдена",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "360",
+      "path": "mobile-menu",
+      "status": "opened",
+      "touchTargetsOk": true
+    },
+    {
+      "vp": "768",
+      "path": "/",
+      "status": 200,
+      "title": "Vet Ritual PTZ — усыпление, кремация и вывоз животных",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "768",
+      "path": "/usyplenie-zhivotnyh/",
+      "status": 200,
+      "title": "Усыпление животных на дому",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "768",
+      "path": "/krematsyja-zhyvotnyh/",
+      "status": 200,
+      "title": "Кремация животных в Петрозаводске",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "768",
+      "path": "/vyvoz-zhivotnyh/",
+      "status": 200,
+      "title": "Вывоз умерших животных",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "768",
+      "path": "/404-safari-check-final/",
+      "status": 404,
+      "title": "404. Страница не найдена",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "1280",
+      "path": "/",
+      "status": 200,
+      "title": "Vet Ritual PTZ — усыпление, кремация и вывоз животных",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "1280",
+      "path": "/usyplenie-zhivotnyh/",
+      "status": 200,
+      "title": "Усыпление животных на дому",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "1280",
+      "path": "/krematsyja-zhyvotnyh/",
+      "status": 200,
+      "title": "Кремация животных в Петрозаводске",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "1280",
+      "path": "/vyvoz-zhivotnyh/",
+      "status": 200,
+      "title": "Вывоз умерших животных",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    },
+    {
+      "vp": "1280",
+      "path": "/404-safari-check-final/",
+      "status": 404,
+      "title": "404. Страница не найдена",
+      "overflowX": 0,
+      "headerBackdrop": "blur(18px)",
+      "supports": {
+        "webkitBackdrop": true,
+        "clip": true
+      }
+    }
+  ],
+  "failed": [],
+  "messages": [
+    {
+      "vp": "360",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "vp": "768",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "vp": "1280",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    }
+  ]
+}
