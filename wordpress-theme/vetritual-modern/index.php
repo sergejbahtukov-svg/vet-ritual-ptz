@@ -1,15 +1,22 @@
 <?php
-$route = vr_get_route_info();
-$is_front_page = is_front_page() || is_home();
+get_header();
+?>
 
-if ($route['slug'] === 'home' || $is_front_page) {
-    require get_template_directory() . '/front-page.php';
-    return;
-}
+<main id="primary" class="site-main">
+  <section class="vr-section">
+    <div class="vr-shell vr-text-page">
+      <?php if (have_posts()) : ?>
+        <?php while (have_posts()) : the_post(); ?>
+          <article <?php post_class(); ?>>
+            <h1><?php the_title(); ?></h1>
+            <?php the_content(); ?>
+          </article>
+        <?php endwhile; ?>
+      <?php else : ?>
+        <h1><?php esc_html_e('Материалы не найдены', 'vetritual-modern'); ?></h1>
+      <?php endif; ?>
+    </div>
+  </section>
+</main>
 
-if (vr_route_is_known($route['slug']) || is_page()) {
-    require get_template_directory() . '/page.php';
-    return;
-}
-
-require get_template_directory() . '/404.php';
+<?php get_footer(); ?>

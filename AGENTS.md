@@ -13,6 +13,30 @@ When template changes do not appear locally, clear the compiled Webasyst cache b
 
 `C:\xampp\webasyst-local\wa-cache\101524\apps\site\templates\compiled`
 
+## WordPress migration architecture
+
+Before any WordPress migration or theme remediation work, agents must explicitly check for available WordPress-relevant skills/tools/plugins. If a dedicated WordPress skill/tool is available, load and follow it before touching files. If no dedicated WordPress skill/tool is available, state that clearly and proceed with the native WordPress checklist below instead of inventing ad hoc content architecture.
+
+Mandatory WordPress project entrypoint before implementation:
+
+1. Open `memory/WORDPRESS_SKILLS.md`.
+2. Open `memory/WORDPRESS_MIGRATION_WORKFLOW.md` only when planning or orchestrating more than one slice.
+3. Open `memory/subagents/WORDPRESS_ASSIGNMENTS.md` when using subagents.
+4. Confirm whether a dedicated WordPress skill/tool exists in the current Codex tool list. As of the last project check, no dedicated WordPress skill/tool was available; use the native WordPress stack documented in `memory/WORDPRESS_SKILLS.md`.
+
+When porting the Webasyst/Smarty theme to WordPress, treat Webasyst as the visual and DOM/CSS reference only. Do not copy Smarty logic directly and do not replace WordPress content management with theme settings.
+
+The WordPress theme must use native WordPress architecture:
+
+- page text belongs in WordPress Pages and is rendered with `the_title()`, `the_content()`, excerpts, featured images, blocks, or block patterns;
+- navigation belongs in registered WordPress menus and is rendered with `wp_nav_menu()`;
+- images that editors change belong in the Media Library, featured images, blocks, or native attachment fields;
+- repeatable editorial entities such as services, prices, reviews, FAQ, and process steps should use core blocks, patterns, custom post types, or proper metabox/ACF-style fields, not JSON strings in Customizer;
+- Customizer/theme options are allowed only for global theme-level settings: logo/site identity, phone, email, address, analytics IDs, verification tags, color tokens if needed, and limited global CTA defaults;
+- template parts may provide fixed visual wrappers matching Webasyst, but the editable content inside them must come from native WordPress content sources.
+
+If an existing pass introduced `*_json` Customizer fields or `vr_theme_setting_array()` as the source of page/section content, treat that as transitional debt. The correct fix is to migrate those fields back to Pages, menus, media, blocks, or CPT/metabox data while preserving the Webasyst visual contract.
+
 ## Theme version discipline
 
 Keep the Webasyst theme version and asset query version at `1.0` during normal development. Do not bump `theme.xml` version or `?v=` asset query strings after individual CSS/JS/template changes; use cache clearing, hard refresh, or local browser cache controls for verification. Bump versions only when the project owner explicitly asks to prepare a deploy/release.

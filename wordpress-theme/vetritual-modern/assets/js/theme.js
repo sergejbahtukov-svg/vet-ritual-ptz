@@ -1,46 +1,4 @@
 (function () {
-  var hero = document.querySelector(".vr-page-hero");
-  var heroTitle = hero ? hero.querySelector("h1") : null;
-  var pageTitle = heroTitle ? heroTitle.textContent.toLowerCase() : "";
-  var contentTitle = document.querySelector(".vr-text-page h1, .vr-text-page h2");
-  var combinedTitle = pageTitle + " " + (contentTitle ? contentTitle.textContent.toLowerCase() : "");
-
-  if (hero && combinedTitle) {
-    var serviceClass = "";
-
-    if (combinedTitle.indexOf("усыпление кош") !== -1) {
-      serviceClass = "vr-page-hero--cats";
-    } else if (combinedTitle.indexOf("усыпление собак") !== -1) {
-      serviceClass = "vr-page-hero--dogs";
-    } else if (combinedTitle.indexOf("усыпление") !== -1) {
-      serviceClass = "vr-page-hero--euthanasia";
-    } else if (combinedTitle.indexOf("индивидуальная кремация") !== -1) {
-      serviceClass = "vr-page-hero--individual-cremation";
-    } else if (combinedTitle.indexOf("общая кремация") !== -1) {
-      serviceClass = "vr-page-hero--common-cremation";
-    } else if (combinedTitle.indexOf("кремация") !== -1) {
-      serviceClass = "vr-page-hero--cremation";
-    } else if (combinedTitle.indexOf("вывоз") !== -1 || combinedTitle.indexOf("транспортиров") !== -1) {
-      serviceClass = "vr-page-hero--transport";
-    } else if (combinedTitle.indexOf("услуги") !== -1) {
-      serviceClass = "vr-page-hero--services";
-    }
-
-    if (serviceClass) {
-      hero.classList.remove(
-        "vr-page-hero--services",
-        "vr-page-hero--euthanasia",
-        "vr-page-hero--cats",
-        "vr-page-hero--dogs",
-        "vr-page-hero--cremation",
-        "vr-page-hero--common-cremation",
-        "vr-page-hero--individual-cremation",
-        "vr-page-hero--transport"
-      );
-      hero.classList.add(serviceClass);
-    }
-  }
-
   var reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var shouldReduceMotion = function () {
     return reduceMotionQuery.matches;

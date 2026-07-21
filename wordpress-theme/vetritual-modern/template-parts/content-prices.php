@@ -3,10 +3,10 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-$raw_prices = (string) vr_theme_setting('prices_cards_json', '[]');
-$price_groups = json_decode($raw_prices, true);
-if (! is_array($price_groups)) {
-    $price_groups = array();
+$price_cards = function_exists('vr_get_price_cards') ? vr_get_price_cards() : array();
+$price_cards = array_values(array_filter($price_cards, 'is_array'));
+if (empty($price_cards)) {
+    return;
 }
 ?>
 
@@ -14,46 +14,22 @@ if (! is_array($price_groups)) {
   <div class="vr-shell">
     <div class="vr-section__head">
       <p class="vr-kicker">Цены</p>
-      <h2><?php esc_html_e('Стоимость услуг', 'vetritual-modern'); ?></h2>
+      <h2>Стоимость зависит от услуги и веса животного</h2>
     </div>
-
-    <?php if (empty($price_groups)) : ?>
-      <p><?php esc_html_e('Пакеты цен скоро будут обновлены.', 'vetritual-modern'); ?></p>
-    <?php else : ?>
-      <div class="vr-prices-grid">
-        <?php foreach ($price_groups as $group) : ?>
-          <?php
-          if (! is_array($group)) {
-              continue;
-          }
-          $title = isset($group['title']) ? (string) $group['title'] : '';
-          $note = isset($group['note']) ? (string) $group['note'] : '';
-          $rows = isset($group['rows']) && is_array($group['rows']) ? $group['rows'] : array();
-          ?>
-          <article class="vr-price-card">
-            <h3><?php echo esc_html($title); ?></h3>
-            <?php if (! empty($note)) : ?>
-              <p class="vr-price-card__note"><?php echo esc_html($note); ?></p>
-            <?php endif; ?>
-            <?php if (! empty($rows)) : ?>
-              <ul class="vr-price-card__rows">
-                <?php foreach ($rows as $row) : ?>
-                  <?php
-                  if (! is_array($row)) { continue; }
-                  $label = isset($row['label']) ? (string) $row['label'] : '';
-                  $value = isset($row['value']) ? (string) $row['value'] : '';
-                  ?>
-                  <li>
-                    <span><?php echo esc_html($label); ?></span>
-                    <strong><?php echo esc_html($value); ?></strong>
-                  </li>
-                <?php endforeach; ?>
-              </ul>
-            <?php endif; ?>
-          </article>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
+    <div class="vr-price-grid">
+      <?php foreach ($price_cards as $index => $price_card) : ?>
+        <?php $price_card_class = ! empty($price_card['class']) ? ' ' . sanitize_html_class($price_card['class']) : ($index === 2 ? ' vr-price-card--accent' : ''); ?>
+        <article class="vr-price-card<?php echo esc_attr($price_card_class); ?>">
+          <h3><?php echo esc_html($price_card['title'] ?? ''); ?></h3>
+          <?php if (! empty($price_card['note'])) : ?>
+            <p class="vr-price-note"><?php echo esc_html($price_card['note']); ?></p>
+          <?php endif; ?>
+          <?php foreach (array_filter((array) ($price_card['rows'] ?? array()), 'is_array') as $price_row) : ?>
+            <div class="vr-price-row"><span><?php echo esc_html($price_row['label'] ?? ''); ?></span><strong><?php echo esc_html($price_row['value'] ?? ''); ?></strong></div>
+          <?php endforeach; ?>
+        </article>
+      <?php endforeach; ?>
+    </div>
+    <p class="vr-footnote">Вывоз рассчитывается в зависимости от района и сложности работ. Точную стоимость можно уточнить по телефону.</p>
   </div>
 </section>
-

@@ -1,71 +1,70 @@
-# WordPress Skills & Templates
+# WordPress Skills And Tools
 
-## Базовый стек
-- PHP для WordPress темы:
-  - `template files`
-  - `WP_Query`
-  - `template hierarchy`
-  - `enqueue`, `nav menus`
-- Theme API:
-  - `Theme Customizer` (`WP_Customize_Manager`)
-  - `Settings API` (`register_setting`, `add_settings_section`, `add_settings_field`)
-  - `Options` + `theme_mod` / `ACF option pages`
-  - `theme.json` и базовые tokens для редактора
-- Frontend:
-  - перенос CSS/JS блоков, производительность, accessibility
-- SEO:
-  - `title/description`, OG, Schema, canonical, robots, sitemap
-- QA:
-  - smoke check, rollout checklist, rollback checklist
+## Current Capability Check
 
-## Ресурсы сайта
-- Page Builder/вложенные модули по необходимости
-- ACF (для полей страниц/групп)
-- Rank Math (или эквивалент)
-- WPForms / Fluent Forms (если нужны формы)
-- Кеш и скорость: WP Super Cache / LiteSpeed Cache
-- Подключение счетчиков/интеграций (Metrika, GA/GTM и др.) через theme settings
+- Dedicated Codex WordPress skill/tool: not available in the current tool list.
+- Plugin dependency strategy: do not depend on ACF, page builders, form builders, SEO plugins, or cache plugins for the base theme.
+- WordPress source of truth: native Pages, Menus, Media Library, Featured Images, CPTs, blocks/patterns, and theme template parts.
+- Webasyst/Smarty source of truth: visual DOM/CSS/layout reference only. Do not port Smarty syntax into WordPress.
 
-## Модель Theme Settings
-- Все правки пользователя должны проходить через админку:
-  - Contacts/brand
-  - Hero + CTA
-  - Включение/выключение секций
-  - SEO fallback
-  - Cookie consent + метрики
-- Единый контракт чтения:
-  - `vr_theme_setting($key, $default)`
-- Нельзя читать опции напрямую в шаблонах через `get_option()` без helper-слоя.
+## Required Local Skills For This Project
 
-## План миграции контента
-- `page.html` / `home.html` -> `page.php`, `front-page.php`, `template-parts`
-- `theme.js` + `integrations.js` -> `assets/js/*`
-- Контентная информация:
-  - глобальные данные в `theme options`
-  - структурные поля в ACF
-  - визуальный уровень в `theme.json`
+| Area | Required Skill | Project Rule | Main Files |
+|---|---|---|---|
+| WordPress template hierarchy | `front-page.php`, `page.php`, `404.php`, `index.php`, template parts | Use WordPress hierarchy instead of custom route rendering. | `wordpress-theme/vetritual-modern/*.php`, `template-parts/*.php` |
+| Native content model | Pages, excerpts, featured images, CPTs | Page text belongs in WP Pages; repeatable editorial data belongs in CPTs or blocks, not Customizer JSON. | `inc/content-model.php`, `tools/seed-wordpress-content.php` |
+| Menus | `register_nav_menus()`, `wp_nav_menu()` | Header/footer navigation must come from WP menus. | `functions.php`, `header.php`, `footer.php` |
+| Media | Media Library, attachments, featured images | Editor-changeable images must be media/featured images. Theme assets are fallback only. | `assets/media/`, seed script, page templates |
+| Global settings | Customizer/theme mods only for global values | Allowed: phone, email, address, logo/site identity, analytics IDs, verification tags, limited global CTA defaults. | `inc/customizer.php`, `inc/helpers/theme-options.php` |
+| Escaping/security | `esc_html`, `esc_url`, `wp_kses_post`, `sanitize_*` | Every dynamic value must be escaped at output and sanitized at save/import. | all templates/helpers |
+| Verification | PHP lint, HTTP smoke, Playwright 360/768/1280 | Do not claim visual readiness without browser checks. | `tools/`, local WP URL |
 
-## Поиск и интеграция скиллов (новый обязательный шаг)
-- Перед стартом разработки запускается сборка:
-  - `memory/WORDPRESS_CAPABILITY_MATRIX.md`
-  - `agent-skill-scout` делает инвентаризацию по всем ролям
-- Для каждого незакрытого навыка фиксируем вариант закрытия:
-  - назначение владельца
-  - внутренний спайк
-  - внешний плагин/ресурс
-  - обучение или расширение
-- Без закрытых критичных пробелов старт разработки откладывается.
+## Available Codex Skills To Use
 
-## Output шаблон для сабагентов
-- Каждый сабагент отчитывается:
-  - findings
-  - mapping
-  - risks
-  - acceptance criteria
-- Обязательно включить в итоговый отчёт ссылку на `Theme Settings Contract`.
-## Критические требования по навыкам для готовности к сборке
+- `qa-acceptance`: use for final acceptance QA and failure logging.
+- `frontend-design`: use only when doing visual/layout comparison or CSS polish.
+- `browser:control-in-app-browser`: use only when the in-app browser is needed for manual/interactive inspection.
 
-- Поддержать `ready_for_build` только после подтвержденного skill-mapping и темный контракт настроек.
-- Theme Settings реализуются через helper (`vr_theme_setting`) и безопасный вывод (`esc_*`).
-- Обязателен план миграции URL и редиректов как часть content mapping.
-- Нужны локальные проверки на `https://vetritual.lvh.me/` и сценарий rollback для rollout.
+There is no dedicated WordPress skill in the available Codex skill list. Therefore WordPress work must follow this document plus `AGENTS.md` and the native checklist below.
+
+## Native WordPress Checklist Before Any Theme Edit
+
+1. Read `AGENTS.md`.
+2. Read this file.
+3. Confirm the active local WP URL: `http://localhost/vetritual-wp/`.
+4. Confirm the source theme path: `wordpress-theme/vetritual-modern`.
+5. Confirm the active XAMPP theme path: `C:\xampp\htdocs\vetritual-wp\wp-content\themes\vetritual-modern`.
+6. Check for old debt before editing:
+   - `vr_route_map`
+   - `vr_get_route_info`
+   - `vr_get_route_fallback_content`
+   - `*_json` Customizer content fields
+   - `vr_theme_setting_array()` as a content source
+   - mojibake strings such as `Рџ`, `Рґ`, `Р»`
+7. Keep source-of-truth boundaries:
+   - Pages: page title/content/excerpt.
+   - Menus: navigation.
+   - Media: editable images and featured images.
+   - CPTs/blocks: repeatable services, prices, process, reviews.
+   - Customizer: global contacts, analytics, verification, global CTA fallback.
+8. Edit only source files, then sync to XAMPP theme.
+9. Run seed/import only with XAMPP PHP: `C:\xampp\php\php.exe`.
+10. Verify with lint, HTTP smoke, and responsive browser checks.
+
+## Orchestration Roles
+
+| Subagent | Mini Task | Output |
+|---|---|---|
+| `agent-skill-scout` | Check available WP skills/tools/plugins and project docs before implementation. | Capability note and blockers. |
+| `agent-wp-architecture` | Keep native WP architecture clean: no route overlay, no JSON content in Customizer. | File-level architecture findings/fixes. |
+| `agent-theme-builder` | Port visual wrappers into WP templates and template parts. | Edited PHP/CSS/JS files. |
+| `agent-content-mapper` | Map Webasyst content into WP Pages, Menus, Media, CPTs/blocks. | Seed/update plan and content checks. |
+| `agent-seo-qa` | Check URLs, canonical, titles, 404, redirects, smoke pages. | QA report with failures and evidence. |
+
+## Forbidden Shortcuts
+
+- Do not copy Smarty control logic into PHP templates.
+- Do not use Customizer JSON arrays for page sections.
+- Do not hardcode editable page text in templates when a WP Page/CPT can own it.
+- Do not add plugin dependency to solve base theme architecture.
+- Do not treat `preview.html` as proof of WordPress readiness.

@@ -3,61 +3,50 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-$raw_services = (string) vr_theme_setting('services_cards_json', '[]');
-$services = json_decode($raw_services, true);
-if (! is_array($services)) {
-    $services = array();
+$services = function_exists('vr_get_service_cards') ? vr_get_service_cards() : array();
+$services = array_values(array_filter($services, 'is_array'));
+if (empty($services)) {
+    return;
 }
-
-$intro_title = vr_theme_setting('services_intro_title', '');
-$intro_text = vr_theme_setting('services_intro_text', '');
 ?>
 
-<section class="vr-services vr-section" id="services">
+<section class="vr-section" id="services">
   <div class="vr-shell">
     <div class="vr-section__head">
-      <p class="vr-kicker"><?php echo esc_html($intro_title); ?></p>
-      <h2><?php echo esc_html(vr_theme_setting('services_intro_text', '')); ?></h2>
-      <p class="vr-section__intro"><?php echo esc_html($intro_text); ?></p>
+      <p class="vr-kicker">Наши услуги</p>
+      <h2>Помогаем взять на себя сложные организационные шаги</h2>
     </div>
-
-    <?php if (! empty($services)) : ?>
-      <div class="vr-services-slider" data-vr-services-slider>
-        <div class="vr-services-slider__buttons">
-          <button type="button" class="vr-services-slider__button" data-vr-services-prev aria-label="<?php esc_attr_e('Назад', 'vetritual-modern'); ?>">◀</button>
-          <button type="button" class="vr-services-slider__button" data-vr-services-next aria-label="<?php esc_attr_e('Вперед', 'vetritual-modern'); ?>">▶</button>
-        </div>
-        <div class="vr-services-slider__track" data-vr-services-track>
-          <?php foreach ($services as $service) : ?>
-            <?php
-            if (! is_array($service)) {
-                continue;
-            }
-            $title = isset($service['title']) ? (string)$service['title'] : '';
-            $text = isset($service['text']) ? (string)$service['text'] : '';
-            $link = isset($service['link']) ? (string)$service['link'] : '';
-            $icon = isset($service['icon']) ? (string)$service['icon'] : '';
-            ?>
-            <article class="vr-service-card">
-              <?php if ($icon !== '') : ?>
-                <img
-                  class="vr-service-card__icon"
-                  src="<?php echo esc_url(vr_theme_media_url($icon)); ?>"
-                  alt="<?php echo esc_attr($title); ?>"
-                  loading="lazy">
+    <div class="vr-services-slider" data-vr-services-slider>
+      <div class="vr-services" data-vr-services-track>
+        <?php foreach ($services as $service) : ?>
+          <?php
+          $service_link = isset($service['link']) ? (string) $service['link'] : '/' . trim((string) ($service['slug'] ?? ''), '/') . '/';
+          if ($service_link === '//') {
+              $service_link = '#';
+          }
+          $service_href = preg_match('~^(https?:|tel:|mailto:|#)~', $service_link) ? $service_link : home_url('/' . trim($service_link, '/') . '/');
+          $service_image = isset($service['icon']) ? (string) $service['icon'] : (string) ($service['image'] ?? '');
+          $service_image_src = ! empty($service['image_src']) ? (string) $service['image_src'] : '';
+          $service_media = isset($service['media']) ? (string) $service['media'] : '';
+          $service_image_url = $service_image_src !== '' ? $service_image_src : ($service_image !== '' ? vr_theme_media_url($service_image) : '');
+          $service_title = isset($service['title']) ? (string) $service['title'] : '';
+          ?>
+          <a class="vr-service-card" href="<?php echo esc_url($service_href); ?>">
+            <div class="vr-service-media <?php echo esc_attr($service_media); ?>">
+              <?php if ($service_image_url !== '') : ?>
+                <img src="<?php echo esc_url($service_image_url); ?>" alt="<?php echo esc_attr($service_title); ?>" loading="lazy">
               <?php endif; ?>
-              <h3><?php echo esc_html($title); ?></h3>
-              <p><?php echo esc_html($text); ?></p>
-              <?php if (! empty($link)) : ?>
-                <a href="<?php echo esc_url(home_url($link)); ?>"><?php esc_html_e('Узнать подробнее', 'vetritual-modern'); ?></a>
-              <?php endif; ?>
-            </article>
-          <?php endforeach; ?>
-        </div>
+            </div>
+            <h3><?php echo esc_html($service_title); ?></h3>
+            <p><?php echo esc_html($service['text'] ?? ''); ?></p>
+            <span class="vr-service-card__more">Подробнее</span>
+          </a>
+        <?php endforeach; ?>
       </div>
-    <?php else : ?>
-      <p><?php esc_html_e('Сейчас список услуг временно недоступен.', 'vetritual-modern'); ?></p>
-    <?php endif; ?>
+      <div class="vr-services-slider__controls">
+        <button class="vr-slider-button" type="button" aria-label="Предыдущие услуги" data-vr-services-prev>‹</button>
+        <button class="vr-slider-button" type="button" aria-label="Следующие услуги" data-vr-services-next>›</button>
+      </div>
+    </div>
   </div>
 </section>
-

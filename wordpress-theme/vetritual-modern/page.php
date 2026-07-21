@@ -1,45 +1,56 @@
 <?php
 get_header();
-$route = vr_get_route_info();
-$slug = $route['slug'];
-$page_content = vr_get_route_page_content($slug);
-$fallback_content = vr_get_route_fallback_content($slug);
 ?>
 
 <main id="primary" class="site-main">
-  <?php
-  $vr_hero_route = $route;
-  $vr_is_front_page = false;
-  require get_template_directory() . '/template-parts/content-hero.php';
-  $vr_hero_route = null;
-  $vr_is_front_page = null;
-  ?>
+  <?php if (have_posts()) : ?>
+    <?php
+    the_post();
+    $slug = get_post_field('post_name', get_the_ID());
+    ?>
+    <?php get_template_part('template-parts/content-hero'); ?>
 
-  <section class="vr-section">
-    <div class="vr-shell vr-text-page">
-      <?php
-      if ($slug === 'o-nas') {
-          get_template_part('template-parts/content-about');
-          get_template_part('template-parts/content-contact');
-      } elseif ($slug === 'uslugi') {
-          get_template_part('template-parts/content-services');
-          get_template_part('template-parts/content-page', null, array('title' => $route['title'], 'content' => $fallback_content));
-      } elseif ($slug === 'tseny') {
-          get_template_part('template-parts/content-prices');
-          get_template_part('template-parts/content-page', null, array('title' => $route['title'], 'content' => $fallback_content));
-      } elseif ($slug === 'kontakty') {
-          get_template_part('template-parts/content-contact');
-          get_template_part('template-parts/content-page', null, array('title' => $route['title'], 'content' => $fallback_content));
-      } elseif (in_array($slug, array('usyplenie-zhivotnyh', 'usyplenie-koshek', 'usyplenie-sobak', 'krematsyja-zhyvotnyh', 'obschaja-krematsyja', 'individualnaja-krematsyja', 'vyvoz-zhivotnyh'), true)) {
-          get_template_part('template-parts/content-page', null, array('title' => $route['title'], 'content' => $fallback_content));
-          get_template_part('template-parts/content-process');
-          get_template_part('template-parts/content-contact');
-      } else {
-          get_template_part('template-parts/content-page', null, array('title' => $route['title'], 'content' => $page_content ?: $fallback_content));
-      }
-      ?>
-    </div>
-  </section>
+    <?php if ($slug === 'o-nas') : ?>
+      <?php get_template_part('template-parts/content-about'); ?>
+    <?php elseif ($slug === 'uslugi') : ?>
+      <?php if (trim((string) get_the_content(null, false, get_the_ID())) !== '') : ?>
+        <section class="vr-section">
+          <div class="vr-shell vr-text-page">
+            <?php get_template_part('template-parts/content-page', null, array('content' => apply_filters('the_content', get_the_content(null, false, get_the_ID())))); ?>
+          </div>
+        </section>
+      <?php endif; ?>
+      <?php get_template_part('template-parts/content-services'); ?>
+    <?php elseif ($slug === 'tseny') : ?>
+      <?php if (trim((string) get_the_content(null, false, get_the_ID())) !== '') : ?>
+        <section class="vr-section">
+          <div class="vr-shell vr-text-page">
+            <?php get_template_part('template-parts/content-page', null, array('content' => apply_filters('the_content', get_the_content(null, false, get_the_ID())))); ?>
+          </div>
+        </section>
+      <?php endif; ?>
+      <?php get_template_part('template-parts/content-prices'); ?>
+    <?php elseif ($slug === 'kontakty') : ?>
+      <?php get_template_part('template-parts/content-contact'); ?>
+      <?php get_template_part('template-parts/content-contact-features'); ?>
+    <?php elseif (in_array($slug, array('usyplenie-zhivotnyh', 'usyplenie-koshek', 'usyplenie-sobak', 'krematsyja-zhyvotnyh', 'obschaja-krematsyja', 'individualnaja-krematsyja', 'vyvoz-zhivotnyh'), true)) : ?>
+      <?php if (trim((string) get_the_content(null, false, get_the_ID())) !== '') : ?>
+        <section class="vr-section">
+          <div class="vr-shell vr-text-page">
+            <?php get_template_part('template-parts/content-page', null, array('content' => apply_filters('the_content', get_the_content(null, false, get_the_ID())))); ?>
+          </div>
+        </section>
+      <?php endif; ?>
+      <?php get_template_part('template-parts/content-process'); ?>
+      <?php get_template_part('template-parts/content-contact'); ?>
+    <?php elseif (trim((string) get_the_content(null, false, get_the_ID())) !== '') : ?>
+      <section class="vr-section">
+        <div class="vr-shell vr-text-page">
+          <?php get_template_part('template-parts/content-page', null, array('content' => apply_filters('the_content', get_the_content(null, false, get_the_ID())))); ?>
+        </div>
+      </section>
+    <?php endif; ?>
+  <?php endif; ?>
 </main>
 
 <?php get_footer(); ?>

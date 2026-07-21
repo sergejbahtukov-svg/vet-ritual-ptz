@@ -6,7 +6,9 @@ if (! defined('ABSPATH')) {
 define('VR_THEME_VERSION', '1.0');
 
 require_once get_template_directory() . '/inc/helpers/theme-options.php';
+require_once get_template_directory() . '/inc/content-model.php';
 require_once get_template_directory() . '/inc/setup.php';
+require_once get_template_directory() . '/inc/customizer.php';
 
 function vr_setup_theme() {
     add_theme_support('title-tag');
@@ -15,33 +17,16 @@ function vr_setup_theme() {
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
     add_theme_support('wp-block-styles');
     add_theme_support('responsive-embeds');
+    add_theme_support('customize-selective-refresh-widgets');
 
     register_nav_menus(
         array(
-            'primary' => __('Главное меню', 'vetritual-modern'),
+            'primary' => __('Основное меню', 'vetritual-modern'),
+            'footer_services' => __('Меню услуг в подвале', 'vetritual-modern'),
         )
     );
 }
 add_action('after_setup_theme', 'vr_setup_theme');
-
-function vr_route_rewrite_rules() {
-    add_rewrite_tag('%vr_route_page%', '([^&]+)');
-
-    foreach (array_keys(vr_route_map()) as $slug) {
-        add_rewrite_rule(sprintf('^%s/?$', preg_quote($slug, '#')), 'index.php?vr_route_page=' . $slug, 'top');
-    }
-    add_rewrite_rule('^about/?$', 'index.php?vr_route_page=o-nas', 'top');
-    add_rewrite_rule('^vyvoz-umershih-zhivotnyh/?$', 'index.php?vr_route_page=vyvoz-zhivotnyh', 'top');
-    add_rewrite_rule('^vyvoz-umershikh-zhivotnyh/?$', 'index.php?vr_route_page=vyvoz-zhivotnyh', 'top');
-    add_rewrite_rule('^vyvoz-tela-zhivotnogo/?$', 'index.php?vr_route_page=vyvoz-zhivotnyh', 'top');
-}
-add_action('init', 'vr_route_rewrite_rules');
-
-function vr_route_query_vars($vars) {
-    $vars[] = 'vr_route_page';
-    return $vars;
-}
-add_filter('query_vars', 'vr_route_query_vars');
 
 function vr_route_alias_redirects() {
     if (is_admin() || wp_doing_ajax()) {
@@ -53,62 +38,62 @@ function vr_route_alias_redirects() {
         $path = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }
 
-    $path = trim((string)$path, '/');
-    if ($path === 'about') {
-        wp_safe_redirect(home_url('/o-nas/'), 301);
-        exit;
+    $path = trim((string) $path, '/');
+    $home_path = trim((string) wp_parse_url(home_url('/'), PHP_URL_PATH), '/');
+    if ($home_path !== '' && strpos($path . '/', $home_path . '/') === 0) {
+        $path = trim(substr($path, strlen($home_path)), '/');
+    }
+
+    $page = $path !== '' ? get_page_by_path($path) : null;
+    if ($page instanceof WP_Post && $page->post_status === 'publish') {
+        return;
     }
 
     $aliases = vr_route_aliases();
-    if (array_key_exists($path, $aliases) && $path !== 'about') {
+    if (array_key_exists($path, $aliases)) {
         wp_safe_redirect(home_url('/' . $aliases[$path] . '/'), 301);
         exit;
     }
 }
 add_action('template_redirect', 'vr_route_alias_redirects');
 
-function vr_route_meta($key, $default = '') {
-    $route = vr_get_route_info();
-    if (! is_array($route) || ! isset($route[$key]) || empty($route[$key])) {
-        return $default;
-    }
-
-    return $route[$key];
-}
-
 function vr_theme_settings_fields_sections() {
     return array(
         'vr_general' => array(
-            'title' => __('Бренд и контакты', 'vetritual-modern'),
+            'title' => __('Основное', 'vetritual-modern'),
             'callback' => function () {
-                echo '<p>' . esc_html__('Базовые контактные и брендовые данные.', 'vetritual-modern') . '</p>';
+                echo '<p>' . esc_html__('Глобальные данные сайта и контакты.', 'vetritual-modern') . '</p>';
+            },
+        ),
+        'vr_social' => array(
+            'title' => __('Соцсети', 'vetritual-modern'),
+            'callback' => function () {
+                echo '<p>' . esc_html__('Ссылки на сообщества и текст подвала.', 'vetritual-modern') . '</p>';
             },
         ),
         'vr_hero' => array(
-            'title' => __('Hero и CTA', 'vetritual-modern'),
+            'title' => __('Глобальные CTA', 'vetritual-modern'),
             'callback' => function () {
-                echo '<p>' . esc_html__('Главная секция и основные кнопки.', 'vetritual-modern') . '</p>';
-            },
-        ),
-        'vr_sections' => array(
-            'title' => __('Контентные блоки', 'vetritual-modern'),
-            'callback' => function () {
-                echo '<p>' . esc_html__('Контент для главной, цен, услуг и отзывов.', 'vetritual-modern') . '</p>';
+                echo '<p>' . esc_html__('Кнопки по умолчанию. Заголовки, тексты и изображения редактируются в страницах WordPress.', 'vetritual-modern') . '</p>';
             },
         ),
         'vr_seo' => array(
-            'title' => __('SEO и домен', 'vetritual-modern'),
+            'title' => __('SEO и верификация', 'vetritual-modern'),
             'callback' => function () {
-                echo '<p>' . esc_html__('Title/description, OG и verification-метки.', 'vetritual-modern') . '</p>';
+                echo '<p>' . esc_html__('Meta, OG и коды подтверждения для поисковых систем.', 'vetritual-modern') . '</p>';
             },
         ),
         'vr_analytics' => array(
-            'title' => __('Аналитика и согласие', 'vetritual-modern'),
+            'title' => __('Аналитика и HTML-вставки', 'vetritual-modern'),
             'callback' => function () {
-                echo '<p>' . esc_html__('Режимы cookie и идентификаторы интеграций.', 'vetritual-modern') . '</p>';
+                echo '<p>' . esc_html__('Согласие cookie, счетчики аналитики и служебные HTML-вставки.', 'vetritual-modern') . '</p>';
             },
         ),
     );
+}
+
+function vr_sanitize_theme_bool_like($value) {
+    return in_array((string) $value, array('1', 'true', 'on', 'yes'), true) ? '1' : '0';
 }
 
 function vr_sanitize_theme_settings($input) {
@@ -117,15 +102,7 @@ function vr_sanitize_theme_settings($input) {
     }
 
     $output = array();
-    $defaults = vr_theme_setting_defaults();
     $definitions = vr_theme_option_fields();
-    $json_fields = array(
-        'services_cards_json',
-        'prices_cards_json',
-        'process_steps_json',
-        'reviews_json',
-        'about_features_json',
-    );
 
     foreach ($definitions as $key => $field) {
         if (! array_key_exists($key, $input)) {
@@ -133,29 +110,43 @@ function vr_sanitize_theme_settings($input) {
         }
 
         $value = wp_unslash($input[$key]);
-        if (! is_scalar($value)) {
+        if (is_array($value) || is_object($value)) {
             $value = '';
         } else {
-            $value = (string)$value;
+            $value = (string) $value;
         }
 
-        if (in_array($key, $json_fields, true)) {
-            if (json_decode($value, true) === null) {
-                $value = $defaults[$key];
-            }
-        } else {
-            if (in_array($key, array('custom_head_html', 'body_start_html', 'body_end_html'), true)) {
-                $value = wp_kses_post($value);
-            } else {
-                $value = sanitize_text_field($value);
-            }
+        if (in_array($key, array('yandex_metrika_webvisor', 'yandex_metrika_ecommerce'), true)) {
+            $output[$key] = vr_sanitize_theme_bool_like($value);
+            continue;
         }
 
-        $output[$key] = $value;
+        if (in_array($key, array('custom_head_html', 'body_start_html', 'body_end_html'), true)) {
+            $output[$key] = wp_kses_post($value);
+            continue;
+        }
+
+        if (isset($field['type']) && 'url' === $field['type']) {
+            $output[$key] = esc_url_raw($value);
+            continue;
+        }
+
+        if (isset($field['type']) && 'textarea' === $field['type']) {
+            $output[$key] = sanitize_textarea_field($value);
+            continue;
+        }
+
+        if (isset($field['type']) && 'checkbox' === $field['type']) {
+            $output[$key] = vr_sanitize_theme_bool_like($value);
+            continue;
+        }
+
+        $output[$key] = sanitize_text_field($value);
     }
 
     return $output;
 }
+
 add_action('admin_init', function () {
     register_setting(
         'vr_theme_options_group',
@@ -168,6 +159,7 @@ add_action('admin_init', function () {
 
     $fields = vr_theme_option_fields();
     $sections = vr_theme_settings_fields_sections();
+
     foreach ($sections as $section_id => $section) {
         add_settings_section($section_id, $section['title'], $section['callback'], 'vr_theme_options');
     }
@@ -192,15 +184,28 @@ function vr_render_theme_setting_field($args) {
     $field = $args['field'];
     $value = vr_theme_setting($key, '');
     $name = 'vr_theme_options[' . esc_attr($key) . ']';
-    $rows = isset($field['rows']) ? (int)$field['rows'] : 8;
+    $rows = isset($field['rows']) ? (int) $field['rows'] : 8;
     $type = $field['type'];
 
     if ('textarea' === $type) {
-        echo '<textarea id="vr_theme_' . esc_attr($key) . '" name="' . esc_attr($name) . '" rows="' . esc_attr($rows) . '" class="large-text code" style="height: 160px; width: 100%;">' . esc_textarea((string)$value) . '</textarea>';
+        echo '<textarea id="vr_theme_' . esc_attr($key) . '" name="' . esc_attr($name) . '" rows="' . esc_attr($rows) . '" class="large-text code" style="height: 160px; width: 100%;">' . esc_textarea((string) $value) . '</textarea>';
         return;
     }
 
-    echo '<input id="vr_theme_' . esc_attr($key) . '" name="' . esc_attr($name) . '" value="' . esc_attr((string)$value) . '" class="regular-text" type="text">';
+    if ('checkbox' === $type) {
+        echo '<label for="vr_theme_' . esc_attr($key) . '">';
+        echo '<input id="vr_theme_' . esc_attr($key) . '" name="' . esc_attr($name) . '" value="1" type="checkbox" ' . checked('1', (string) $value, false) . ' style="margin-right: 6px;">';
+        echo esc_html__('Включить', 'vetritual-modern');
+        echo '</label>';
+        return;
+    }
+
+    if ('url' === $type) {
+        echo '<input id="vr_theme_' . esc_attr($key) . '" name="' . esc_attr($name) . '" value="' . esc_attr((string) $value) . '" class="regular-text" type="url">';
+        return;
+    }
+
+    echo '<input id="vr_theme_' . esc_attr($key) . '" name="' . esc_attr($name) . '" value="' . esc_attr((string) $value) . '" class="regular-text" type="text">';
 }
 
 function vr_add_settings_page() {
@@ -215,9 +220,25 @@ function vr_add_settings_page() {
 add_action('admin_menu', 'vr_add_settings_page');
 
 function vr_render_theme_settings_page() {
+    $customize_url = add_query_arg(
+        array(
+            'url' => home_url('/'),
+            'return' => admin_url('themes.php?page=vr-theme-options'),
+        ),
+        admin_url('customize.php')
+    );
     ?>
     <div class="wrap">
         <h1><?php esc_html_e('Настройки темы Vet Ritual', 'vetritual-modern'); ?></h1>
+        <p class="description">
+            <strong><?php esc_html_e('Быстрые правки:', 'vetritual-modern'); ?></strong>
+            <a href="<?php echo esc_url($customize_url); ?>" target="_blank">
+                <?php esc_html_e('Открыть стандартный кастомайзер WordPress', 'vetritual-modern'); ?>
+            </a>
+        </p>
+        <p class="description">
+            <?php esc_html_e('Здесь хранятся только глобальные настройки темы. Тексты страниц, услуги, цены, отзывы, меню и изображения редактируются штатными сущностями WordPress.', 'vetritual-modern'); ?>
+        </p>
         <form method="post" action="options.php">
             <?php
             settings_fields('vr_theme_options_group');

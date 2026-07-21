@@ -3,113 +3,95 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-$route = null;
-if (isset($args) && isset($args['route']) && is_array($args['route'])) {
-    $route = $args['route'];
-} elseif (isset($vr_hero_route) && is_array($vr_hero_route)) {
-    $route = $vr_hero_route;
-} else {
-    $route = vr_get_route_info();
+$is_front_page = ! empty($args['is_front_page']) || is_front_page();
+$phone = vr_theme_setting('phone_main', '+7 953 533-16-00');
+$phone_href = preg_replace('/[^0-9+]/', '', $phone);
+$queried_object = get_queried_object();
+
+if ($is_front_page) :
+    $hero_title = 'Усыпление, кремация и вывоз животных с бережным сопровождением';
+    $hero_subtitle = 'Работаем круглосуточно, выезжаем по Петрозаводску, Прионежскому району и дальним районам Карелии по согласованию.';
+    $hero_primary_cta_text = (string) vr_theme_setting('hero_primary_cta_text', 'Позвонить 24/7');
+    $hero_primary_cta_url = (string) vr_theme_setting('hero_primary_cta_url', 'tel:' . $phone_href);
+    $hero_secondary_cta_text = (string) vr_theme_setting('hero_secondary_cta_text', 'Посмотреть цены');
+    $hero_secondary_cta_url = (string) vr_theme_setting('hero_secondary_cta_url', home_url('/tseny/'));
+    $hero_image_src = vr_theme_media_url('hero-pets-mobile.webp');
+
+    if ($queried_object instanceof WP_Post) {
+        $front_title = get_the_title($queried_object);
+        $front_text = has_excerpt($queried_object) ? get_the_excerpt($queried_object) : vr_get_post_plain_text($queried_object);
+        $front_image_src = get_the_post_thumbnail_url($queried_object, 'full');
+
+        if ($front_title !== '') {
+            $hero_title = $front_title;
+        }
+        if ($front_text !== '') {
+            $hero_subtitle = $front_text;
+        }
+        if ($front_image_src) {
+            $hero_image_src = $front_image_src;
+        }
+    }
+    ?>
+    <section class="vr-hero">
+      <div class="vr-shell vr-hero__grid">
+        <div class="vr-hero__content">
+          <p class="vr-kicker">Петрозаводск и Карелия · 24/7</p>
+          <h1><?php echo esc_html($hero_title); ?></h1>
+          <p><?php echo esc_html($hero_subtitle); ?></p>
+          <div class="vr-actions">
+            <a class="vr-button" href="<?php echo esc_url($hero_primary_cta_url); ?>"><?php echo esc_html($hero_primary_cta_text); ?></a>
+            <a class="vr-button vr-button--ghost" href="<?php echo esc_url($hero_secondary_cta_url); ?>"><?php echo esc_html($hero_secondary_cta_text); ?></a>
+          </div>
+          <div class="vr-hero__facts" aria-label="Ключевая информация">
+            <span><strong>30-60 мин</strong> приезд специалиста</span>
+            <span><strong>20 мин</strong> выполнение услуги</span>
+            <span><strong>24/7</strong> принимаем обращения</span>
+          </div>
+        </div>
+        <div class="vr-hero__visual" aria-hidden="true">
+          <img src="<?php echo esc_url($hero_image_src); ?>" alt="">
+        </div>
+      </div>
+    </section>
+    <?php
+    return;
+endif;
+
+$slug = '';
+$hero_title = '';
+$hero_lead = '';
+
+if ($queried_object instanceof WP_Post) {
+    $slug = get_post_field('post_name', $queried_object);
+    $hero_title = get_the_title($queried_object);
+    if (has_excerpt($queried_object)) {
+        $hero_lead = get_the_excerpt($queried_object);
+    }
 }
 
-$is_front_page = false;
-if (! empty($vr_is_front_page) || (isset($args) && ! empty($args['is_front_page']))) {
-    $is_front_page = true;
-}
-
-$slug = isset($route['slug']) ? (string) $route['slug'] : '';
-$route_title = isset($route['title']) ? (string) $route['title'] : '';
-$route_description = isset($route['description']) ? (string) $route['description'] : '';
-
-$hero_title = $is_front_page
-    ? vr_theme_setting('hero_title', $route_title)
-    : ($route_title !== '' ? $route_title : vr_theme_setting('hero_title'));
-
-$hero_subtitle = $is_front_page
-    ? vr_theme_setting('hero_subtitle', '')
-    : $route_description;
-if ($hero_subtitle === '') {
-    $hero_subtitle = vr_theme_setting('hero_subtitle', '');
-}
-
-$hero_image = '';
-$hero_attachment_id = (int) vr_theme_setting('hero_image_id', 0);
-if ($hero_attachment_id > 0) {
-    $hero_image = wp_get_attachment_image_url($hero_attachment_id, 'large');
-}
-if (empty($hero_image)) {
-    $hero_image = vr_theme_setting('hero_image', '');
-}
-if (empty($hero_image)) {
-    $hero_image = vr_theme_setting('hero_image_id', '');
-}
-if (is_string($hero_image) && preg_match('#^https?://#', $hero_image)) {
-    $hero_image_url = $hero_image;
-} else {
-    $hero_image_url = vr_theme_media_url($hero_image);
-}
-
-$hero_cta_primary = vr_theme_setting('hero_primary_cta_text', '');
-$hero_cta_primary_url = vr_theme_setting('hero_primary_cta_url', '');
-$hero_cta_secondary = vr_theme_setting('hero_secondary_cta_text', '');
-$hero_cta_secondary_url = vr_theme_setting('hero_secondary_cta_url', '');
-$hero_kicker = $is_front_page ? '' : vr_theme_setting('hero_title', '');
-
-$hero_class_map = array(
+$hero_modifiers = array(
     'o-nas' => 'vr-page-hero--about',
     'uslugi' => 'vr-page-hero--services',
     'tseny' => 'vr-page-hero--prices',
     'kontakty' => 'vr-page-hero--contacts',
     'usyplenie-zhivotnyh' => 'vr-page-hero--euthanasia',
-    'usyplenie-koshek' => 'vr-page-hero--cats',
-    'usyplenie-sobak' => 'vr-page-hero--dogs',
     'krematsyja-zhyvotnyh' => 'vr-page-hero--cremation',
-    'obschaja-krematsyja' => 'vr-page-hero--common-cremation',
-    'individualnaja-krematsyja' => 'vr-page-hero--individual-cremation',
     'vyvoz-zhivotnyh' => 'vr-page-hero--transport',
 );
-
-$route_hero_class = isset($route['hero_class']) && is_string($route['hero_class']) ? trim($route['hero_class']) : '';
-if ($is_front_page) {
-    $hero_class = $route_hero_class !== '' ? $route_hero_class : 'vr-hero';
-} elseif ($route_hero_class !== '') {
-    $hero_class = $route_hero_class;
-} elseif (isset($hero_class_map[$slug])) {
-    $hero_class = $hero_class_map[$slug];
-} else {
-    $hero_class = 'vr-page-hero';
-}
-
-if (! $is_front_page) {
-    if (strpos($hero_class, 'vr-page-hero') !== 0 && strpos($hero_class, 'vr-page-hero ') !== 0) {
-        $hero_class = 'vr-page-hero ' . $hero_class;
-    }
+$hero_class = 'vr-page-hero';
+if (isset($hero_modifiers[$slug])) {
+    $hero_class .= ' ' . $hero_modifiers[$slug];
 }
 ?>
 
 <section class="<?php echo esc_attr($hero_class); ?>">
   <div class="vr-shell">
-    <div class="vr-page-hero__content">
-      <?php if (! empty($hero_kicker)) : ?>
-        <p class="vr-kicker"><?php echo esc_html($hero_kicker); ?></p>
-      <?php endif; ?>
-      <h1><?php echo esc_html($hero_title); ?></h1>
-      <?php if (! empty($hero_subtitle)) : ?>
-        <p class="vr-page-hero__intro"><?php echo esc_html($hero_subtitle); ?></p>
-      <?php endif; ?>
-      <div class="vr-page-hero__actions">
-        <?php if (! empty($hero_cta_primary) && ! empty($hero_cta_primary_url)) : ?>
-          <a class="vr-button" href="<?php echo esc_url($hero_cta_primary_url); ?>"><?php echo esc_html($hero_cta_primary); ?></a>
-        <?php endif; ?>
-        <?php if (! empty($hero_cta_secondary) && ! empty($hero_cta_secondary_url)) : ?>
-          <a class="vr-button vr-button--ghost" href="<?php echo esc_url($hero_cta_secondary_url); ?>"><?php echo esc_html($hero_cta_secondary); ?></a>
-        <?php endif; ?>
-      </div>
-    </div>
-    <div class="vr-page-hero__media" aria-hidden="true">
-      <?php if (! empty($hero_image_url)) : ?>
-        <img src="<?php echo esc_url($hero_image_url); ?>" alt="<?php echo esc_attr($hero_title); ?>" loading="lazy">
-      <?php endif; ?>
-    </div>
+    <p class="vr-kicker">Круглосуточно в Петрозаводске</p>
+    <h1><?php echo esc_html($hero_title); ?></h1>
+    <?php if ($hero_lead !== '') : ?>
+      <p><?php echo esc_html($hero_lead); ?></p>
+    <?php endif; ?>
+    <a class="vr-button" href="tel:<?php echo esc_attr($phone_href); ?>">Позвонить сейчас</a>
   </div>
 </section>

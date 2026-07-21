@@ -3,52 +3,90 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-$phone = vr_theme_setting('contact_block_phone', vr_theme_setting('phone_main', ''));
-$email = vr_theme_setting('contact_block_email', vr_theme_setting('contact_email', ''));
-$address = vr_theme_setting('contact_block_address', vr_theme_setting('address_text', ''));
+$site_name = vr_theme_setting('site_name', get_bloginfo('name'));
+$site_city = vr_theme_setting('site_city', 'Петрозаводск и Карелия');
+$phone = vr_theme_setting('phone_main', '+7 953 533-16-00');
+$phone_href = preg_replace('/[^0-9+]/', '', $phone);
+$address = vr_theme_setting('address_text', 'Республика Карелия, г. Петрозаводск, пр. Энергетиков, 33');
+$footer_note = vr_theme_setting('footer_secondary_text', 'Внимательное сопровождение и поддержка в сложный момент');
+$cookie_mode = vr_theme_setting('cookie_consent_mode', 'disabled');
 $cookie_banner_text = vr_theme_setting('cookie_banner_text', '');
-$cookie_accept = vr_theme_setting('cookie_button_accept', __('Принять', 'vetritual-modern'));
-$cookie_reject = vr_theme_setting('cookie_button_reject', '');
-$copyright = vr_theme_setting('copyright_text', get_bloginfo('name'));
+$cookie_accept = vr_theme_setting('cookie_button_accept', 'Хорошо');
+$copyright = trim(vr_theme_setting('copyright_text', 'vet-ritual-ptz.ru © 2026'));
 ?>
 
 <footer class="vr-footer">
-  <div class="vr-shell">
-    <div class="vr-footer__grid">
-      <section class="vr-footer__block">
-        <h2><?php esc_html_e('Контакты', 'vetritual-modern'); ?></h2>
-        <p><?php echo esc_html($address); ?></p>
-        <?php if (! empty($phone)) : ?>
-          <p><a href="tel:<?php echo esc_attr(str_replace(' ', '', $phone)); ?>"><?php echo esc_html($phone); ?></a></p>
-        <?php endif; ?>
-        <?php if (! empty($email)) : ?>
-          <p><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></p>
-        <?php endif; ?>
-      </section>
-
-      <section class="vr-footer__block">
-        <h2><?php esc_html_e('Быстрые ссылки', 'vetritual-modern'); ?></h2>
-        <p><a href="<?php echo esc_url(home_url('/o-nas/')); ?>"><?php esc_html_e('О нас', 'vetritual-modern'); ?></a></p>
-        <p><a href="<?php echo esc_url(home_url('/uslugi/')); ?>"><?php esc_html_e('Услуги', 'vetritual-modern'); ?></a></p>
-        <p><a href="<?php echo esc_url(home_url('/tseny/')); ?>"><?php esc_html_e('Цены', 'vetritual-modern'); ?></a></p>
-        <p><a href="<?php echo esc_url(home_url('/kontakty/')); ?>"><?php esc_html_e('Контакты', 'vetritual-modern'); ?></a></p>
-      </section>
+  <div class="vr-shell vr-footer__grid">
+    <div>
+      <a class="vr-brand vr-brand--footer" href="<?php echo esc_url(home_url('/')); ?>">
+        <span class="vr-brand__mark">
+          <img src="<?php echo esc_url(vr_theme_media_url('logo-mark.svg')); ?>" alt="" loading="lazy">
+        </span>
+        <span>
+          <strong><?php echo esc_html($site_name); ?></strong>
+          <small><?php echo esc_html($site_city); ?></small>
+        </span>
+      </a>
+      <p><?php echo esc_html($footer_note); ?></p>
+      <p>Информация на сайте носит информационный характер и не является публичной офертой.</p>
     </div>
-
-    <div class="vr-footer__bottom">
-      <p>&copy; <?php echo esc_html($copyright); ?></p>
+    <div>
+      <h2>Меню</h2>
+      <?php if (has_nav_menu('primary')) : ?>
+        <?php
+        wp_nav_menu(
+            array(
+                'theme_location' => 'primary',
+                'container' => false,
+                'items_wrap' => '%3$s',
+                'depth' => 1,
+                'fallback_cb' => false,
+            )
+        );
+        ?>
+      <?php else : ?>
+        <a href="<?php echo esc_url(home_url('/o-nas/')); ?>">О нас</a>
+        <a href="<?php echo esc_url(home_url('/uslugi/')); ?>">Услуги</a>
+        <a href="<?php echo esc_url(home_url('/tseny/')); ?>">Цены</a>
+        <a href="<?php echo esc_url(home_url('/kontakty/')); ?>">Контакты</a>
+      <?php endif; ?>
+    </div>
+    <div>
+      <h2>Услуги</h2>
+      <?php if (has_nav_menu('footer_services')) : ?>
+        <?php
+        wp_nav_menu(
+            array(
+                'theme_location' => 'footer_services',
+                'container' => false,
+                'items_wrap' => '%3$s',
+                'depth' => 1,
+                'fallback_cb' => false,
+            )
+        );
+        ?>
+      <?php else : ?>
+        <a href="<?php echo esc_url(home_url('/usyplenie-zhivotnyh/')); ?>">Усыпление животных</a>
+        <a href="<?php echo esc_url(home_url('/krematsyja-zhyvotnyh/')); ?>">Кремация животных</a>
+        <a href="<?php echo esc_url(home_url('/vyvoz-zhivotnyh/')); ?>">Вывоз животных</a>
+      <?php endif; ?>
+    </div>
+    <div>
+      <h2>Контакты</h2>
+      <a href="tel:<?php echo esc_attr($phone_href); ?>"><?php echo esc_html($phone); ?></a>
+      <span><?php echo esc_html($address); ?></span>
     </div>
   </div>
+  <div class="vr-shell vr-footer__bottom"><?php echo esc_html($copyright); ?></div>
 </footer>
 
-<?php if (! empty($cookie_banner_text)) : ?>
+<?php if ($cookie_mode !== 'disabled' && ! empty($cookie_banner_text)) : ?>
   <div class="vr-cookie-banner" data-vr-cookie-banner hidden>
-    <div class="vr-shell vr-cookie-banner__inner">
+    <div class="vr-cookie-banner__body">
+      <p><strong>Мы используем cookie</strong></p>
       <p><?php echo wp_kses_post($cookie_banner_text); ?></p>
-      <div class="vr-cookie-banner__actions">
-        <button type="button" class="vr-button" data-vr-cookie-accept><?php echo esc_html($cookie_accept); ?></button>
-      </div>
     </div>
+    <button class="vr-cookie-banner__button" type="button" data-vr-cookie-accept><?php echo esc_html($cookie_accept); ?></button>
   </div>
 <?php endif; ?>
 
@@ -56,4 +94,3 @@ $copyright = vr_theme_setting('copyright_text', get_bloginfo('name'));
 <?php wp_footer(); ?>
 </body>
 </html>
-
