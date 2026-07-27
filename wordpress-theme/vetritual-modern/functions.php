@@ -92,6 +92,88 @@ function vr_filter_document_title_parts($parts) {
 }
 add_filter('document_title_parts', 'vr_filter_document_title_parts');
 
+function vr_default_page_seo_meta() {
+    return array(
+        'home' => array('title' => 'Ритуальные услуги для животных в Петрозаводске | Vet Ritual', 'description' => 'Помогаем организовать усыпление, кремацию и вывоз домашних животных в Петрозаводске и Карелии. Круглосуточно консультируем по телефону.'),
+        'o-nas' => array('title' => 'О Vet Ritual — ритуальные услуги для животных в Петрозаводске', 'description' => 'Рассказываем о работе Vet Ritual: консультации, выезде, вывозе и организации кремации домашних животных в Петрозаводске и Карелии.'),
+        'uslugi' => array('title' => 'Услуги для животных в Петрозаводске | Vet Ritual', 'description' => 'Выберите формат помощи для питомца: усыпление на дому, общая или индивидуальная кремация, вывоз. Уточним порядок и стоимость по телефону.'),
+        'tseny' => array('title' => 'Цены на ритуальные услуги для животных | Vet Ritual', 'description' => 'Цены на усыпление и кремацию животных. Итоговую стоимость уточняем по весу питомца, адресу и выбранному формату услуги.'),
+        'kontakty' => array('title' => 'Контакты Vet Ritual в Петрозаводске', 'description' => 'Свяжитесь с Vet Ritual в любое время: ответим на вопросы об усыплении, кремации и вывозе домашних животных, согласуем формат помощи.'),
+        'usyplenie-zhivotnyh' => array('title' => 'Усыпление животных на дому в Петрозаводске | Vet Ritual', 'description' => 'Усыпление домашних животных на дому в Петрозаводске: консультация, спокойное прощание и бережное сопровождение. Уточните порядок и стоимость.'),
+        'krematsyja-zhyvotnyh' => array('title' => 'Кремация животных в Петрозаводске | Vet Ritual', 'description' => 'Общая и индивидуальная кремация домашних животных в Петрозаводске. Расскажем об условиях, вывозе и вариантах возврата урны.'),
+        'vyvoz-zhivotnyh' => array('title' => 'Вывоз животных в Петрозаводске | Vet Ritual', 'description' => 'Организуем аккуратный вывоз тела домашнего животного из дома или клиники в крематорий. Согласуем адрес, время и дальнейший формат услуги.'),
+        'usyplenie-koshek' => array('title' => 'Усыпление кошек на дому в Петрозаводске | Vet Ritual', 'description' => 'Усыпление кошек на дому в привычной обстановке. Спокойно объясним порядок процедуры, согласуем время приезда и стоимость.'),
+        'usyplenie-sobak' => array('title' => 'Усыпление собак на дому в Петрозаводске | Vet Ritual', 'description' => 'Усыпление собак на дому с бережным сопровождением владельца. Уточним порядок процедуры, время приезда и стоимость по телефону.'),
+        'obschaja-krematsyja' => array('title' => 'Общая кремация животных в Петрозаводске | Vet Ritual', 'description' => 'Общая кремация домашних животных без возврата праха. Объясним порядок услуги, организуем вывоз и согласуем стоимость.'),
+        'individualnaja-krematsyja' => array('title' => 'Индивидуальная кремация животных в Петрозаводске | Vet Ritual', 'description' => 'Индивидуальная кремация домашнего животного с возвратом урны. Расскажем об условиях, вывозе и согласуем порядок услуги.'),
+    );
+}
+
+function vr_migrate_seo_meta_and_primary_menu() {
+    if (get_option('vr_seo_menu_migration_20260727', false)) {
+        return;
+    }
+
+    foreach (vr_default_page_seo_meta() as $slug => $meta) {
+        $page = get_page_by_path($slug);
+        if (! $page instanceof WP_Post) {
+            continue;
+        }
+
+        if (vr_get_page_seo_meta($page->ID, '_vr_seo_title') === '') {
+            update_post_meta($page->ID, '_vr_seo_title', $meta['title']);
+        }
+        if (vr_get_page_seo_meta($page->ID, '_vr_meta_description') === '') {
+            update_post_meta($page->ID, '_vr_meta_description', $meta['description']);
+        }
+    }
+
+    $locations = get_nav_menu_locations();
+    $menu_id = ! empty($locations['primary']) ? (int) $locations['primary'] : 0;
+    $parent_page = get_page_by_path('uslugi');
+    if ($menu_id > 0 && $parent_page instanceof WP_Post) {
+        $items_by_object_id = array();
+        foreach ((array) wp_get_nav_menu_items($menu_id) as $item) {
+            $items_by_object_id[(int) $item->object_id] = $item;
+        }
+
+        $parent_item = $items_by_object_id[(int) $parent_page->ID] ?? null;
+        if ($parent_item && ! empty($parent_item->ID)) {
+            $service_slugs = array('usyplenie-zhivotnyh', 'krematsyja-zhyvotnyh', 'vyvoz-zhivotnyh', 'usyplenie-koshek', 'usyplenie-sobak', 'obschaja-krematsyja', 'individualnaja-krematsyja');
+            foreach ($service_slugs as $service_slug) {
+                $service_page = get_page_by_path($service_slug);
+                if (! $service_page instanceof WP_Post) {
+                    continue;
+                }
+
+                $service_item = $items_by_object_id[(int) $service_page->ID] ?? null;
+                if (! $service_item) {
+                    $service_item_id = wp_update_nav_menu_item(
+                        $menu_id,
+                        0,
+                        array(
+                            'menu-item-object-id' => $service_page->ID,
+                            'menu-item-object' => 'page',
+                            'menu-item-type' => 'post_type',
+                            'menu-item-status' => 'publish',
+                            'menu-item-parent' => (int) $parent_item->ID,
+                        )
+                    );
+                    if (is_wp_error($service_item_id) || ! $service_item_id) {
+                        continue;
+                    }
+                    $service_item = (object) array('ID' => (int) $service_item_id);
+                }
+
+                update_post_meta((int) $service_item->ID, '_menu_item_menu_item_parent', (int) $parent_item->ID);
+            }
+        }
+    }
+
+    update_option('vr_seo_menu_migration_20260727', '1', false);
+}
+add_action('after_setup_theme', 'vr_migrate_seo_meta_and_primary_menu', 40);
+
 function vr_add_page_seo_meta_box() {
     add_meta_box(
         'vr_page_seo',
