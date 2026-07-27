@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# ISPmanager starts non-interactive SSH sessions with a reduced PATH.
+export PATH="/usr/local/bin:${PATH}"
+
 die() {
   printf 'deploy-wordpress: %s\n' "$1" >&2
   exit 1
