@@ -1,0 +1,203 @@
+name: Deploy WordPress theme
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "wordpress-theme/**"
+      - "wordpress-plugins/**"
+      - "scripts/deploy-wordpress.sh"
+      - ".github/workflows/deploy-wordpress.yml"
+  workflow_dispatch:
+    inputs:
+      run_db_update:
+        description: "Run wp core update-db before switching the release"
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: production-wordpress-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy production release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Validate deployment inputs
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          WP_DOMAIN: ${{ secrets.WP_DOMAIN }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+
+          for name in DEPLOY_HOST DEPLOY_PORT DEPLOY_USER DEPLOY_PATH WP_DOMAIN DEPLOY_KNOWN_HOSTS; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Required GitHub Secret is missing: ${name}" >&2
+              exit 1
+            fi
+          done
+
+          [[ "$DEPLOY_PORT" =~ ^[0-9]+$ ]] || { echo "DEPLOY_PORT must be numeric" >&2; exit 1; }
+          (( DEPLOY_PORT >= 1 && DEPLOY_PORT <= 65535 )) || { echo "DEPLOY_PORT is out of range" >&2; exit 1; }
+          [[ "$DEPLOY_HOST" =~ ^[A-Za-z0-9.-]+$ ]] || { echo "DEPLOY_HOST contains unsupported characters" >&2; exit 1; }
+          [[ "$DEPLOY_USER" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "DEPLOY_USER contains unsupported characters" >&2; exit 1; }
+          [[ "$DEPLOY_PATH" =~ ^/[A-Za-z0-9._/-]+$ ]] || { echo "DEPLOY_PATH must be an absolute Unix path without spaces or shell metacharacters" >&2; exit 1; }
+          [[ "$DEPLOY_PATH" != *".."* && "$DEPLOY_PATH" != "/" ]] || { echo "DEPLOY_PATH is unsafe" >&2; exit 1; }
+          [[ "$WP_DOMAIN" =~ ^[A-Za-z0-9.-]+$ ]] || { echo "WP_DOMAIN must be a hostname without a URL scheme" >&2; exit 1; }
+
+      - name: PHP syntax check
+        run: |
+          set -euo pipefail
+          mapfile -t php_files < <(find wordpress-theme/vetritual-modern -type f -name "*.php" -print)
+          ((${#php_files[@]} > 0)) || { echo "No PHP files found in the theme" >&2; exit 1; }
+          for file in "${php_files[@]}"; do
+            php -l "$file"
+          done
+
+      - name: JavaScript syntax check
+        run: |
+          set -euo pipefail
+          mapfile -t js_files < <(find wordpress-theme/vetritual-modern -type f -name "*.js" -print)
+          for file in "${js_files[@]}"; do
+            node --check "$file"
+          done
+
+      - name: Print commit SHA
+        id: revision
+        run: echo "sha=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Build theme-only package
+        env:
+          PACKAGE_NAME: vetritual-wordpress-${{ github.sha }}.tar.gz
+        run: |
+          set -euo pipefail
+          stage_dir="${RUNNER_TEMP}/vetritual-wordpress-${GITHUB_SHA}"
+          mkdir -p "$stage_dir/wp-content/themes" "$stage_dir/wp-content/plugins"
+          cp -a wordpress-theme/vetritual-modern "$stage_dir/wp-content/themes/vetritual-modern"
+
+          if [[ -d wordpress-plugins ]]; then
+            cp -a wordpress-plugins/. "$stage_dir/wp-content/plugins/"
+          fi
+
+          if find "$stage_dir" -type l -print -quit | grep -q .; then
+            echo "Refusing to package symlinks" >&2
+            exit 1
+          fi
+          if find "$stage_dir" \( -name "wp-config.php" -o -path "*/uploads/*" \) -print -quit | grep -q .; then
+            echo "Refusing to package wp-config.php or uploads" >&2
+            exit 1
+          fi
+
+          tar --format=posix --create --gzip --file "${RUNNER_TEMP}/${PACKAGE_NAME}" \
+            --directory "$stage_dir" wp-content
+          sha256sum "${RUNNER_TEMP}/${PACKAGE_NAME}"
+
+      - name: Configure SSH agent
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          [[ -n "$DEPLOY_SSH_KEY" ]] || { echo "DEPLOY_SSH_KEY secret is missing" >&2; exit 1; }
+          eval "$(ssh-agent -s)"
+          ssh-add <(printf "%s\n" "$DEPLOY_SSH_KEY")
+          printf "SSH_AUTH_SOCK=%s\n" "$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          printf "SSH_AGENT_PID=%s\n" "$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+      - name: Install verified SSH host keys
+        env:
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          install -d -m 700 "$HOME/.ssh"
+          printf "%s\n" "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 644 "$HOME/.ssh/known_hosts"
+
+      - name: Upload release package and deploy script
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          PACKAGE_NAME: vetritual-wordpress-${{ github.sha }}.tar.gz
+        run: |
+          set -euo pipefail
+          remote_package="${DEPLOY_PATH}/shared/.incoming/${GITHUB_SHA}.tar.gz"
+          remote_script="${DEPLOY_PATH}/shared/deploy-wordpress.sh"
+          ssh -p "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "umask 077; mkdir -p '${DEPLOY_PATH}/shared/.incoming'"
+          scp -P "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${RUNNER_TEMP}/${PACKAGE_NAME}" \
+            "${DEPLOY_USER}@${DEPLOY_HOST}:${remote_package}"
+          scp -P "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            scripts/deploy-wordpress.sh \
+            "${DEPLOY_USER}@${DEPLOY_HOST}:${remote_script}.tmp.${GITHUB_SHA}"
+          ssh -p "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "mv -T '${remote_script}.tmp.${GITHUB_SHA}' '${remote_script}' && chmod 700 '${remote_script}'"
+
+      - name: Deploy atomic release
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          WP_DOMAIN: ${{ secrets.WP_DOMAIN }}
+          RUN_DB_UPDATE: ${{ github.event_name == 'workflow_dispatch' && inputs.run_db_update || false }}
+        run: |
+          set -euo pipefail
+          remote_script="${DEPLOY_PATH}/shared/deploy-wordpress.sh"
+          remote_package="${DEPLOY_PATH}/shared/.incoming/${GITHUB_SHA}.tar.gz"
+          ssh -p "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "bash '${remote_script}' deploy '${DEPLOY_PATH}' '${GITHUB_SHA}' '${WP_DOMAIN}' '${remote_package}' '${RUN_DB_UPDATE}'"
+
+      - name: HTTP smoke-check
+        env:
+          WP_DOMAIN: ${{ secrets.WP_DOMAIN }}
+        run: |
+          set -euo pipefail
+          for url in "https://${WP_DOMAIN}/" "https://${WP_DOMAIN}/wp-admin/"; do
+            curl --fail --silent --show-error --location --retry 3 --max-time 30 \
+              --proto '=https' --tlsv1.2 "$url" > /dev/null
+          done
+
+      - name: Roll back failed release
+        if: ${{ failure() }}
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set +e
+          remote_script="${DEPLOY_PATH}/shared/deploy-wordpress.sh"
+          ssh -p "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "bash '${remote_script}' rollback '${DEPLOY_PATH}' '${GITHUB_SHA}'"
+          exit 0
+
+      - name: Stop SSH agent
+        if: ${{ always() }}
+        run: |
+          set +e
+          if [[ -n "${SSH_AGENT_PID:-}" ]]; then
+            ssh-agent -k >/dev/null 2>&1
+          fi
