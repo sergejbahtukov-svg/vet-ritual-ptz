@@ -487,9 +487,9 @@ body.vr-site .vr-button--ghost {
 
 .vr-section--image::after {
   left: clamp(230px, 17vw, 310px);
-  bottom: 16px;
+  bottom: -4px;
   z-index: 1;
-  width: min(25vw, 360px);
+  width: min(23vw, 340px);
   height: 68%;
   background: url("/wa-data/public/site/vetritual-media/dogs-angel-mirrored.webp") center bottom / contain no-repeat;
   opacity: 0.74;
