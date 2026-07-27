@@ -56,6 +56,38 @@ state_value() {
   awk -F= -v wanted="$key" '$1 == wanted { print substr($0, index($0, "=") + 1); exit }' "$state_file"
 }
 
+remove_redundant_service_intro_content() {
+  local root="$1"
+
+  wp --path="$root" eval '
+    $migration_option = "vr_redundant_service_intro_content_removed_20260727";
+    if (! get_option($migration_option, false)) {
+      $service_slugs = array(
+        "uslugi",
+        "usyplenie-zhivotnyh",
+        "krematsyja-zhyvotnyh",
+        "vyvoz-zhivotnyh",
+        "usyplenie-koshek",
+        "usyplenie-sobak",
+        "obschaja-krematsyja",
+        "individualnaja-krematsyja",
+      );
+
+      foreach ($service_slugs as $service_slug) {
+        $service_page = get_page_by_path($service_slug);
+        if ($service_page instanceof WP_Post) {
+          wp_update_post(array(
+            "ID" => (int) $service_page->ID,
+            "post_content" => "",
+          ));
+        }
+      }
+
+      update_option($migration_option, "1", false);
+    }
+  ' --quiet
+}
+
 deploy_release() {
   local root="$1"
   local sha="$2"
@@ -143,6 +175,7 @@ deploy_release() {
   atomic_link "$new_theme" "$theme_link" "$sha"
   switched=1
   wp --path="$root" theme activate vetritual-modern --quiet
+  remove_redundant_service_intro_content "$root"
   write_state "$state_file" switched "$sha" "$previous_target" "$release"
 
   wp --path="$root" cache flush --quiet
