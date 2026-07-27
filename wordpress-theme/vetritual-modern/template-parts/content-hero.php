@@ -11,10 +11,19 @@ $queried_object = get_queried_object();
 if ($is_front_page) :
     $hero_title = 'Усыпление, кремация и вывоз животных с бережным сопровождением';
     $hero_subtitle = 'Работаем круглосуточно, выезжаем по Петрозаводску, Прионежскому району и дальним районам Карелии по согласованию.';
-    $hero_primary_cta_text = (string) vr_theme_setting('hero_primary_cta_text', 'Позвонить 24/7');
-    $hero_primary_cta_url = (string) vr_theme_setting('hero_primary_cta_url', 'tel:' . $phone_href);
-    $hero_secondary_cta_text = (string) vr_theme_setting('hero_secondary_cta_text', 'Посмотреть цены');
-    $hero_secondary_cta_url = (string) vr_theme_setting('hero_secondary_cta_url', home_url('/tseny/'));
+    $hero_kicker = vr_get_home_section_value('hero', 'kicker', 'Петрозаводск и Карелия · 24/7');
+    $hero_primary_cta_text = vr_get_home_section_value('hero', 'cta', 'Позвонить 24/7');
+    $hero_primary_cta_url = vr_get_home_section_value('hero', 'cta_url', 'tel:' . $phone_href);
+    $hero_secondary_cta_text = vr_get_home_section_value('hero', 'secondary_cta', 'Посмотреть цены');
+    $hero_secondary_cta_url = vr_get_home_section_value('hero', 'secondary_cta_url', home_url('/tseny/'));
+    $hero_facts = vr_get_home_section_lines(
+        'hero',
+        array(
+            '30–60 мин|приезд специалиста',
+            '20 мин|выполнение услуги',
+            '24/7|принимаем обращения',
+        )
+    );
     $hero_image_src = vr_theme_media_url('hero-pets-mobile.webp');
 
     if ($queried_object instanceof WP_Post) {
@@ -36,17 +45,18 @@ if ($is_front_page) :
     <section class="vr-hero">
       <div class="vr-shell vr-hero__grid">
         <div class="vr-hero__content">
-          <p class="vr-kicker">Петрозаводск и Карелия · 24/7</p>
+          <p class="vr-kicker"><?php echo esc_html($hero_kicker); ?></p>
           <h1><?php echo esc_html($hero_title); ?></h1>
           <p><?php echo esc_html($hero_subtitle); ?></p>
           <div class="vr-actions">
             <a class="vr-button" href="<?php echo esc_url($hero_primary_cta_url); ?>"><?php echo esc_html($hero_primary_cta_text); ?></a>
             <a class="vr-button vr-button--ghost" href="<?php echo esc_url($hero_secondary_cta_url); ?>"><?php echo esc_html($hero_secondary_cta_text); ?></a>
           </div>
-          <div class="vr-hero__facts" aria-label="Ключевая информация">
-            <span><strong>30-60 мин</strong> приезд специалиста</span>
-            <span><strong>20 мин</strong> выполнение услуги</span>
-            <span><strong>24/7</strong> принимаем обращения</span>
+          <div class="vr-hero__facts" aria-label="<?php echo esc_attr__('Ключевая информация', 'vetritual-modern'); ?>">
+            <?php foreach ($hero_facts as $hero_fact) : ?>
+              <?php $fact_parts = array_pad(explode('|', (string) $hero_fact, 2), 2, ''); ?>
+              <span><strong><?php echo esc_html(trim($fact_parts[0])); ?></strong><?php echo esc_html(' ' . trim($fact_parts[1])); ?></span>
+            <?php endforeach; ?>
           </div>
         </div>
         <div class="vr-hero__visual" aria-hidden="true">
@@ -70,6 +80,10 @@ if ($queried_object instanceof WP_Post) {
     }
 }
 
+$page_hero_kicker = vr_get_home_section_value('page-hero', 'kicker', 'Круглосуточно в Петрозаводске');
+$page_hero_cta_text = vr_get_home_section_value('page-hero', 'cta', 'Позвонить сейчас');
+$page_hero_cta_url = vr_get_home_section_value('page-hero', 'cta_url', 'tel:' . $phone_href);
+
 $hero_modifiers = array(
     'o-nas' => 'vr-page-hero--about',
     'uslugi' => 'vr-page-hero--services',
@@ -87,11 +101,11 @@ if (isset($hero_modifiers[$slug])) {
 
 <section class="<?php echo esc_attr($hero_class); ?>">
   <div class="vr-shell">
-    <p class="vr-kicker">Круглосуточно в Петрозаводске</p>
+    <p class="vr-kicker"><?php echo esc_html($page_hero_kicker); ?></p>
     <h1><?php echo esc_html($hero_title); ?></h1>
     <?php if ($hero_lead !== '') : ?>
       <p><?php echo esc_html($hero_lead); ?></p>
     <?php endif; ?>
-    <a class="vr-button" href="tel:<?php echo esc_attr($phone_href); ?>">Позвонить сейчас</a>
+    <a class="vr-button" href="<?php echo esc_url($page_hero_cta_url); ?>"><?php echo esc_html($page_hero_cta_text); ?></a>
   </div>
 </section>

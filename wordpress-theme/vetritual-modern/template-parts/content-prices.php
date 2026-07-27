@@ -8,13 +8,16 @@ $price_cards = array_values(array_filter($price_cards, 'is_array'));
 if (empty($price_cards)) {
     return;
 }
+$prices_kicker = vr_get_home_section_value('prices', 'kicker', 'Цены');
+$prices_title = vr_get_home_section_value('prices', 'title', 'Стоимость зависит от услуги и веса животного');
+$prices_note = vr_get_home_section_value('prices', 'content', 'Вывоз рассчитывается в зависимости от района и сложности работ. Точную стоимость можно уточнить по телефону.');
 ?>
 
 <section class="vr-section" id="prices">
   <div class="vr-shell">
     <div class="vr-section__head">
-      <p class="vr-kicker">Цены</p>
-      <h2>Стоимость зависит от услуги и веса животного</h2>
+      <p class="vr-kicker"><?php echo esc_html($prices_kicker); ?></p>
+      <h2><?php echo esc_html($prices_title); ?></h2>
     </div>
     <div class="vr-price-grid">
       <?php foreach ($price_cards as $index => $price_card) : ?>
@@ -30,6 +33,8 @@ if (empty($price_cards)) {
         </article>
       <?php endforeach; ?>
     </div>
-    <p class="vr-footnote">Вывоз рассчитывается в зависимости от района и сложности работ. Точную стоимость можно уточнить по телефону.</p>
+    <?php if ($prices_note !== '') : ?>
+      <p class="vr-footnote"><?php echo esc_html($prices_note); ?></p>
+    <?php endif; ?>
   </div>
 </section>

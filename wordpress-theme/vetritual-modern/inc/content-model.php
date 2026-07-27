@@ -73,6 +73,12 @@ function vr_register_content_model() {
             'menu_icon' => 'dashicons-format-quote',
             'supports' => array('title', 'editor', 'excerpt', 'page-attributes'),
         ),
+        'vr_home_section' => array(
+            'singular' => 'Блок главной страницы',
+            'plural' => 'Главная: блоки',
+            'menu_icon' => 'dashicons-screenoptions',
+            'supports' => array('title', 'editor', 'excerpt', 'page-attributes'),
+        ),
     );
 
     foreach ($content_types as $post_type => $config) {
@@ -461,3 +467,233 @@ function vr_get_reviews() {
 
     return $reviews;
 }
+
+function vr_register_home_section_meta() {
+    register_post_meta(
+        'vr_home_section',
+        '_vr_home_section_cta_label',
+        array(
+            'single' => true,
+            'type' => 'string',
+            'show_in_rest' => true,
+            'sanitize_callback' => 'sanitize_text_field',
+            'auth_callback' => function () {
+                return current_user_can('edit_posts');
+            },
+        )
+    );
+
+    register_post_meta(
+        'vr_home_section',
+        '_vr_home_section_cta_url',
+        array(
+            'single' => true,
+            'type' => 'string',
+            'show_in_rest' => true,
+            'sanitize_callback' => 'esc_url_raw',
+            'auth_callback' => function () {
+                return current_user_can('edit_posts');
+            },
+        )
+    );
+
+    register_post_meta(
+        'vr_home_section',
+        '_vr_home_section_secondary_cta_label',
+        array(
+            'single' => true,
+            'type' => 'string',
+            'show_in_rest' => true,
+            'sanitize_callback' => 'sanitize_text_field',
+            'auth_callback' => function () {
+                return current_user_can('edit_posts');
+            },
+        )
+    );
+
+    register_post_meta(
+        'vr_home_section',
+        '_vr_home_section_secondary_cta_url',
+        array(
+            'single' => true,
+            'type' => 'string',
+            'show_in_rest' => true,
+            'sanitize_callback' => 'esc_url_raw',
+            'auth_callback' => function () {
+                return current_user_can('edit_posts');
+            },
+        )
+    );
+}
+add_action('init', 'vr_register_home_section_meta', 6);
+
+function vr_add_home_section_meta_box() {
+    add_meta_box(
+        'vr_home_section_details',
+        __('Блок главной страницы', 'vetritual-modern'),
+        'vr_render_home_section_meta_box',
+        'vr_home_section',
+        'normal',
+        'default'
+    );
+}
+add_action('add_meta_boxes_vr_home_section', 'vr_add_home_section_meta_box');
+
+function vr_render_home_section_meta_box($post) {
+    wp_nonce_field('vr_save_home_section_meta', 'vr_home_section_nonce');
+    $cta_label = get_post_meta($post->ID, '_vr_home_section_cta_label', true);
+    $cta_url = get_post_meta($post->ID, '_vr_home_section_cta_url', true);
+    $secondary_cta_label = get_post_meta($post->ID, '_vr_home_section_secondary_cta_label', true);
+    $secondary_cta_url = get_post_meta($post->ID, '_vr_home_section_secondary_cta_url', true);
+    ?>
+    <p class="description"><?php esc_html_e('URL записи определяет блок на главной: services, about, prices, process, reviews или contact.', 'vetritual-modern'); ?></p>
+    <p>
+      <label for="vr_home_section_cta_label"><strong><?php esc_html_e('Текст кнопки / ссылки', 'vetritual-modern'); ?></strong></label><br>
+      <input id="vr_home_section_cta_label" name="vr_home_section_cta_label" type="text" class="widefat" value="<?php echo esc_attr((string) $cta_label); ?>">
+    </p>
+    <p>
+      <label for="vr_home_section_cta_url"><strong><?php esc_html_e('Ссылка основной кнопки', 'vetritual-modern'); ?></strong></label><br>
+      <input id="vr_home_section_cta_url" name="vr_home_section_cta_url" type="url" class="widefat" value="<?php echo esc_attr((string) $cta_url); ?>">
+    </p>
+    <p>
+      <label for="vr_home_section_secondary_cta_label"><strong><?php esc_html_e('Текст второй кнопки', 'vetritual-modern'); ?></strong></label><br>
+      <input id="vr_home_section_secondary_cta_label" name="vr_home_section_secondary_cta_label" type="text" class="widefat" value="<?php echo esc_attr((string) $secondary_cta_label); ?>">
+    </p>
+    <p>
+      <label for="vr_home_section_secondary_cta_url"><strong><?php esc_html_e('Ссылка второй кнопки', 'vetritual-modern'); ?></strong></label><br>
+      <input id="vr_home_section_secondary_cta_url" name="vr_home_section_secondary_cta_url" type="url" class="widefat" value="<?php echo esc_attr((string) $secondary_cta_url); ?>">
+    </p>
+    <p class="description"><?php esc_html_e('Заголовок — H2, краткое описание — надзаголовок, основной текст — пояснение или примечание.', 'vetritual-modern'); ?></p>
+    <?php
+}
+
+function vr_save_home_section_meta($post_id) {
+    if (get_post_type($post_id) !== 'vr_home_section') {
+        return;
+    }
+
+    if (! isset($_POST['vr_home_section_nonce']) || ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['vr_home_section_nonce'])), 'vr_save_home_section_meta')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE || ! current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    update_post_meta($post_id, '_vr_home_section_cta_label', sanitize_text_field((string) wp_unslash($_POST['vr_home_section_cta_label'] ?? '')));
+    update_post_meta($post_id, '_vr_home_section_cta_url', esc_url_raw((string) wp_unslash($_POST['vr_home_section_cta_url'] ?? '')));
+    update_post_meta($post_id, '_vr_home_section_secondary_cta_label', sanitize_text_field((string) wp_unslash($_POST['vr_home_section_secondary_cta_label'] ?? '')));
+    update_post_meta($post_id, '_vr_home_section_secondary_cta_url', esc_url_raw((string) wp_unslash($_POST['vr_home_section_secondary_cta_url'] ?? '')));
+}
+add_action('save_post_vr_home_section', 'vr_save_home_section_meta');
+
+function vr_get_home_section($slug) {
+    $slug = sanitize_title((string) $slug);
+    if ($slug === '') {
+        return null;
+    }
+
+    $section = get_page_by_path($slug, OBJECT, 'vr_home_section');
+    return $section instanceof WP_Post && 'publish' === $section->post_status ? $section : null;
+}
+
+function vr_get_home_section_value($slug, $field = 'title', $default = '') {
+    $section = vr_get_home_section($slug);
+    if (! $section instanceof WP_Post) {
+        return $default;
+    }
+
+    if ('kicker' === $field) {
+        return has_excerpt($section) ? get_the_excerpt($section) : $default;
+    }
+
+    if ('content' === $field) {
+        $content = trim(wp_strip_all_tags(strip_shortcodes($section->post_content)));
+        return $content !== '' ? $content : $default;
+    }
+
+    if ('cta' === $field) {
+        $cta = (string) get_post_meta($section->ID, '_vr_home_section_cta_label', true);
+        return $cta !== '' ? $cta : $default;
+    }
+
+    if ('cta_url' === $field) {
+        $cta_url = (string) get_post_meta($section->ID, '_vr_home_section_cta_url', true);
+        return $cta_url !== '' ? $cta_url : $default;
+    }
+
+    if ('secondary_cta' === $field) {
+        $cta = (string) get_post_meta($section->ID, '_vr_home_section_secondary_cta_label', true);
+        return $cta !== '' ? $cta : $default;
+    }
+
+    if ('secondary_cta_url' === $field) {
+        $cta_url = (string) get_post_meta($section->ID, '_vr_home_section_secondary_cta_url', true);
+        return $cta_url !== '' ? $cta_url : $default;
+    }
+
+    $title = get_the_title($section);
+    return $title !== '' ? $title : $default;
+}
+
+function vr_get_home_section_lines($slug, $default = array()) {
+    $section = vr_get_home_section($slug);
+    if (! $section instanceof WP_Post) {
+        return $default;
+    }
+
+    $lines = preg_split('/\R+/', wp_strip_all_tags(strip_shortcodes($section->post_content)));
+    $lines = array_values(array_filter(array_map('trim', (array) $lines)));
+    return ! empty($lines) ? $lines : $default;
+}
+
+function vr_seed_home_sections() {
+    if (get_option('vr_home_sections_seeded', false)) {
+        return;
+    }
+
+    $sections = array(
+        'hero' => array('title' => 'Главный экран', 'excerpt' => 'Петрозаводск и Карелия · 24/7', 'content' => "30–60 мин|приезд специалиста\n20 мин|выполнение услуги\n24/7|принимаем обращения", 'cta' => 'Позвонить 24/7', 'cta_url' => 'tel:+79535331600', 'secondary_cta' => 'Посмотреть цены', 'secondary_cta_url' => '/tseny/'),
+        'page-hero' => array('title' => 'Внутренние страницы', 'excerpt' => 'Круглосуточно в Петрозаводске', 'content' => '', 'cta' => 'Позвонить сейчас', 'cta_url' => 'tel:+79535331600', 'secondary_cta' => '', 'secondary_cta_url' => ''),
+        'services' => array('title' => 'Помогаем взять на себя сложные организационные шаги', 'excerpt' => 'Наши услуги', 'content' => '', 'cta' => 'Подробнее'),
+        'about' => array('title' => 'О крематории', 'excerpt' => '', 'content' => '', 'cta' => ''),
+        'prices' => array('title' => 'Стоимость зависит от услуги и веса животного', 'excerpt' => 'Цены', 'content' => 'Вывоз рассчитывается в зависимости от района и сложности работ. Точную стоимость можно уточнить по телефону.', 'cta' => ''),
+        'process' => array('title' => 'Понятный порядок, когда сил разбираться почти нет', 'excerpt' => 'Как проходит обращение', 'content' => '', 'cta' => ''),
+        'reviews' => array('title' => 'Отзывы о нашей работе', 'excerpt' => 'Клиенты говорят', 'content' => '', 'cta' => ''),
+        'contact' => array('title' => 'Позвоните в любое время суток', 'excerpt' => 'Контакты', 'content' => 'Вы можете уточнить детали услуги или выбрать урну. Мы отвечаем быстро и уважительно.', 'cta' => 'Получить консультацию'),
+    );
+
+    foreach ($sections as $slug => $data) {
+        $post = get_page_by_path($slug, OBJECT, 'vr_home_section');
+        if ($post instanceof WP_Post) {
+            continue;
+        }
+
+        $post_id = wp_insert_post(
+            array(
+                'post_type' => 'vr_home_section',
+                'post_status' => 'publish',
+                'post_name' => $slug,
+                'post_title' => $data['title'],
+                'post_excerpt' => $data['excerpt'],
+                'post_content' => $data['content'],
+            )
+        );
+        if (! is_wp_error($post_id)) {
+            $meta = array(
+                '_vr_home_section_cta_label' => $data['cta'] ?? '',
+                '_vr_home_section_cta_url' => $data['cta_url'] ?? '',
+                '_vr_home_section_secondary_cta_label' => $data['secondary_cta'] ?? '',
+                '_vr_home_section_secondary_cta_url' => $data['secondary_cta_url'] ?? '',
+            );
+            foreach ($meta as $key => $value) {
+                if ($value !== '') {
+                    update_post_meta($post_id, $key, $value);
+                }
+            }
+        }
+    }
+
+    update_option('vr_home_sections_seeded', '1', false);
+}
+add_action('init', 'vr_seed_home_sections', 20);

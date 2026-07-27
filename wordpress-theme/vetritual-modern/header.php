@@ -277,25 +277,18 @@ if (! class_exists('VR_Header_Nav_Walker')) {
     </button>
 
     <nav class="vr-nav" aria-label="<?php esc_attr_e('Основная навигация', 'vetritual-modern'); ?>" data-vr-menu>
-      <?php if (has_nav_menu('primary')) : ?>
-        <?php
-        wp_nav_menu(
-            array(
-                'theme_location' => 'primary',
-                'container' => false,
-                'items_wrap' => '%3$s',
-                'depth' => 2,
-                'fallback_cb' => false,
-                'walker' => new VR_Header_Nav_Walker(),
-            )
-        );
-        ?>
-      <?php else : ?>
-        <a href="<?php echo esc_url(home_url('/o-nas/')); ?>">О нас</a>
-        <a href="<?php echo esc_url(home_url('/uslugi/')); ?>">Услуги</a>
-        <a href="<?php echo esc_url(home_url('/tseny/')); ?>">Цены</a>
-        <a href="<?php echo esc_url(home_url('/kontakty/')); ?>">Контакты</a>
-      <?php endif; ?>
+      <?php
+      wp_nav_menu(
+          array(
+              'theme_location' => 'primary',
+              'container' => false,
+              'items_wrap' => '%3$s',
+              'depth' => 2,
+              'fallback_cb' => false,
+              'walker' => new VR_Header_Nav_Walker(),
+          )
+      );
+      ?>
       <a class="vr-nav__call" href="tel:<?php echo esc_attr($phone_href); ?>"><?php echo esc_html($phone_main); ?></a>
     </nav>
 

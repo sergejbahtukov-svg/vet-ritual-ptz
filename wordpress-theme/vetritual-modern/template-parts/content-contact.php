@@ -4,15 +4,13 @@ if (! defined('ABSPATH')) {
 }
 
 $contact_page = get_page_by_path('kontakty');
-$title = 'Контакты';
-$text = 'Вы можете уточнить детали услуги или выбрать урну. Мы отвечаем быстро и уважительно.';
+$title = vr_get_home_section_value('contact', 'kicker', 'Контакты');
+$headline = vr_get_home_section_value('contact', 'title', 'Позвоните в любое время суток');
+$text = vr_get_home_section_value('contact', 'content', 'Вы можете уточнить детали услуги или выбрать урну. Мы отвечаем быстро и уважительно.');
+$cta_label = vr_get_home_section_value('contact', 'cta', 'Получить консультацию');
 
 if ($contact_page instanceof WP_Post) {
-    $title = get_the_title($contact_page);
-
-    if (! empty($contact_page->post_content) && function_exists('vr_get_post_plain_text')) {
-        $text = vr_get_post_plain_text($contact_page);
-    }
+    $title = vr_get_home_section_value('contact', 'kicker', get_the_title($contact_page));
 }
 
 $phone = vr_theme_setting('phone_main', '+7 953 533-16-00');
@@ -30,13 +28,13 @@ if ($contact_href === '' && $email !== '') {
   <div class="vr-shell vr-contact">
     <div>
       <p class="vr-kicker"><?php echo esc_html($title); ?></p>
-      <h2><?php esc_html_e('Позвоните в любое время суток', 'vetritual-modern'); ?></h2>
+      <h2><?php echo esc_html($headline); ?></h2>
       <p><?php echo esc_html($text); ?></p>
     </div>
     <div class="vr-contact__panel">
       <a class="vr-phone-large" href="<?php echo esc_url($contact_href); ?>"><?php echo esc_html($phone !== '' ? $phone : antispambot($email)); ?></a>
       <span><?php echo esc_html($address); ?></span>
-      <a class="vr-button" href="<?php echo esc_url($contact_href); ?>"><?php esc_html_e('Получить консультацию', 'vetritual-modern'); ?></a>
+      <a class="vr-button" href="<?php echo esc_url($contact_href); ?>"><?php echo esc_html($cta_label); ?></a>
     </div>
   </div>
 </section>

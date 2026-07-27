@@ -8,13 +8,16 @@ $services = array_values(array_filter($services, 'is_array'));
 if (empty($services)) {
     return;
 }
+$services_kicker = vr_get_home_section_value('services', 'kicker', 'Наши услуги');
+$services_title = vr_get_home_section_value('services', 'title', 'Помогаем взять на себя сложные организационные шаги');
+$services_cta = vr_get_home_section_value('services', 'cta', 'Подробнее');
 ?>
 
 <section class="vr-section" id="services">
   <div class="vr-shell">
     <div class="vr-section__head">
-      <p class="vr-kicker">Наши услуги</p>
-      <h2>Помогаем взять на себя сложные организационные шаги</h2>
+      <p class="vr-kicker"><?php echo esc_html($services_kicker); ?></p>
+      <h2><?php echo esc_html($services_title); ?></h2>
     </div>
     <div class="vr-services-slider" data-vr-services-slider>
       <div class="vr-services" data-vr-services-track>
@@ -39,7 +42,7 @@ if (empty($services)) {
             </div>
             <h3><?php echo esc_html($service_title); ?></h3>
             <p><?php echo esc_html($service['text'] ?? ''); ?></p>
-            <span class="vr-service-card__more">Подробнее</span>
+            <span class="vr-service-card__more"><?php echo esc_html($services_cta); ?></span>
           </a>
         <?php endforeach; ?>
       </div>

@@ -25,6 +25,60 @@ function vr_setup_theme() {
 }
 add_action('after_setup_theme', 'vr_setup_theme');
 
+function vr_seed_default_menus() {
+    if (get_option('vr_default_menus_seeded', false)) {
+        return;
+    }
+
+    $locations = get_theme_mod('nav_menu_locations', array());
+    $locations = is_array($locations) ? $locations : array();
+    $definitions = array(
+        'primary' => array(
+            'name' => 'Основное меню',
+            'paths' => array('o-nas', 'uslugi', 'tseny', 'kontakty'),
+        ),
+        'footer_services' => array(
+            'name' => 'Услуги в подвале',
+            'paths' => array('usyplenie-zhivotnyh', 'krematsyja-zhyvotnyh', 'vyvoz-zhivotnyh'),
+        ),
+    );
+
+    foreach ($definitions as $location => $definition) {
+        if (! empty($locations[$location])) {
+            continue;
+        }
+
+        $menu_id = wp_create_nav_menu($definition['name']);
+        if (is_wp_error($menu_id)) {
+            continue;
+        }
+
+        foreach ($definition['paths'] as $path) {
+            $page = get_page_by_path($path);
+            if (! $page instanceof WP_Post) {
+                continue;
+            }
+
+            wp_update_nav_menu_item(
+                $menu_id,
+                0,
+                array(
+                    'menu-item-object-id' => $page->ID,
+                    'menu-item-object' => 'page',
+                    'menu-item-type' => 'post_type',
+                    'menu-item-status' => 'publish',
+                )
+            );
+        }
+
+        $locations[$location] = $menu_id;
+    }
+
+    set_theme_mod('nav_menu_locations', $locations);
+    update_option('vr_default_menus_seeded', '1', false);
+}
+add_action('after_setup_theme', 'vr_seed_default_menus', 30);
+
 function vr_route_alias_redirects() {
     if (is_admin() || wp_doing_ajax()) {
         return;
@@ -66,12 +120,6 @@ function vr_theme_settings_fields_sections() {
             'title' => __('Соцсети', 'vetritual-modern'),
             'callback' => function () {
                 echo '<p>' . esc_html__('Ссылки на сообщества и текст подвала.', 'vetritual-modern') . '</p>';
-            },
-        ),
-        'vr_hero' => array(
-            'title' => __('Глобальные CTA', 'vetritual-modern'),
-            'callback' => function () {
-                echo '<p>' . esc_html__('Кнопки по умолчанию. Заголовки, тексты и изображения редактируются в страницах WordPress.', 'vetritual-modern') . '</p>';
             },
         ),
         'vr_seo' => array(

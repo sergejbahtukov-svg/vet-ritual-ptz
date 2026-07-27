@@ -22,9 +22,9 @@ Use native WordPress content management while preserving the approved Vet Ritual
 | Header and footer navigation | Registered menus via `wp_nav_menu()` |
 | Services, price groups, feature cards, process steps, reviews | Existing `vr_*` custom post types and their metaboxes |
 | Editor-changeable images | Media Library or featured images |
-| Logo, contacts, analytics, verification tags, global CTA defaults, colour token | Theme options / Customizer |
+| Logo, contacts, analytics, verification tags, global CTA defaults, colour token | Settings API theme options |
 
-Do not use Customizer JSON arrays or `vr_theme_setting_array()` for page-section content. Do not hardcode editor-owned copy in a template: add a page field, a proper post type field, or a menu item instead.
+Do not use theme-option JSON arrays or `vr_theme_setting_array()` for page-section content. Do not hardcode editor-owned copy in a template: add a page field, a proper post type field, or a menu item instead.
 
 ## Theme work
 
@@ -39,4 +39,3 @@ Do not use Customizer JSON arrays or `vr_theme_setting_array()` for page-section
 2. Check home, service pages, 404, menus, and mobile layouts at 360, 768, and 1280 px on the local instance.
 3. Confirm user-visible Russian text is not mojibake.
 4. Commit only related files. The GitHub workflow deploys the theme atomically; do not modify WordPress core, `wp-config.php`, uploads, or deployment archives.
-

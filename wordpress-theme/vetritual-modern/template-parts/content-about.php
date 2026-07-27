@@ -10,13 +10,14 @@ if (! $about_page instanceof WP_Post && empty($about_features)) {
 }
 
 $about_page_content = $about_page instanceof WP_Post && ! empty($about_page->post_content) ? apply_filters('the_content', $about_page->post_content) : '';
-$about_title = $about_page instanceof WP_Post ? get_the_title($about_page) : '';
+$about_kicker = vr_get_home_section_value('about', 'kicker', 'О крематории');
+$about_title = vr_get_home_section_value('about', 'title', $about_page instanceof WP_Post ? get_the_title($about_page) : '');
 ?>
 
 <section class="vr-section" id="about">
   <div class="vr-shell">
     <div class="vr-section__head">
-      <p class="vr-kicker">О крематории</p>
+      <p class="vr-kicker"><?php echo esc_html($about_kicker); ?></p>
       <h2><?php echo esc_html($about_title); ?></h2>
     </div>
     <div class="vr-feature-grid">

@@ -15,7 +15,7 @@
 | Native content model | Pages, excerpts, featured images, CPTs | Page text belongs in WP Pages; repeatable editorial data belongs in CPTs or blocks, not Customizer JSON. | `inc/content-model.php`, `tools/seed-wordpress-content.php` |
 | Menus | `register_nav_menus()`, `wp_nav_menu()` | Header/footer navigation must come from WP menus. | `functions.php`, `header.php`, `footer.php` |
 | Media | Media Library, attachments, featured images | Editor-changeable images must be media/featured images. Theme assets are fallback only. | `assets/media/`, seed script, page templates |
-| Global settings | Customizer/theme mods only for global values | Allowed: phone, email, address, logo/site identity, analytics IDs, verification tags, limited global CTA defaults. | `inc/customizer.php`, `inc/helpers/theme-options.php` |
+| Global settings | Settings API/theme options only for global values | Allowed: phone, email, address, logo/site identity, analytics IDs, verification tags, limited global CTA defaults. | `inc/helpers/theme-options.php` |
 | Escaping/security | `esc_html`, `esc_url`, `wp_kses_post`, `sanitize_*` | Every dynamic value must be escaped at output and sanitized at save/import. | all templates/helpers |
 | Verification | PHP lint, HTTP smoke, Playwright 360/768/1280 | Do not claim visual readiness without browser checks. | `tools/`, local WP URL |
 
@@ -38,7 +38,7 @@ There is no dedicated WordPress skill in the available Codex skill list. Therefo
    - `vr_route_map`
    - `vr_get_route_info`
    - `vr_get_route_fallback_content`
-   - `*_json` Customizer content fields
+   - `*_json` theme-option content fields
    - `vr_theme_setting_array()` as a content source
    - mojibake strings such as `Рџ`, `Рґ`, `Р»`
 7. Keep source-of-truth boundaries:
@@ -46,7 +46,7 @@ There is no dedicated WordPress skill in the available Codex skill list. Therefo
    - Menus: navigation.
    - Media: editable images and featured images.
    - CPTs/blocks: repeatable services, prices, process, reviews.
-   - Customizer: global contacts, analytics, verification, global CTA fallback.
+   - Settings API options: global contacts, analytics, verification, global CTA fallback.
 8. Edit only source files, then sync to XAMPP theme.
 9. Run seed/import only with XAMPP PHP: `C:\xampp\php\php.exe`.
 10. Verify with lint, HTTP smoke, and responsive browser checks.
@@ -64,7 +64,7 @@ There is no dedicated WordPress skill in the available Codex skill list. Therefo
 ## Forbidden Shortcuts
 
 - Do not copy Smarty control logic into PHP templates.
-- Do not use Customizer JSON arrays for page sections.
+- Do not use theme-option JSON arrays for page sections.
 - Do not hardcode editable page text in templates when a WP Page/CPT can own it.
 - Do not add plugin dependency to solve base theme architecture.
 - Do not treat `preview.html` as proof of WordPress readiness.

@@ -20,12 +20,9 @@ function vr_theme_setting_defaults() {
         'social_whatsapp_url' => '',
         'business_hours_text' => 'Круглосуточно, без выходных',
         'footer_secondary_text' => 'Внимательное сопровождение и поддержка в сложный момент',
+        'footer_disclaimer' => 'Информация на сайте носит информационный характер и не является публичной офертой.',
         'theme_color' => '#fffdf8',
         'media_base_url' => '',
-        'hero_primary_cta_text' => 'Позвонить 24/7',
-        'hero_primary_cta_url' => 'tel:+79535331600',
-        'hero_secondary_cta_text' => 'Посмотреть цены',
-        'hero_secondary_cta_url' => '/tseny/',
         'default_meta_title' => 'Усыпление и кремация животных в Петрозаводске | Vet Ritual',
         'default_meta_description' => 'Бережное усыпление, кремация и вывоз домашних животных в Петрозаводске и Карелии. Круглосуточно, аккуратное сопровождение, понятные условия.',
         'og_image' => 'og-logo-share.png',
@@ -33,6 +30,7 @@ function vr_theme_setting_defaults() {
         'cookie_consent_mode' => 'disabled',
         'cookie_consent_key' => 'vr_cookie_consent',
         'cookie_banner_text' => 'Мы используем cookie, чтобы сайт работал стабильно и корректно учитывал согласие.',
+        'cookie_banner_heading' => 'Мы используем cookie',
         'cookie_button_accept' => 'Хорошо',
         'cookie_button_reject' => 'Позже',
         'yandex_metrika_id' => '',
@@ -74,11 +72,7 @@ function vr_theme_option_fields() {
         'social_telegram_url' => array('section' => 'vr_social', 'label' => 'Ссылка Telegram', 'type' => 'url'),
         'social_whatsapp_url' => array('section' => 'vr_social', 'label' => 'Ссылка WhatsApp', 'type' => 'url'),
         'footer_secondary_text' => array('section' => 'vr_social', 'label' => 'Текст в подвале', 'type' => 'text'),
-
-        'hero_primary_cta_text' => array('section' => 'vr_hero', 'label' => 'Главный CTA: текст', 'type' => 'text'),
-        'hero_primary_cta_url' => array('section' => 'vr_hero', 'label' => 'Главный CTA: ссылка', 'type' => 'url'),
-        'hero_secondary_cta_text' => array('section' => 'vr_hero', 'label' => 'Вторичный CTA: текст', 'type' => 'text'),
-        'hero_secondary_cta_url' => array('section' => 'vr_hero', 'label' => 'Вторичный CTA: ссылка', 'type' => 'url'),
+        'footer_disclaimer' => array('section' => 'vr_social', 'label' => 'Юридическое примечание в подвале', 'type' => 'textarea', 'rows' => 3),
 
         'public_domain_url' => array('section' => 'vr_seo', 'label' => 'Публичный домен', 'type' => 'url'),
         'default_meta_title' => array('section' => 'vr_seo', 'label' => 'Meta title по умолчанию', 'type' => 'text'),
@@ -93,6 +87,7 @@ function vr_theme_option_fields() {
         'cookie_consent_mode' => array('section' => 'vr_analytics', 'label' => 'Режим cookie consent', 'type' => 'text'),
         'cookie_consent_key' => array('section' => 'vr_analytics', 'label' => 'Cookie key', 'type' => 'text'),
         'cookie_banner_text' => array('section' => 'vr_analytics', 'label' => 'Текст cookie banner', 'type' => 'textarea', 'rows' => 4),
+        'cookie_banner_heading' => array('section' => 'vr_analytics', 'label' => 'Заголовок cookie banner', 'type' => 'text'),
         'cookie_button_accept' => array('section' => 'vr_analytics', 'label' => 'Кнопка согласия', 'type' => 'text'),
         'cookie_button_reject' => array('section' => 'vr_analytics', 'label' => 'Кнопка отказа', 'type' => 'text'),
         'yandex_metrika_id' => array('section' => 'vr_analytics', 'label' => 'Yandex Metrika ID', 'type' => 'text'),
@@ -123,8 +118,8 @@ function vr_theme_setting($key, $default = '') {
     return $fallback;
 }
 
-function vr_migrate_legacy_customizer_settings() {
-    if (get_option('vr_theme_customizer_migration_complete', false)) {
+function vr_migrate_legacy_theme_mod_settings() {
+    if (get_option('vr_theme_legacy_mod_migration_complete', false)) {
         return;
     }
 
@@ -149,9 +144,9 @@ function vr_migrate_legacy_customizer_settings() {
         update_option('vr_theme_options', $options);
     }
 
-    update_option('vr_theme_customizer_migration_complete', '1', false);
+    update_option('vr_theme_legacy_mod_migration_complete', '1', false);
 }
-add_action('after_setup_theme', 'vr_migrate_legacy_customizer_settings', 20);
+add_action('after_setup_theme', 'vr_migrate_legacy_theme_mod_settings', 20);
 
 function vr_theme_setting_bool($key, $default = false) {
     $value = vr_theme_setting($key, $default ? '1' : '0');

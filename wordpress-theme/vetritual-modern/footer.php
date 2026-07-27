@@ -9,10 +9,19 @@ $phone = vr_theme_setting('phone_main', '+7 953 533-16-00');
 $phone_href = preg_replace('/[^0-9+]/', '', $phone);
 $address = vr_theme_setting('address_text', 'Республика Карелия, г. Петрозаводск, пр. Энергетиков, 33');
 $footer_note = vr_theme_setting('footer_secondary_text', 'Внимательное сопровождение и поддержка в сложный момент');
+$footer_disclaimer = vr_theme_setting('footer_disclaimer', 'Информация на сайте носит информационный характер и не является публичной офертой.');
 $cookie_mode = vr_theme_setting('cookie_consent_mode', 'disabled');
 $cookie_banner_text = vr_theme_setting('cookie_banner_text', '');
+$cookie_banner_heading = vr_theme_setting('cookie_banner_heading', 'Мы используем cookie');
 $cookie_accept = vr_theme_setting('cookie_button_accept', 'Хорошо');
 $copyright = trim(vr_theme_setting('copyright_text', 'vet-ritual-ptz.ru © 2026'));
+$menu_locations = get_nav_menu_locations();
+$primary_menu = ! empty($menu_locations['primary']) ? wp_get_nav_menu_object($menu_locations['primary']) : null;
+$services_menu = ! empty($menu_locations['footer_services']) ? wp_get_nav_menu_object($menu_locations['footer_services']) : null;
+$primary_menu_name = $primary_menu instanceof WP_Term ? $primary_menu->name : __('Меню', 'vetritual-modern');
+$services_menu_name = $services_menu instanceof WP_Term ? $services_menu->name : __('Услуги', 'vetritual-modern');
+$contact_page = get_page_by_path('kontakty');
+$contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_page) : __('Контакты', 'vetritual-modern');
 ?>
 
 <footer class="vr-footer">
@@ -28,51 +37,40 @@ $copyright = trim(vr_theme_setting('copyright_text', 'vet-ritual-ptz.ru © 2026'
         </span>
       </a>
       <p><?php echo esc_html($footer_note); ?></p>
-      <p>Информация на сайте носит информационный характер и не является публичной офертой.</p>
-    </div>
-    <div>
-      <h2>Меню</h2>
-      <?php if (has_nav_menu('primary')) : ?>
-        <?php
-        wp_nav_menu(
-            array(
-                'theme_location' => 'primary',
-                'container' => false,
-                'items_wrap' => '%3$s',
-                'depth' => 1,
-                'fallback_cb' => false,
-            )
-        );
-        ?>
-      <?php else : ?>
-        <a href="<?php echo esc_url(home_url('/o-nas/')); ?>">О нас</a>
-        <a href="<?php echo esc_url(home_url('/uslugi/')); ?>">Услуги</a>
-        <a href="<?php echo esc_url(home_url('/tseny/')); ?>">Цены</a>
-        <a href="<?php echo esc_url(home_url('/kontakty/')); ?>">Контакты</a>
+      <?php if ($footer_disclaimer !== '') : ?>
+        <p><?php echo esc_html($footer_disclaimer); ?></p>
       <?php endif; ?>
     </div>
     <div>
-      <h2>Услуги</h2>
-      <?php if (has_nav_menu('footer_services')) : ?>
-        <?php
-        wp_nav_menu(
-            array(
-                'theme_location' => 'footer_services',
-                'container' => false,
-                'items_wrap' => '%3$s',
-                'depth' => 1,
-                'fallback_cb' => false,
-            )
-        );
-        ?>
-      <?php else : ?>
-        <a href="<?php echo esc_url(home_url('/usyplenie-zhivotnyh/')); ?>">Усыпление животных</a>
-        <a href="<?php echo esc_url(home_url('/krematsyja-zhyvotnyh/')); ?>">Кремация животных</a>
-        <a href="<?php echo esc_url(home_url('/vyvoz-zhivotnyh/')); ?>">Вывоз животных</a>
-      <?php endif; ?>
+      <h2><?php echo esc_html($primary_menu_name); ?></h2>
+      <?php
+      wp_nav_menu(
+          array(
+              'theme_location' => 'primary',
+              'container' => false,
+              'items_wrap' => '%3$s',
+              'depth' => 1,
+              'fallback_cb' => false,
+          )
+      );
+      ?>
     </div>
     <div>
-      <h2>Контакты</h2>
+      <h2><?php echo esc_html($services_menu_name); ?></h2>
+      <?php
+      wp_nav_menu(
+          array(
+              'theme_location' => 'footer_services',
+              'container' => false,
+              'items_wrap' => '%3$s',
+              'depth' => 1,
+              'fallback_cb' => false,
+          )
+      );
+      ?>
+    </div>
+    <div>
+      <h2><?php echo esc_html($contact_heading); ?></h2>
       <a href="tel:<?php echo esc_attr($phone_href); ?>"><?php echo esc_html($phone); ?></a>
       <span><?php echo esc_html($address); ?></span>
     </div>
@@ -83,7 +81,7 @@ $copyright = trim(vr_theme_setting('copyright_text', 'vet-ritual-ptz.ru © 2026'
 <?php if ($cookie_mode !== 'disabled' && ! empty($cookie_banner_text)) : ?>
   <div class="vr-cookie-banner" data-vr-cookie-banner hidden>
     <div class="vr-cookie-banner__body">
-      <p><strong>Мы используем cookie</strong></p>
+      <p><strong><?php echo esc_html($cookie_banner_heading); ?></strong></p>
       <p><?php echo wp_kses_post($cookie_banner_text); ?></p>
     </div>
     <button class="vr-cookie-banner__button" type="button" data-vr-cookie-accept><?php echo esc_html($cookie_accept); ?></button>

@@ -35,10 +35,10 @@ The WordPress theme must use native WordPress architecture:
 - navigation belongs in registered WordPress menus and is rendered with `wp_nav_menu()`;
 - images that editors change belong in the Media Library, featured images, blocks, or native attachment fields;
 - repeatable editorial entities such as services, prices, reviews, FAQ, and process steps should use core blocks, patterns, custom post types, or proper metabox/ACF-style fields, not JSON strings in Customizer;
-- Customizer/theme options are allowed only for global theme-level settings: logo/site identity, phone, email, address, analytics IDs, verification tags, color tokens if needed, and limited global CTA defaults;
+- Settings API/theme options are allowed only for global theme-level settings: logo/site identity, phone, email, address, analytics IDs, verification tags, color tokens if needed, and limited global CTA defaults;
 - template parts may provide fixed visual wrappers matching Webasyst, but the editable content inside them must come from native WordPress content sources.
 
-If an existing pass introduced `*_json` Customizer fields or `vr_theme_setting_array()` as the source of page/section content, treat that as transitional debt. The correct fix is to migrate those fields back to Pages, menus, media, blocks, or CPT/metabox data while preserving the Webasyst visual contract.
+If an existing pass introduced `*_json` theme-option fields or `vr_theme_setting_array()` as the source of page/section content, treat that as transitional debt. The correct fix is to migrate those fields back to Pages, menus, media, blocks, or CPT/metabox data while preserving the Webasyst visual contract.
 
 ## WordPress SEO workflow
 

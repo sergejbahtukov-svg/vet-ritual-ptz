@@ -7,13 +7,15 @@ $process_steps = function_exists('vr_get_process_steps') ? vr_get_process_steps(
 if (empty($process_steps)) {
     return;
 }
+$process_kicker = vr_get_home_section_value('process', 'kicker', 'Как проходит обращение');
+$process_title = vr_get_home_section_value('process', 'title', 'Понятный порядок, когда сил разбираться почти нет');
 ?>
 
 <section class="vr-section vr-section--image">
   <div class="vr-shell vr-process">
     <div>
-      <p class="vr-kicker">Как проходит обращение</p>
-      <h2>Понятный порядок, когда сил разбираться почти нет</h2>
+      <p class="vr-kicker"><?php echo esc_html($process_kicker); ?></p>
+      <h2><?php echo esc_html($process_title); ?></h2>
     </div>
     <ol>
       <?php foreach ($process_steps as $process_step) : ?>
