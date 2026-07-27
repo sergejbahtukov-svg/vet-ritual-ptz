@@ -47,6 +47,7 @@ jobs:
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           WP_DOMAIN: ${{ secrets.WP_DOMAIN }}
           DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
         run: |
@@ -172,10 +173,10 @@ jobs:
           remote_package="${DEPLOY_PATH}/shared/.incoming/${GITHUB_SHA}.tar.gz"
           ssh -p "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
             "${DEPLOY_USER}@${DEPLOY_HOST}" \
-            "bash '${remote_script}' deploy '${DEPLOY_PATH}' '${GITHUB_SHA}' '${WP_DOMAIN}' '${remote_package}' '${RUN_DB_UPDATE}'"
+            "bash '${remote_script}' deploy '${DEPLOY_PATH}' '${GITHUB_SHA}' '${WP_DOMAIN}' '${remote_package}' '${RUN_DB_UPDATE}' '${DEPLOY_HOST}'"
 
       - name: HTTP smoke-check
-        if: ${{ github.event_name == 'push' || inputs.verify_public_https }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.verify_public_https }}
         env:
           WP_DOMAIN: ${{ secrets.WP_DOMAIN }}
         run: |

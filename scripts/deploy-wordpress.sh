@@ -62,6 +62,7 @@ deploy_release() {
   local domain="$3"
   local package="$4"
   local db_update="${5:-false}"
+  local server_host="$6"
   local deploy_dir
   local releases
   local backups
@@ -76,6 +77,7 @@ deploy_release() {
   validate_root "$root"
   [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || die "release id must be a full Git SHA"
   [[ "$domain" =~ ^[A-Za-z0-9.-]+$ ]] || die "domain must be a hostname without a URL scheme"
+  [[ "$server_host" =~ ^[A-Za-z0-9.-]+$ ]] || die "server host must be a hostname or IP address"
   [[ -f "$package" ]] || die "release package is missing: $package"
   [[ -f "$root/wp-load.php" && -d "$root/wp-content/themes" ]] || die "WordPress root is invalid: $root"
   require_command tar
@@ -137,7 +139,7 @@ deploy_release() {
 
   wp --path="$root" cache flush --quiet
   if ! curl --fail --silent --show-error --location --max-time 30 \
-    --header "Host: ${domain}" "http://127.0.0.1/" > /dev/null; then
+    --connect-to "${domain}:80:${server_host}:80" "http://${domain}/" > /dev/null; then
     if [[ -n "$previous_target" ]]; then
       atomic_link "$previous_target" "$theme_link" "smoke-${sha}"
       switched=0
@@ -195,8 +197,8 @@ rollback_release() {
 
 case "${1:-}" in
   deploy)
-    [[ $# -ge 5 ]] || die "usage: $0 deploy ROOT SHA DOMAIN PACKAGE [true|false]"
-    deploy_release "$2" "$3" "$4" "$5" "${6:-false}"
+    [[ $# -eq 7 ]] || die "usage: $0 deploy ROOT SHA DOMAIN PACKAGE true|false SERVER_HOST"
+    deploy_release "$2" "$3" "$4" "$5" "$6" "$7"
     ;;
   rollback)
     [[ $# -eq 3 ]] || die "usage: $0 rollback ROOT SHA"
