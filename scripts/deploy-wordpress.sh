@@ -71,6 +71,7 @@ deploy_release() {
   local release
   local new_theme
   local previous_target=""
+  local previous_active_theme
   local backup_file
   local switched=0
 
@@ -91,6 +92,8 @@ deploy_release() {
   state_file="$deploy_dir/.deploy-state"
   theme_link="$root/wp-content/themes/vetritual-modern"
   release="$releases/$sha"
+  previous_active_theme="$(wp --path="$root" option get stylesheet --quiet)"
+  [[ "$previous_active_theme" =~ ^[A-Za-z0-9_-]+$ ]] || die "active WordPress theme slug is invalid"
 
   mkdir -p "$releases" "$backups"
   exec 9>"$deploy_dir/.deploy.lock"
@@ -111,6 +114,10 @@ deploy_release() {
       set +e
       atomic_link "$previous_target" "$theme_link" "error-${sha}" >/dev/null 2>&1 || true
       write_state "$state_file" rolled_back "$sha" "$previous_target" "$release" >/dev/null 2>&1 || true
+    fi
+    if [[ "$switched" == "1" && "$previous_active_theme" != "vetritual-modern" ]]; then
+      set +e
+      wp --path="$root" theme activate "$previous_active_theme" --quiet >/dev/null 2>&1 || true
     fi
     exit "$exit_code"
   }
@@ -135,6 +142,7 @@ deploy_release() {
   write_state "$state_file" prepared "$sha" "$previous_target" "$release"
   atomic_link "$new_theme" "$theme_link" "$sha"
   switched=1
+  wp --path="$root" theme activate vetritual-modern --quiet
   write_state "$state_file" switched "$sha" "$previous_target" "$release"
 
   wp --path="$root" cache flush --quiet
