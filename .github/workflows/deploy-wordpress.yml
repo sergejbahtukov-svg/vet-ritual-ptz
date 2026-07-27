@@ -16,6 +16,11 @@ on:
         required: true
         default: false
         type: boolean
+      verify_public_https:
+        description: "Check the public HTTPS site after deployment"
+        required: true
+        default: false
+        type: boolean
 
 concurrency:
   group: production-wordpress-deploy
@@ -170,6 +175,7 @@ jobs:
             "bash '${remote_script}' deploy '${DEPLOY_PATH}' '${GITHUB_SHA}' '${WP_DOMAIN}' '${remote_package}' '${RUN_DB_UPDATE}'"
 
       - name: HTTP smoke-check
+        if: ${{ github.event_name == 'push' || inputs.verify_public_https }}
         env:
           WP_DOMAIN: ${{ secrets.WP_DOMAIN }}
         run: |
