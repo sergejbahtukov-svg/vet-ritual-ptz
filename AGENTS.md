@@ -15,6 +15,8 @@ When template changes do not appear locally, clear the compiled Webasyst cache b
 
 ## WordPress migration architecture
 
+This repository includes the project-local skill `skills/wordpress-vetritual/SKILL.md`. Read and follow it before WordPress implementation; it supplements the native checklist below.
+
 Before any WordPress migration or theme remediation work, agents must explicitly check for available WordPress-relevant skills/tools/plugins. If a dedicated WordPress skill/tool is available, load and follow it before touching files. If no dedicated WordPress skill/tool is available, state that clearly and proceed with the native WordPress checklist below instead of inventing ad hoc content architecture.
 
 Mandatory WordPress project entrypoint before implementation:

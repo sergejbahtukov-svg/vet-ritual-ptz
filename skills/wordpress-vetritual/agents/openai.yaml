@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vet Ritual WordPress"
+  short_description: "Native WordPress workflow for Vet Ritual"
+  default_prompt: "Use $wordpress-vetritual to update the Vet Ritual WordPress theme safely."
