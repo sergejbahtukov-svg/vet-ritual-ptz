@@ -15,11 +15,6 @@ $cookie_banner_text = vr_theme_setting('cookie_banner_text', '');
 $cookie_banner_heading = vr_theme_setting('cookie_banner_heading', 'Мы используем cookie');
 $cookie_accept = vr_theme_setting('cookie_button_accept', 'Хорошо');
 $copyright = trim(vr_theme_setting('copyright_text', 'vet-ritual-ptz.ru © 2026'));
-$menu_locations = get_nav_menu_locations();
-$primary_menu = ! empty($menu_locations['primary']) ? wp_get_nav_menu_object($menu_locations['primary']) : null;
-$services_menu = ! empty($menu_locations['footer_services']) ? wp_get_nav_menu_object($menu_locations['footer_services']) : null;
-$primary_menu_name = $primary_menu instanceof WP_Term ? $primary_menu->name : __('Меню', 'vetritual-modern');
-$services_menu_name = $services_menu instanceof WP_Term ? $services_menu->name : __('Услуги', 'vetritual-modern');
 $contact_page = get_page_by_path('kontakty');
 $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_page) : __('Контакты', 'vetritual-modern');
 ?>
@@ -41,8 +36,7 @@ $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_pag
         <p><?php echo esc_html($footer_disclaimer); ?></p>
       <?php endif; ?>
     </div>
-    <div>
-      <h2><?php echo esc_html($primary_menu_name); ?></h2>
+    <nav aria-label="<?php esc_attr_e('Основная навигация', 'vetritual-modern'); ?>">
       <?php
       wp_nav_menu(
           array(
@@ -54,9 +48,8 @@ $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_pag
           )
       );
       ?>
-    </div>
-    <div>
-      <h2><?php echo esc_html($services_menu_name); ?></h2>
+    </nav>
+    <nav aria-label="<?php esc_attr_e('Услуги', 'vetritual-modern'); ?>">
       <?php
       wp_nav_menu(
           array(
@@ -68,7 +61,7 @@ $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_pag
           )
       );
       ?>
-    </div>
+    </nav>
     <div>
       <h2><?php echo esc_html($contact_heading); ?></h2>
       <a href="tel:<?php echo esc_attr($phone_href); ?>"><?php echo esc_html($phone); ?></a>

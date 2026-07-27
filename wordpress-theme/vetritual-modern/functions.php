@@ -25,6 +25,130 @@ function vr_setup_theme() {
 }
 add_action('after_setup_theme', 'vr_setup_theme');
 
+function vr_get_page_seo_meta($post_id, $meta_key) {
+    return trim(wp_strip_all_tags((string) get_post_meta((int) $post_id, $meta_key, true)));
+}
+
+function vr_get_document_meta_description($post = null) {
+    if (! $post instanceof WP_Post && is_singular()) {
+        $post = get_queried_object();
+    }
+
+    if ($post instanceof WP_Post) {
+        $custom_description = vr_get_page_seo_meta($post->ID, '_vr_meta_description');
+        if ($custom_description !== '') {
+            return $custom_description;
+        }
+
+        $excerpt = has_excerpt($post) ? get_the_excerpt($post) : '';
+        if ($excerpt !== '') {
+            return trim(wp_strip_all_tags($excerpt));
+        }
+
+        $content = vr_get_post_plain_text($post);
+        if ($content !== '') {
+            return $content;
+        }
+    }
+
+    return trim((string) vr_theme_setting('default_meta_description', get_bloginfo('description')));
+}
+
+function vr_filter_document_title_parts($parts) {
+    $site_name = trim((string) vr_theme_setting('site_name', get_bloginfo('name')));
+
+    if (is_front_page()) {
+        $front_page_id = (int) get_option('page_on_front');
+        $front_page_title = $front_page_id > 0 ? vr_get_page_seo_meta($front_page_id, '_vr_seo_title') : '';
+        $parts['title'] = $front_page_title !== ''
+            ? $front_page_title
+            : trim((string) vr_theme_setting('default_meta_title', $site_name));
+        $parts['site'] = '';
+        $parts['tagline'] = '';
+        return $parts;
+    }
+
+    if (! is_singular()) {
+        return $parts;
+    }
+
+    $post = get_queried_object();
+    if (! $post instanceof WP_Post) {
+        return $parts;
+    }
+
+    $custom_title = vr_get_page_seo_meta($post->ID, '_vr_seo_title');
+    if ($custom_title !== '') {
+        $parts['title'] = $custom_title;
+        $parts['site'] = '';
+        $parts['tagline'] = '';
+        return $parts;
+    }
+
+    $parts['title'] = get_the_title($post);
+    $parts['site'] = $site_name;
+    $parts['tagline'] = '';
+    return $parts;
+}
+add_filter('document_title_parts', 'vr_filter_document_title_parts');
+
+function vr_add_page_seo_meta_box() {
+    add_meta_box(
+        'vr_page_seo',
+        __('SEO страницы', 'vetritual-modern'),
+        'vr_render_page_seo_meta_box',
+        'page',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes_page', 'vr_add_page_seo_meta_box');
+
+function vr_render_page_seo_meta_box($post) {
+    wp_nonce_field('vr_save_page_seo_meta', 'vr_page_seo_nonce');
+    $title = vr_get_page_seo_meta($post->ID, '_vr_seo_title');
+    $description = vr_get_page_seo_meta($post->ID, '_vr_meta_description');
+    ?>
+    <p>
+      <label for="vr_seo_title"><strong><?php esc_html_e('Заголовок вкладки (title)', 'vetritual-modern'); ?></strong></label><br>
+      <input id="vr_seo_title" name="vr_seo_title" class="widefat" type="text" value="<?php echo esc_attr($title); ?>">
+    </p>
+    <p>
+      <label for="vr_meta_description"><strong><?php esc_html_e('Meta description', 'vetritual-modern'); ?></strong></label><br>
+      <textarea id="vr_meta_description" name="vr_meta_description" class="widefat" rows="3"><?php echo esc_textarea($description); ?></textarea>
+    </p>
+    <p class="description"><?php esc_html_e('Если поля пустые, тема использует заголовок и отрывок страницы. Тексты не попадают в навигацию.', 'vetritual-modern'); ?></p>
+    <?php
+}
+
+function vr_save_page_seo_meta($post_id) {
+    if (
+        ! isset($_POST['vr_page_seo_nonce'])
+        || ! wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['vr_page_seo_nonce'])), 'vr_save_page_seo_meta')
+        || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+        || wp_is_post_revision($post_id)
+        || ! current_user_can('edit_post', $post_id)
+    ) {
+        return;
+    }
+
+    $fields = array(
+        '_vr_seo_title' => 'vr_seo_title',
+        '_vr_meta_description' => 'vr_meta_description',
+    );
+
+    foreach ($fields as $meta_key => $field_name) {
+        $value = isset($_POST[$field_name]) ? sanitize_text_field(wp_unslash($_POST[$field_name])) : '';
+        if ($value === '') {
+            delete_post_meta($post_id, $meta_key);
+            continue;
+        }
+
+        update_post_meta($post_id, $meta_key, $value);
+    }
+}
+add_action('save_post_page', 'vr_save_page_seo_meta');
+
 function vr_seed_default_menus() {
     if (get_option('vr_default_menus_seeded', false)) {
         return;

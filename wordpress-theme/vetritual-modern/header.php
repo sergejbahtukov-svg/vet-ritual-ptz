@@ -8,20 +8,12 @@
   $is_404 = is_404();
   $queried_object = get_queried_object();
   $title = wp_get_document_title();
-  $description = (string) get_bloginfo('description');
+  $description = vr_get_document_meta_description($queried_object);
   $canonical = home_url('/');
 
   if ($queried_object instanceof WP_Post) {
-      $title = get_the_title($queried_object);
-      $description = has_excerpt($queried_object) ? get_the_excerpt($queried_object) : vr_get_post_plain_text($queried_object);
       $canonical = get_permalink($queried_object);
   } elseif (is_front_page()) {
-      $front_id = (int) get_option('page_on_front');
-      if ($front_id > 0) {
-          $front_post = get_post($front_id);
-          $title = get_the_title($front_id);
-          $description = has_excerpt($front_id) ? get_the_excerpt($front_id) : vr_get_post_plain_text($front_post);
-      }
       $canonical = home_url('/');
   }
 
@@ -29,10 +21,6 @@
       $title = __('Страница не найдена', 'vetritual-modern');
       $description = __('Запрошенная страница не найдена.', 'vetritual-modern');
       $canonical = '';
-  }
-
-  if ($description === '') {
-      $description = (string) vr_theme_setting('site_description', get_bloginfo('description'));
   }
 
   $canonical = $canonical ? esc_url_raw($canonical) : '';

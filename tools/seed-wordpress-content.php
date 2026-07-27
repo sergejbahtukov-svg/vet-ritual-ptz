@@ -80,6 +80,18 @@ function vr_seed_update_post_meta($post_id, array $meta) {
     }
 }
 
+function vr_seed_add_post_meta_if_empty($post_id, array $meta) {
+    if (! $post_id) {
+        return;
+    }
+
+    foreach ($meta as $key => $value) {
+        if (trim((string) get_post_meta((int) $post_id, $key, true)) === '') {
+            update_post_meta((int) $post_id, $key, $value);
+        }
+    }
+}
+
 function vr_seed_theme_asset_path($file_name) {
     $candidates = array(
         get_template_directory() . '/assets/media/' . $file_name,
@@ -144,7 +156,7 @@ function vr_seed_attachment_from_theme_asset($file_name, $title, $alt) {
     return (int) $attachment_id;
 }
 
-function vr_seed_menu($name, $location, array $slugs, array $page_ids) {
+function vr_seed_menu($name, $location, array $slugs, array $page_ids, array $child_slugs = array(), $parent_slug = '') {
     $menu = wp_get_nav_menu_object($name);
     $menu_id = $menu ? (int) $menu->term_id : wp_create_nav_menu($name);
 
@@ -153,17 +165,17 @@ function vr_seed_menu($name, $location, array $slugs, array $page_ids) {
     }
 
     $existing_items = wp_get_nav_menu_items($menu_id);
-    $existing_object_ids = array();
+    $items_by_object_id = array();
     foreach ((array) $existing_items as $item) {
-        $existing_object_ids[] = (int) $item->object_id;
+        $items_by_object_id[(int) $item->object_id] = $item;
     }
 
     foreach ($slugs as $slug) {
-        if (empty($page_ids[$slug]) || in_array((int) $page_ids[$slug], $existing_object_ids, true)) {
+        if (empty($page_ids[$slug]) || isset($items_by_object_id[(int) $page_ids[$slug]])) {
             continue;
         }
 
-        wp_update_nav_menu_item(
+        $item_id = wp_update_nav_menu_item(
             $menu_id,
             0,
             array(
@@ -173,6 +185,28 @@ function vr_seed_menu($name, $location, array $slugs, array $page_ids) {
                 'menu-item-status' => 'publish',
             )
         );
+
+        if (! is_wp_error($item_id) && $item_id) {
+            $items_by_object_id[(int) $page_ids[$slug]] = (object) array('ID' => (int) $item_id);
+        }
+    }
+
+    if ($parent_slug !== '' && ! empty($page_ids[$parent_slug])) {
+        $parent_page_id = (int) $page_ids[$parent_slug];
+        $parent_item = $items_by_object_id[$parent_page_id] ?? null;
+
+        if ($parent_item && ! empty($parent_item->ID)) {
+            foreach ($child_slugs as $child_slug) {
+                if (empty($page_ids[$child_slug])) {
+                    continue;
+                }
+
+                $child_item = $items_by_object_id[(int) $page_ids[$child_slug]] ?? null;
+                if ($child_item && ! empty($child_item->ID)) {
+                    update_post_meta((int) $child_item->ID, '_menu_item_menu_item_parent', (int) $parent_item->ID);
+                }
+            }
+        }
     }
 
     $locations = get_theme_mod('nav_menu_locations', array());
@@ -286,6 +320,63 @@ $pages = array(
 $page_ids = array();
 foreach ($pages as $slug => $data) {
     $page_ids[$slug] = vr_seed_upsert_post($data, $slug, 'page');
+}
+
+$page_seo = array(
+    'home' => array(
+        '_vr_seo_title' => 'Ритуальные услуги для животных в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Помогаем организовать усыпление, кремацию и вывоз домашних животных в Петрозаводске и Карелии. Круглосуточно консультируем по телефону.',
+    ),
+    'o-nas' => array(
+        '_vr_seo_title' => 'О Vet Ritual — ритуальные услуги для животных в Петрозаводске',
+        '_vr_meta_description' => 'Рассказываем о работе Vet Ritual: консультации, выезде, вывозе и организации кремации домашних животных в Петрозаводске и Карелии.',
+    ),
+    'uslugi' => array(
+        '_vr_seo_title' => 'Услуги для животных в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Выберите формат помощи для питомца: усыпление на дому, общая или индивидуальная кремация, вывоз. Уточним порядок и стоимость по телефону.',
+    ),
+    'tseny' => array(
+        '_vr_seo_title' => 'Цены на ритуальные услуги для животных | Vet Ritual',
+        '_vr_meta_description' => 'Цены на усыпление и кремацию животных. Итоговую стоимость уточняем по весу питомца, адресу и выбранному формату услуги.',
+    ),
+    'kontakty' => array(
+        '_vr_seo_title' => 'Контакты Vet Ritual в Петрозаводске',
+        '_vr_meta_description' => 'Свяжитесь с Vet Ritual в любое время: ответим на вопросы об усыплении, кремации и вывозе домашних животных, согласуем формат помощи.',
+    ),
+    'usyplenie-zhivotnyh' => array(
+        '_vr_seo_title' => 'Усыпление животных на дому в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Усыпление домашних животных на дому в Петрозаводске: консультация, спокойное прощание и бережное сопровождение. Уточните порядок и стоимость.',
+    ),
+    'krematsyja-zhyvotnyh' => array(
+        '_vr_seo_title' => 'Кремация животных в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Общая и индивидуальная кремация домашних животных в Петрозаводске. Расскажем об условиях, вывозе и вариантах возврата урны.',
+    ),
+    'vyvoz-zhivotnyh' => array(
+        '_vr_seo_title' => 'Вывоз животных в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Организуем аккуратный вывоз тела домашнего животного из дома или клиники в крематорий. Согласуем адрес, время и дальнейший формат услуги.',
+    ),
+    'usyplenie-koshek' => array(
+        '_vr_seo_title' => 'Усыпление кошек на дому в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Усыпление кошек на дому в привычной обстановке. Спокойно объясним порядок процедуры, согласуем время приезда и стоимость.',
+    ),
+    'usyplenie-sobak' => array(
+        '_vr_seo_title' => 'Усыпление собак на дому в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Усыпление собак на дому с бережным сопровождением владельца. Уточним порядок процедуры, время приезда и стоимость по телефону.',
+    ),
+    'obschaja-krematsyja' => array(
+        '_vr_seo_title' => 'Общая кремация животных в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Общая кремация домашних животных без возврата праха. Объясним порядок услуги, организуем вывоз и согласуем стоимость.',
+    ),
+    'individualnaja-krematsyja' => array(
+        '_vr_seo_title' => 'Индивидуальная кремация животных в Петрозаводске | Vet Ritual',
+        '_vr_meta_description' => 'Индивидуальная кремация домашнего животного с возвратом урны. Расскажем об условиях, вывозе и согласуем порядок услуги.',
+    ),
+);
+
+foreach ($page_seo as $slug => $meta) {
+    if (! empty($page_ids[$slug])) {
+        vr_seed_add_post_meta_if_empty($page_ids[$slug], $meta);
+    }
 }
 
 $featured_images = array(
@@ -563,7 +654,14 @@ if (! empty($page_ids['home'])) {
 }
 
 update_option('permalink_structure', '/%postname%/');
-vr_seed_menu('Основное меню', 'primary', array('o-nas', 'uslugi', 'tseny', 'kontakty'), $page_ids);
+vr_seed_menu(
+    'Основное меню',
+    'primary',
+    array('o-nas', 'uslugi', 'usyplenie-zhivotnyh', 'krematsyja-zhyvotnyh', 'vyvoz-zhivotnyh', 'usyplenie-koshek', 'usyplenie-sobak', 'obschaja-krematsyja', 'individualnaja-krematsyja', 'tseny', 'kontakty'),
+    $page_ids,
+    array('usyplenie-zhivotnyh', 'krematsyja-zhyvotnyh', 'vyvoz-zhivotnyh', 'usyplenie-koshek', 'usyplenie-sobak', 'obschaja-krematsyja', 'individualnaja-krematsyja'),
+    'uslugi'
+);
 vr_seed_menu('Услуги в подвале', 'footer_services', array('usyplenie-zhivotnyh', 'krematsyja-zhyvotnyh', 'vyvoz-zhivotnyh', 'usyplenie-koshek', 'usyplenie-sobak', 'obschaja-krematsyja', 'individualnaja-krematsyja'), $page_ids);
 
 flush_rewrite_rules(false);
