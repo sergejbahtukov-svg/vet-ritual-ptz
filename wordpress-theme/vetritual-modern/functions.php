@@ -8,16 +8,13 @@ define('VR_THEME_VERSION', '1.0');
 require_once get_template_directory() . '/inc/helpers/theme-options.php';
 require_once get_template_directory() . '/inc/content-model.php';
 require_once get_template_directory() . '/inc/setup.php';
-require_once get_template_directory() . '/inc/customizer.php';
 
 function vr_setup_theme() {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
-    add_theme_support('custom-logo');
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
     add_theme_support('wp-block-styles');
     add_theme_support('responsive-embeds');
-    add_theme_support('customize-selective-refresh-widgets');
 
     register_nav_menus(
         array(
@@ -141,6 +138,11 @@ function vr_sanitize_theme_settings($input) {
             continue;
         }
 
+        if (isset($field['type']) && 'media' === $field['type']) {
+            $output[$key] = absint($value);
+            continue;
+        }
+
         $output[$key] = sanitize_text_field($value);
     }
 
@@ -205,11 +207,23 @@ function vr_render_theme_setting_field($args) {
         return;
     }
 
+    if ('media' === $type) {
+        $attachment_id = absint($value);
+        $preview = $attachment_id > 0 ? wp_get_attachment_image($attachment_id, 'thumbnail', false, array('class' => 'vr-theme-media__preview')) : '';
+        echo '<div class="vr-theme-media" data-title="' . esc_attr__('Выберите логотип', 'vetritual-modern') . '" data-button="' . esc_attr__('Использовать логотип', 'vetritual-modern') . '">';
+        echo '<input id="vr_theme_' . esc_attr($key) . '" name="' . esc_attr($name) . '" value="' . esc_attr((string) $attachment_id) . '" type="hidden">';
+        echo '<span class="vr-theme-media__preview-wrap">' . $preview . '</span>';
+        echo '<button class="button vr-theme-media__select" type="button">' . esc_html__('Выбрать из медиатеки', 'vetritual-modern') . '</button> ';
+        echo '<button class="button-link-delete vr-theme-media__remove" type="button">' . esc_html__('Убрать', 'vetritual-modern') . '</button>';
+        echo '</div>';
+        return;
+    }
+
     echo '<input id="vr_theme_' . esc_attr($key) . '" name="' . esc_attr($name) . '" value="' . esc_attr((string) $value) . '" class="regular-text" type="text">';
 }
 
 function vr_add_settings_page() {
-    add_theme_page(
+    add_options_page(
         __('Настройки темы Vet Ritual', 'vetritual-modern'),
         __('Настройки темы', 'vetritual-modern'),
         'manage_options',
@@ -220,23 +234,10 @@ function vr_add_settings_page() {
 add_action('admin_menu', 'vr_add_settings_page');
 
 function vr_render_theme_settings_page() {
-    $customize_url = add_query_arg(
-        array(
-            'url' => home_url('/'),
-            'return' => admin_url('themes.php?page=vr-theme-options'),
-        ),
-        admin_url('customize.php')
-    );
     ?>
     <div class="wrap">
         <h1><?php esc_html_e('Настройки темы Vet Ritual', 'vetritual-modern'); ?></h1>
-        <p class="description">
-            <strong><?php esc_html_e('Быстрые правки:', 'vetritual-modern'); ?></strong>
-            <a href="<?php echo esc_url($customize_url); ?>" target="_blank">
-                <?php esc_html_e('Открыть стандартный кастомайзер WordPress', 'vetritual-modern'); ?>
-            </a>
-        </p>
-        <p class="description">
+<p class="description">
             <?php esc_html_e('Здесь хранятся только глобальные настройки темы. Тексты страниц, услуги, цены, отзывы, меню и изображения редактируются штатными сущностями WordPress.', 'vetritual-modern'); ?>
         </p>
         <form method="post" action="options.php">
@@ -249,6 +250,22 @@ function vr_render_theme_settings_page() {
     </div>
     <?php
 }
+
+function vr_enqueue_theme_settings_media($hook_suffix) {
+    if ('settings_page_vr-theme-options' !== $hook_suffix) {
+        return;
+    }
+
+    wp_enqueue_media();
+    wp_enqueue_script(
+        'vetritual-theme-settings',
+        get_template_directory_uri() . '/assets/js/theme-settings.js',
+        array('jquery'),
+        VR_THEME_VERSION,
+        true
+    );
+}
+add_action('admin_enqueue_scripts', 'vr_enqueue_theme_settings_media');
 
 function vr_render_theme_assets() {
     wp_enqueue_style('vetritual-theme-style', get_template_directory_uri() . '/assets/css/theme.css', array(), VR_THEME_VERSION);

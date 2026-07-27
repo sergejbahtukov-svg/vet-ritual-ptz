@@ -54,7 +54,7 @@
   $address_text = vr_theme_setting('address_text', '');
   $theme_color = vr_theme_setting('theme_color', '#fffdf8');
   $brand_logo = '';
-  $logo_id = absint(get_theme_mod('custom_logo', 0));
+  $logo_id = absint(vr_theme_setting('logo_attachment_id', 0));
   if ($logo_id > 0) {
       $brand_logo = wp_get_attachment_image(
           $logo_id,

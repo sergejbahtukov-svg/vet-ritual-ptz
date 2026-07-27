@@ -7,6 +7,7 @@ function vr_theme_setting_defaults() {
     return array(
         'public_domain_url' => 'https://vet-ritual-ptz.ru',
         'site_name' => 'Vet Ritual PTZ',
+        'logo_attachment_id' => 0,
         'site_description' => 'Ритуальные вет-услуги для домашних животных в Петрозаводске и Карелии',
         'site_city' => 'Петрозаводск и Карелия',
         'brand_tagline' => 'бережная помощь 24/7',
@@ -56,6 +57,7 @@ function vr_theme_setting_defaults() {
 
 function vr_theme_option_fields() {
     return array(
+        'logo_attachment_id' => array('section' => 'vr_general', 'label' => 'Логотип', 'type' => 'media'),
         'site_name' => array('section' => 'vr_general', 'label' => 'Название компании', 'type' => 'text'),
         'site_description' => array('section' => 'vr_general', 'label' => 'Описание сайта', 'type' => 'textarea', 'rows' => 3),
         'site_city' => array('section' => 'vr_general', 'label' => 'Город/регион', 'type' => 'text'),
@@ -113,11 +115,6 @@ function vr_theme_setting($key, $default = '') {
     $defaults = vr_theme_setting_defaults();
     $fallback = array_key_exists($key, $defaults) ? $defaults[$key] : $default;
 
-    $theme_mod = get_theme_mod('vr_theme_' . $key, null);
-    if ($theme_mod !== null && $theme_mod !== '') {
-        return $theme_mod;
-    }
-
     $options = get_option('vr_theme_options', array());
     if (is_array($options) && array_key_exists($key, $options) && $options[$key] !== '') {
         return $options[$key];
@@ -125,6 +122,36 @@ function vr_theme_setting($key, $default = '') {
 
     return $fallback;
 }
+
+function vr_migrate_legacy_customizer_settings() {
+    if (get_option('vr_theme_customizer_migration_complete', false)) {
+        return;
+    }
+
+    $options = get_option('vr_theme_options', array());
+    $options = is_array($options) ? $options : array();
+    $legacy = array();
+
+    foreach (array_keys(vr_theme_setting_defaults()) as $key) {
+        $value = get_theme_mod('vr_theme_' . $key, null);
+        if ($value !== null && $value !== '' && (! array_key_exists($key, $options) || $options[$key] === '')) {
+            $legacy[$key] = $value;
+        }
+    }
+
+    $legacy_logo_id = absint(get_theme_mod('custom_logo', 0));
+    if ($legacy_logo_id > 0 && empty($options['logo_attachment_id'])) {
+        $legacy['logo_attachment_id'] = $legacy_logo_id;
+    }
+
+    if (! empty($legacy)) {
+        $options = array_merge($options, vr_sanitize_theme_settings($legacy));
+        update_option('vr_theme_options', $options);
+    }
+
+    update_option('vr_theme_customizer_migration_complete', '1', false);
+}
+add_action('after_setup_theme', 'vr_migrate_legacy_customizer_settings', 20);
 
 function vr_theme_setting_bool($key, $default = false) {
     $value = vr_theme_setting($key, $default ? '1' : '0');
