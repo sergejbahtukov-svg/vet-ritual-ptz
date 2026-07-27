@@ -15,7 +15,7 @@ When template changes do not appear locally, clear the compiled Webasyst cache b
 
 ## WordPress migration architecture
 
-This repository includes the project-local skill `skills/wordpress-vetritual/SKILL.md`. Read and follow it before WordPress implementation; it supplements the native checklist below.
+This repository includes the project-local skill `skills/wordpress-vetritual/SKILL.md` and Codex-discoverable WordPress skills in `.codex/skills/`. Read and follow the applicable skills before WordPress implementation; they supplement the native checklist below.
 
 Before any WordPress migration or theme remediation work, agents must explicitly check for available WordPress-relevant skills/tools/plugins. If a dedicated WordPress skill/tool is available, load and follow it before touching files. If no dedicated WordPress skill/tool is available, state that clearly and proceed with the native WordPress checklist below instead of inventing ad hoc content architecture.
 
@@ -24,7 +24,8 @@ Mandatory WordPress project entrypoint before implementation:
 1. Open `memory/WORDPRESS_SKILLS.md`.
 2. Open `memory/WORDPRESS_MIGRATION_WORKFLOW.md` only when planning or orchestrating more than one slice.
 3. Open `memory/subagents/WORDPRESS_ASSIGNMENTS.md` when using subagents.
-4. Confirm whether a dedicated WordPress skill/tool exists in the current Codex tool list. As of the last project check, no dedicated WordPress skill/tool was available; use the native WordPress stack documented in `memory/WORDPRESS_SKILLS.md`.
+4. From `wordpress-theme/vetritual-modern`, run `../../.codex/skills/wp-project-triage/scripts/detect_wp_project.mjs` with Node and select the relevant workflow through `.codex/skills/wordpress-router/`.
+5. Use `.codex/skills/wp-wpcli-and-ops/` for WP-CLI or production operations, and `.codex/skills/wp-performance/` for any performance investigation.
 
 When porting the Webasyst/Smarty theme to WordPress, treat Webasyst as the visual and DOM/CSS reference only. Do not copy Smarty logic directly and do not replace WordPress content management with theme settings.
 
@@ -38,6 +39,19 @@ The WordPress theme must use native WordPress architecture:
 - template parts may provide fixed visual wrappers matching Webasyst, but the editable content inside them must come from native WordPress content sources.
 
 If an existing pass introduced `*_json` Customizer fields or `vr_theme_setting_array()` as the source of page/section content, treat that as transitional debt. The correct fix is to migrate those fields back to Pages, menus, media, blocks, or CPT/metabox data while preserving the Webasyst visual contract.
+
+## WordPress SEO workflow
+
+For SEO work on the WordPress theme, read `skills/seo-vetritual/SKILL.md` and use the Codex-discoverable counterpart `.codex/skills/seo-vetritual/` together with only the needed specialist skills:
+
+- `semantic-core` for intent, semantic clusters, and page architecture;
+- `seo-optimizer` for page-level on-page and technical audits;
+- `wp-performance` for performance work affecting Core Web Vitals;
+- `serp-monitor` for the agreed Yandex ranking set;
+- `yandex-metrika` for read-only outcome measurement;
+- `demand-research` only when factual demand research is required.
+
+Start with a measurable baseline, retain native WordPress content ownership, and separate facts from hypotheses. Do not create doorway pages, keyword-stuff copy, invented schema/reviews, or analytics/redirect/production writes without an explicit approved plan.
 
 ## Theme version discipline
 

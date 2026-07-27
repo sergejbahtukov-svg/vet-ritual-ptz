@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vet Ritual SEO"
+  short_description: "Семантика, скорость и SEO для Vet Ritual."
+  default_prompt: "Проведи следующий безопасный этап SEO для темы Vet Ritual: семантика, архитектура, технические проверки, скорость или измерения."
