@@ -22,12 +22,9 @@ atomic_link() {
   local token="$3"
   local temporary="${link}.tmp.${token}.${BASHPID}"
 
-  if [[ -e "$link" && ! -L "$link" ]]; then
-    die "refusing to replace a non-symlink: $link"
-  fi
-  if [[ -e "$temporary" || -L "$temporary" ]]; then
-    die "temporary symlink already exists: $temporary"
-  fi
+  [[ -d "$target" ]] || die "link target is missing: $target"
+  [[ ! -e "$link" || -L "$link" ]] || die "refusing to replace a non-symlink: $link"
+  [[ ! -e "$temporary" && ! -L "$temporary" ]] || die "temporary link already exists: $temporary"
   ln -s -- "$target" "$temporary"
   mv -Tf -- "$temporary" "$link"
 }
@@ -56,30 +53,20 @@ state_value() {
   awk -F= -v wanted="$key" '$1 == wanted { print substr($0, index($0, "=") + 1); exit }' "$state_file"
 }
 
-rollback_current() {
-  local root="$1"
-  local sha="$2"
-  local current="$root/current"
-  local previous_target="$3"
-
-  [[ -n "$previous_target" && -d "$previous_target" ]] || die "previous release is unavailable for rollback"
-  atomic_link "$previous_target" "$current" "rollback-${sha}"
-}
-
 deploy_release() {
   local root="$1"
   local sha="$2"
   local domain="$3"
   local package="$4"
   local db_update="${5:-false}"
-  local releases="$root/releases"
-  local shared="$root/shared"
-  local current="$root/current"
-  local previous="$root/previous"
-  local state_file="$shared/.deploy-state"
-  local release="$releases/$sha"
-  local current_target
-  local previous_target
+  local deploy_dir
+  local releases
+  local backups
+  local state_file
+  local theme_link
+  local release
+  local new_theme
+  local previous_target=""
   local backup_file
   local switched=0
 
@@ -87,78 +74,73 @@ deploy_release() {
   [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || die "release id must be a full Git SHA"
   [[ "$domain" =~ ^[A-Za-z0-9.-]+$ ]] || die "domain must be a hostname without a URL scheme"
   [[ -f "$package" ]] || die "release package is missing: $package"
-  require_command rsync
+  [[ -f "$root/wp-load.php" && -d "$root/wp-content/themes" ]] || die "WordPress root is invalid: $root"
   require_command tar
   require_command wp
   require_command curl
-
-  [[ -L "$current" ]] || die "current must be a symlink prepared by the server bootstrap"
-  current_target="$(readlink -f -- "$current")"
-  [[ "$current_target" == "$releases/"* && -d "$current_target" ]] || die "current must point into releases/"
-  previous_target="$current_target"
-  [[ ! -e "$release" && ! -L "$release" ]] || die "release already exists: $release"
-
-  mkdir -p "$releases" "$shared/backups" "$shared/uploads"
   require_command flock
-  exec 9>"$shared/.deploy.lock"
+
+  deploy_dir="$root/.vetritual-deploy"
+  releases="$deploy_dir/releases"
+  backups="$deploy_dir/backups"
+  state_file="$deploy_dir/.deploy-state"
+  theme_link="$root/wp-content/themes/vetritual-modern"
+  release="$releases/$sha"
+
+  mkdir -p "$releases" "$backups"
+  exec 9>"$deploy_dir/.deploy.lock"
   flock -n 9 || die "another deployment is already running"
+
+  if [[ -L "$theme_link" ]]; then
+    previous_target="$(readlink -f -- "$theme_link")"
+    [[ "$previous_target" == "$releases/"* && -d "$previous_target" ]] || die "active theme link points outside managed releases"
+  elif [[ -e "$theme_link" ]]; then
+    die "refusing to replace an unmanaged theme directory: $theme_link"
+  fi
+
+  [[ ! -e "$release" && ! -L "$release" ]] || die "release already exists: $release"
 
   rollback_on_error() {
     local exit_code=$?
-    if [[ "${switched:-0}" == "1" ]]; then
+    if [[ "$switched" == "1" && -n "$previous_target" ]]; then
       set +e
-      atomic_link "$previous_target" "$current" "error-${sha}" >/dev/null 2>&1 || true
+      atomic_link "$previous_target" "$theme_link" "error-${sha}" >/dev/null 2>&1 || true
       write_state "$state_file" rolled_back "$sha" "$previous_target" "$release" >/dev/null 2>&1 || true
     fi
     exit "$exit_code"
   }
   trap rollback_on_error ERR
 
-  [[ -f "$shared/wp-config.php" ]] || {
-    [[ -f "$current_target/wp-config.php" ]] || die "shared/wp-config.php is missing"
-    cp -p -- "$current_target/wp-config.php" "$shared/wp-config.php"
-  }
-
-  if [[ -d "$current_target/wp-content/uploads" && ! -L "$current_target/wp-content/uploads" ]]; then
-    rsync -a --ignore-existing -- "$current_target/wp-content/uploads/" "$shared/uploads/"
-  fi
-
-  backup_file="$shared/backups/db-${sha}-$(date -u +%Y%m%dT%H%M%SZ).sql"
-  wp --path="$current_target" db export "$backup_file" --add-drop-table --quiet
-  [[ -s "$backup_file" ]] || die "database backup is empty: $backup_file"
-  cp -p -- "$shared/wp-config.php" "$shared/backups/wp-config-${sha}.php"
+  backup_file="$backups/db-${sha}-$(date -u +%Y%m%dT%H%M%SZ).sql"
+  wp --path="$root" db export "$backup_file" --add-drop-table --quiet
+  [[ -s "$backup_file" ]] || die "database backup is empty"
 
   mkdir "$release"
-  rsync -a --links \
-    --exclude='/wp-config.php' \
-    --exclude='/wp-content/uploads' \
-    -- "$current_target/" "$release/"
   tar --extract --gzip --file "$package" --directory "$release" --no-same-owner --no-same-permissions
-  [[ ! -e "$release/wp-config.php" && ! -L "$release/wp-config.php" ]] || die "release contains wp-config.php"
-  [[ ! -e "$release/wp-content/uploads" && ! -L "$release/wp-content/uploads" ]] || die "release contains uploads"
-  ln -s -- "$shared/wp-config.php" "$release/wp-config.php"
-  mkdir -p "$release/wp-content"
-  ln -s -- "$shared/uploads" "$release/wp-content/uploads"
+  new_theme="$release/wp-content/themes/vetritual-modern"
+  [[ -d "$new_theme" ]] || die "release package does not contain the theme"
+  if find "$release" -type l -print -quit | grep -q .; then
+    die "release package contains a symlink"
+  fi
 
   if [[ "$db_update" == "true" ]]; then
-    wp --path="$release" core update-db --quiet
+    wp --path="$root" core update-db --quiet
   fi
 
   write_state "$state_file" prepared "$sha" "$previous_target" "$release"
-  atomic_link "$release" "$current" "$sha"
+  atomic_link "$new_theme" "$theme_link" "$sha"
   switched=1
   write_state "$state_file" switched "$sha" "$previous_target" "$release"
-  atomic_link "$previous_target" "$previous" "$sha"
 
-  if ! {
-    wp --path="$release" cache flush --quiet
-    curl --fail --silent --show-error --location --max-time 30 --proto '=https' --tlsv1.2 \
-      "https://${domain}/" > /dev/null
-  }; then
-    rollback_current "$root" "$sha" "$previous_target"
-    switched=0
-    write_state "$state_file" rolled_back "$sha" "$previous_target" "$release"
-    die "post-switch smoke-check failed; release rolled back"
+  wp --path="$root" cache flush --quiet
+  if ! curl --fail --silent --show-error --location --max-time 30 \
+    --header "Host: ${domain}" "http://127.0.0.1/" > /dev/null; then
+    if [[ -n "$previous_target" ]]; then
+      atomic_link "$previous_target" "$theme_link" "smoke-${sha}"
+      switched=0
+      write_state "$state_file" rolled_back "$sha" "$previous_target" "$release"
+    fi
+    die "server smoke-check failed"
   fi
 
   write_state "$state_file" success "$sha" "$previous_target" "$release"
@@ -171,31 +153,39 @@ deploy_release() {
 rollback_release() {
   local root="$1"
   local sha="$2"
-  local shared="$root/shared"
-  local state_file="$shared/.deploy-state"
-  local current="$root/current"
+  local deploy_dir
+  local state_file
   local status
   local state_sha
   local previous_target
   local release
+  local theme_link
 
   validate_root "$root"
+  deploy_dir="$root/.vetritual-deploy"
+  state_file="$deploy_dir/.deploy-state"
+  theme_link="$root/wp-content/themes/vetritual-modern"
   [[ -f "$state_file" ]] || { echo "no deployment state; rollback skipped"; return 0; }
+
   status="$(state_value "$state_file" status)"
   state_sha="$(state_value "$state_file" sha)"
   previous_target="$(state_value "$state_file" previous)"
   release="$(state_value "$state_file" release)"
-  [[ "$state_sha" == "$sha" && "$status" == "switched" ]] || {
-    echo "no switched release for $sha; rollback skipped"
+  [[ "$state_sha" == "$sha" && ( "$status" == "success" || "$status" == "switched" ) ]] || {
+    echo "no active release for $sha; rollback skipped"
     return 0
   }
-  [[ "$release" == "$root/releases/"* && -d "$release" ]] || die "state points outside releases"
-  [[ "$previous_target" == "$root/releases/"* && -d "$previous_target" ]] || die "state points to an invalid previous release"
-  [[ "$(readlink -f -- "$current")" == "$release" ]] || {
-    echo "current no longer points to failed release; rollback skipped"
+  [[ -n "$previous_target" && "$previous_target" == "$deploy_dir/releases/"* && -d "$previous_target" ]] || {
+    echo "no previous managed theme release; rollback skipped"
     return 0
   }
-  rollback_current "$root" "$sha" "$previous_target"
+  [[ "$release" == "$deploy_dir/releases/"* && -d "$release" ]] || die "state points outside managed releases"
+  [[ -L "$theme_link" && "$(readlink -f -- "$theme_link")" == "$release/wp-content/themes/vetritual-modern" ]] || {
+    echo "active theme changed; rollback skipped"
+    return 0
+  }
+
+  atomic_link "$previous_target" "$theme_link" "rollback-${sha}"
   write_state "$state_file" rolled_back "$sha" "$previous_target" "$release"
   echo "rolled back $sha"
 }
