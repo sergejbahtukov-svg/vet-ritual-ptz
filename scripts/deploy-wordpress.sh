@@ -88,6 +88,58 @@ remove_redundant_service_intro_content() {
   ' --quiet
 }
 
+restore_approved_price_catalog() {
+  local root="$1"
+
+  wp --path="$root" eval '
+    $migration_option = "vr_price_catalog_restored_20260818";
+    if (! get_option($migration_option, false)) {
+      $catalog = array(
+        "usyplenie" => array(
+          array("label" => "Кошка", "value" => "3 000–3 500 руб."),
+          array("label" => "Собаки 5–10 кг", "value" => "4 000–5 000 руб."),
+          array("label" => "Собаки 11–20 кг", "value" => "5 000–6 000 руб."),
+          array("label" => "Собаки от 20 кг", "value" => "от 7 000 руб."),
+        ),
+        "obschaya-krematsiya" => array(
+          array("label" => "до 5 кг", "value" => "4 000 руб."),
+          array("label" => "до 10 кг", "value" => "4 500 руб."),
+          array("label" => "до 20 кг", "value" => "5 500 руб."),
+          array("label" => "до 30 кг", "value" => "6 000 руб."),
+          array("label" => "до 40 кг", "value" => "7 000 руб."),
+          array("label" => "до 50 кг", "value" => "8 500 руб."),
+          array("label" => "от 50 кг", "value" => "10 000–12 000 руб."),
+        ),
+        "individualnaya-krematsiya" => array(
+          array("label" => "до 5 кг", "value" => "8 000 руб."),
+          array("label" => "Попугай, крыса", "value" => "4 500 руб."),
+          array("label" => "до 10 кг", "value" => "8 500 руб."),
+          array("label" => "до 20 кг", "value" => "9 000 руб."),
+          array("label" => "до 30 кг", "value" => "10 000 руб."),
+          array("label" => "до 40 кг", "value" => "11 000 руб."),
+          array("label" => "до 50 кг", "value" => "13 500 руб."),
+          array("label" => "от 50 кг", "value" => "от 16 000 руб."),
+        ),
+      );
+      $groups = array();
+
+      foreach ($catalog as $slug => $rows) {
+        $group = get_page_by_path($slug, OBJECT, "vr_price_group");
+        if (! $group instanceof WP_Post) {
+          throw new RuntimeException(sprintf("Price group is missing: %s", $slug));
+        }
+        $groups[$slug] = $group;
+      }
+
+      foreach ($catalog as $slug => $rows) {
+        update_post_meta((int) $groups[$slug]->ID, "_vr_price_rows", $rows);
+      }
+
+      update_option($migration_option, "1", false);
+    }
+  ' --quiet
+}
+
 deploy_release() {
   local root="$1"
   local sha="$2"
@@ -176,6 +228,7 @@ deploy_release() {
   switched=1
   wp --path="$root" theme activate vetritual-modern --quiet
   remove_redundant_service_intro_content "$root"
+  restore_approved_price_catalog "$root"
   write_state "$state_file" switched "$sha" "$previous_target" "$release"
 
   wp --path="$root" cache flush --quiet
