@@ -92,7 +92,7 @@ restore_approved_price_catalog() {
   local root="$1"
 
   wp --path="$root" eval '
-    $migration_option = "vr_price_catalog_restored_20260818";
+    $migration_option = "vr_price_catalog_restored_20260818_v2";
     if (! get_option($migration_option, false)) {
       $catalog = array(
         "usyplenie" => array(
@@ -102,13 +102,14 @@ restore_approved_price_catalog() {
           array("label" => "Собаки от 20 кг", "value" => "от 7 000 руб."),
         ),
         "obschaya-krematsiya" => array(
-          array("label" => "до 5 кг", "value" => "4 000 руб."),
-          array("label" => "до 10 кг", "value" => "4 500 руб."),
-          array("label" => "до 20 кг", "value" => "5 500 руб."),
-          array("label" => "до 30 кг", "value" => "6 000 руб."),
-          array("label" => "до 40 кг", "value" => "7 000 руб."),
-          array("label" => "до 50 кг", "value" => "8 500 руб."),
-          array("label" => "от 50 кг", "value" => "10 000–12 000 руб."),
+          array("label" => "до 1 кг", "value" => "2 000–2 500 руб."),
+          array("label" => "1–5 кг", "value" => "4 000 руб."),
+          array("label" => "5–10 кг", "value" => "4 500 руб."),
+          array("label" => "10–20 кг", "value" => "5 500 руб."),
+          array("label" => "20–30 кг", "value" => "6 000 руб."),
+          array("label" => "30–40 кг", "value" => "7 000 руб."),
+          array("label" => "40–50 кг", "value" => "8 500 руб."),
+          array("label" => "От 50 кг", "value" => "10 000–12 000 руб."),
         ),
         "individualnaya-krematsiya" => array(
           array("label" => "до 5 кг", "value" => "8 000 руб."),
