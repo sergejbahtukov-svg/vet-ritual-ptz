@@ -112,8 +112,8 @@ restore_approved_price_catalog() {
           array("label" => "От 50 кг", "value" => "10 000–12 000 руб."),
         ),
         "individualnaya-krematsiya" => array(
-          array("label" => "до 5 кг", "value" => "8 000 руб."),
           array("label" => "Попугай, крыса", "value" => "4 500 руб."),
+          array("label" => "до 5 кг", "value" => "8 000 руб."),
           array("label" => "до 10 кг", "value" => "8 500 руб."),
           array("label" => "до 20 кг", "value" => "9 000 руб."),
           array("label" => "до 30 кг", "value" => "10 000 руб."),
@@ -134,6 +134,49 @@ restore_approved_price_catalog() {
 
       foreach ($catalog as $slug => $rows) {
         update_post_meta((int) $groups[$slug]->ID, "_vr_price_rows", $rows);
+      }
+
+      update_option($migration_option, "1", false);
+    }
+  ' --quiet
+}
+
+fix_individual_cremation_price_order() {
+  local root="$1"
+
+  wp --path="$root" eval '
+    $migration_option = "vr_individual_cremation_price_order_fixed_20260821";
+    if (! get_option($migration_option, false)) {
+      $group = get_page_by_path("individualnaya-krematsiya", OBJECT, "vr_price_group");
+      if (! $group instanceof WP_Post) {
+        throw new RuntimeException("Individual cremation price group is missing");
+      }
+
+      $rows = get_post_meta((int) $group->ID, "_vr_price_rows", true);
+      if (! is_array($rows)) {
+        throw new RuntimeException("Individual cremation price rows are invalid");
+      }
+
+      $small_animal_index = null;
+      $up_to_five_index = null;
+      foreach ($rows as $index => $row) {
+        $label = trim((string) ($row["label"] ?? ""));
+        if ($label === "Попугай, крыса") {
+          $small_animal_index = (int) $index;
+        } elseif ($label === "до 5 кг") {
+          $up_to_five_index = (int) $index;
+        }
+      }
+
+      if ($small_animal_index === null || $up_to_five_index === null) {
+        throw new RuntimeException("Required individual cremation price rows are missing");
+      }
+
+      if ($small_animal_index > $up_to_five_index) {
+        $small_animal_row = $rows[$small_animal_index];
+        array_splice($rows, $small_animal_index, 1);
+        array_splice($rows, $up_to_five_index, 0, array($small_animal_row));
+        update_post_meta((int) $group->ID, "_vr_price_rows", array_values($rows));
       }
 
       update_option($migration_option, "1", false);
@@ -230,6 +273,7 @@ deploy_release() {
   wp --path="$root" theme activate vetritual-modern --quiet
   remove_redundant_service_intro_content "$root"
   restore_approved_price_catalog "$root"
+  fix_individual_cremation_price_order "$root"
   write_state "$state_file" switched "$sha" "$previous_target" "$release"
 
   wp --path="$root" cache flush --quiet

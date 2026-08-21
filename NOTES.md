@@ -26,3 +26,17 @@
 | OG/favicons/canonical | PASS local, PROD pending | Local pages expose `og:image`; favicons/manifest are linked. Canonical is local `http://localhost/vetritual-wp/...`, as expected in local WP. | Before production switch, set WP `home` and `siteurl` to the production domain and re-check canonical/OG URLs over HTTPS. |
 | Forms/phones/analytics | WARN | No `<form>` elements detected on core pages. Phone links resolve to `tel:+79535331600`. Analytics IDs are empty, so counters are not emitted. | If leads require forms, add native WP form handling or confirmed external integration. Set analytics IDs only after owner provides final counters. |
 | Backup/deploy readiness | PENDING | No deploy archive or production backup was created in this QA-only iteration. | Before deploy, create DB export and theme/uploads backup, then package deployment artifacts only under `deploy-vetritual-modern/`. |
+
+## 2026-08-21 Individual Cremation Price Order Hotfix
+
+- Scope: local WordPress `http://localhost/vetritual-wp/`, price order only.
+- Expected first rows: `Попугай, крыса — 4 500 руб.`, then `до 5 кг — 8 000 руб.`.
+
+| Check | Status | Confirmed result | Next atomic task |
+| --- | --- | --- | --- |
+| Seed data order | PASS | The seed stores `Попугай, крыса` before `до 5 кг`. | None. |
+| One-time production migration | PASS | The migration moved only the existing small-animal row and preserved prices and the remaining row order. | None. |
+| Price rendering | PASS | `/` and `/tseny/` show the exact 8-row individual-cremation sequence and 20 total price rows. | None. |
+| Responsive layout | PASS | 360, 768, and 1280 px have no page overflow; all three price cards render. | None. |
+| Interaction and console | PASS | Mobile menu opens/closes; browser console has no errors. | None. |
+| HTTP smoke | PASS | Core service URLs return `200`; the synthetic missing URL returns `404`. | None. |

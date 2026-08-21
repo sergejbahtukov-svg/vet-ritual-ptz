@@ -533,8 +533,8 @@ $price_groups = array(
             'menu_order' => 30,
         ),
         'rows' => array(
-            array('label' => 'до 5 кг', 'value' => '8 000 руб.'),
             array('label' => 'Попугай, крыса', 'value' => '4 500 руб.'),
+            array('label' => 'до 5 кг', 'value' => '8 000 руб.'),
             array('label' => 'до 10 кг', 'value' => '8 500 руб.'),
             array('label' => 'до 20 кг', 'value' => '9 000 руб.'),
             array('label' => 'до 30 кг', 'value' => '10 000 руб.'),
