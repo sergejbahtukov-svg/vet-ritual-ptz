@@ -27,15 +27,15 @@ function vr_theme_setting_defaults() {
         'default_meta_description' => 'Бережное усыпление, кремация и вывоз домашних животных в Петрозаводске и Карелии. Круглосуточно, аккуратное сопровождение, понятные условия.',
         'og_image' => 'og-logo-share.png',
         'twitter_card_type' => 'summary_large_image',
-        'cookie_consent_mode' => 'disabled',
+        'cookie_consent_mode' => 'always',
         'cookie_consent_key' => 'vr_cookie_consent',
         'cookie_banner_text' => 'Мы используем cookie, чтобы сайт работал стабильно и корректно учитывал согласие.',
         'cookie_banner_heading' => 'Мы используем cookie',
         'cookie_button_accept' => 'Хорошо',
         'cookie_button_reject' => 'Позже',
-        'yandex_metrika_id' => '',
-        'yandex_metrika_webvisor' => '0',
-        'yandex_metrika_ecommerce' => '0',
+        'yandex_metrika_id' => '110337254',
+        'yandex_metrika_webvisor' => '1',
+        'yandex_metrika_ecommerce' => '1',
         'ga4_id' => '',
         'gtm_id' => '',
         'vk_pixel_id' => '',
@@ -147,6 +147,24 @@ function vr_migrate_legacy_theme_mod_settings() {
     update_option('vr_theme_legacy_mod_migration_complete', '1', false);
 }
 add_action('after_setup_theme', 'vr_migrate_legacy_theme_mod_settings', 20);
+
+function vr_enable_yandex_metrika_110337254() {
+    $migration_key = 'vr_yandex_metrika_110337254_enabled';
+    if (get_option($migration_key, false)) {
+        return;
+    }
+
+    $options = get_option('vr_theme_options', array());
+    $options = is_array($options) ? $options : array();
+    $options['cookie_consent_mode'] = 'always';
+    $options['yandex_metrika_id'] = '110337254';
+    $options['yandex_metrika_webvisor'] = '1';
+    $options['yandex_metrika_ecommerce'] = '1';
+
+    update_option('vr_theme_options', $options);
+    update_option($migration_key, '1', false);
+}
+add_action('after_setup_theme', 'vr_enable_yandex_metrika_110337254', 30);
 
 function vr_theme_setting_bool($key, $default = false) {
     $value = vr_theme_setting($key, $default ? '1' : '0');

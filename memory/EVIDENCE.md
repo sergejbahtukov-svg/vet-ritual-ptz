@@ -38,3 +38,10 @@
 - `WORDPRESS_PREPARATION_COORDINATION_PLAN.md` — текущая карта координации.
 - `CRITICAL_REMEDIATION_ACTIONS.md` — чеклист обязательных блокеров и порядок закрытия до build.
 - `WORDPRESS_MIGRATION_WORKFLOW.md` — расширен блоком hard-gate и критических требований AGENTS.
+
+## 2026-08-27 — Yandex Metrika 110337254
+
+- Настройки темы по умолчанию и одноразовая миграция задают ID `110337254`, режим `always`, Вебвизор и ecommerce.
+- `assets/js/integrations.js` инициализирует счётчик с `ssr`, `webvisor`, `clickmap`, `ecommerce: dataLayer`, `referrer`, `url`, `accurateTrackBounce` и `trackLinks` и загружает `tag.js?id=110337254`.
+- `header.php` выводит резервный `<noscript>`-пиксель только для активного счётчика в режиме `always`.
+- Присланный пользователем фрагмент был продублирован; в тему добавлена одна интеграция, чтобы не считать визиты дважды.

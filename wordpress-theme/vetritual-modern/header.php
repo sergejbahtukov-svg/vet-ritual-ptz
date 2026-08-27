@@ -181,6 +181,13 @@
 <body <?php body_class('vr-site'); ?>>
 <?php wp_body_open(); ?>
 <?php echo wp_kses_post(vr_theme_setting('body_start_html', '')); ?>
+<?php
+$yandex_metrika_id = preg_replace('/\D+/', '', (string) vr_theme_setting('yandex_metrika_id', ''));
+$analytics_mode = vr_theme_setting('cookie_consent_mode', 'disabled');
+if ($yandex_metrika_id !== '' && $analytics_mode === 'always') :
+?>
+  <noscript><div><img src="https://mc.yandex.ru/watch/<?php echo esc_attr($yandex_metrika_id); ?>" style="position:absolute;left:-9999px" alt="" width="1" height="1"></div></noscript>
+<?php endif; ?>
 
 <?php
 if (! class_exists('VR_Header_Nav_Walker')) {

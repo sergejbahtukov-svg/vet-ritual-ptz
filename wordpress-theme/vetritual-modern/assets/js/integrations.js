@@ -117,10 +117,13 @@
     window.ym.l = 1 * new Date();
 
     var options = {
+      ssr: true,
       clickmap: true,
       trackLinks: true,
       accurateTrackBounce: true,
-      webvisor: config.ymWebvisor
+      webvisor: config.ymWebvisor,
+      referrer: document.referrer,
+      url: window.location.href
     };
 
     if (config.ymEcommerce) {
@@ -129,7 +132,7 @@
     }
 
     window.ym(config.ymId, 'init', options);
-    appendScript('https://mc.yandex.ru/metrika/tag.js', 'vr-yandex-metrika', true);
+    appendScript('https://mc.yandex.ru/metrika/tag.js?id=' + encodeURIComponent(config.ymId), 'vr-yandex-metrika', true);
   }
 
   function loadGa4() {

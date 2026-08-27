@@ -53,3 +53,9 @@
 - Decision: gate eady_for_build is now set to TRUE by the orchestrator for sprint-1.
 - Evidence: mandatory blocker list from WORDPRESS_MIGRATION_WORKFLOW.md section 11a is present in /memory/.
 - Condition: gent-theme-builder can start after this entry and updated matrix state.
+
+## 2026-08-27 — Yandex Metrika 110337254
+
+- Решение: включить на всех страницах WordPress-сайта единственный счётчик Яндекс Метрики `110337254` в режиме `always` с Вебвизором, clickmap, trackLinks, accurateTrackBounce и ecommerce через `dataLayer`.
+- Решение: использовать существующий модуль аналитики и глобальные настройки темы, а не вставлять второй независимый фрагмент счётчика.
+- Решение: добавить одноразовую миграцию настроек, чтобы релиз применил счётчик к уже работающей базе WordPress без ручной настройки в админке.
