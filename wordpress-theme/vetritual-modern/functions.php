@@ -3,7 +3,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define('VR_THEME_VERSION', '1.0');
+define('VR_THEME_VERSION', '1.0.1');
 
 require_once get_template_directory() . '/inc/helpers/theme-options.php';
 require_once get_template_directory() . '/inc/content-model.php';
