@@ -42,7 +42,7 @@ $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_pag
           array(
               'theme_location' => 'primary',
               'container' => false,
-              'items_wrap' => '%3$s',
+              'items_wrap' => '<ul class="vr-footer__menu">%3$s</ul>',
               'depth' => 1,
               'fallback_cb' => false,
           )
@@ -55,7 +55,7 @@ $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_pag
           array(
               'theme_location' => 'footer_services',
               'container' => false,
-              'items_wrap' => '%3$s',
+              'items_wrap' => '<ul class="vr-footer__menu">%3$s</ul>',
               'depth' => 1,
               'fallback_cb' => false,
           )

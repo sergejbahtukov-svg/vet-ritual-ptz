@@ -1417,6 +1417,25 @@ body.vr-site .vr-section--tint .vr-about__copy p {
   text-decoration: none;
 }
 
+.vr-footer__menu {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vr-footer__menu li {
+  margin: 0;
+  padding: 0;
+}
+
+.vr-footer__menu a {
+  margin: 0;
+  padding: 4px 0;
+  line-height: 1.45;
+}
+
 .vr-brand--footer .vr-brand__mark {
   background: color-mix(in srgb, var(--vr-surface) 88%, transparent);
 }
@@ -1562,6 +1581,10 @@ body.vr-site .vr-section--tint .vr-about__copy p {
   .vr-price-grid,
   .vr-footer__grid {
     grid-template-columns: 1fr;
+  }
+
+  .vr-footer__grid {
+    gap: 28px;
   }
 
   .vr-service-card {
