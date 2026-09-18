@@ -1,0 +1,25 @@
+.vr-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 32px;
+}
+
+.vr-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  max-width: 760px;
+}
+
+.vr-footer__legal a { text-decoration: underline; text-underline-offset: 4px; }
+.vr-cookie-banner__links { list-style: none; margin: 8px 0 0; padding: 0; }
+.vr-cookie-banner__links a { color: inherit; }
+.vr-legal-page { padding-top: 56px; }
+/* Long legal documents must remain visible without scroll-triggered animation. */
+.vr-motion-ready .vr-legal-page .vr-text-page.vr-reveal { opacity: 1; transform: none; transition: none; }
+.vr-legal-page h1 { font-size: clamp(28px, 4vw, 48px); overflow-wrap: anywhere; }
+.vr-legal-page .vr-legal-table { overflow-x: auto; margin: 24px 0; }
+.vr-legal-page .vr-legal-table table { min-width: 680px; margin: 0; }
+.vr-legal-page .vr-legal-downloads { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 24px 0 32px; }

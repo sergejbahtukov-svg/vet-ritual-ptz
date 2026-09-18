@@ -7,6 +7,8 @@ on:
     paths:
       - "wordpress-theme/**"
       - "wordpress-plugins/**"
+      - "legal-documents/**"
+      - "tools/publish-legal-documents.php"
       - "scripts/deploy-wordpress.sh"
       - ".github/workflows/deploy-wordpress.yml"
   workflow_dispatch:
@@ -88,14 +90,18 @@ jobs:
         id: revision
         run: echo "sha=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
 
-      - name: Build theme-only package
+      - name: Build theme and approved legal documents package
         env:
           PACKAGE_NAME: vetritual-wordpress-${{ github.sha }}.tar.gz
         run: |
           set -euo pipefail
           stage_dir="${RUNNER_TEMP}/vetritual-wordpress-${GITHUB_SHA}"
+          mkdir -p "${RUNNER_TEMP}/deploy-vetritual-modern"
           mkdir -p "$stage_dir/wp-content/themes" "$stage_dir/wp-content/plugins"
           cp -a wordpress-theme/vetritual-modern "$stage_dir/wp-content/themes/vetritual-modern"
+          cp -a legal-documents "$stage_dir/legal-documents"
+          cp tools/publish-legal-documents.php "$stage_dir/legal-documents/publish.php"
+          php -l "$stage_dir/legal-documents/publish.php"
 
           if [[ -d wordpress-plugins ]]; then
             cp -a wordpress-plugins/. "$stage_dir/wp-content/plugins/"
@@ -110,9 +116,9 @@ jobs:
             exit 1
           fi
 
-          tar --format=posix --create --gzip --file "${RUNNER_TEMP}/${PACKAGE_NAME}" \
-            --directory "$stage_dir" wp-content
-          sha256sum "${RUNNER_TEMP}/${PACKAGE_NAME}"
+          tar --format=posix --create --gzip --file "${RUNNER_TEMP}/deploy-vetritual-modern/${PACKAGE_NAME}" \
+            --directory "$stage_dir" wp-content legal-documents
+          sha256sum "${RUNNER_TEMP}/deploy-vetritual-modern/${PACKAGE_NAME}"
 
       - name: Configure SSH agent
         env:
@@ -149,7 +155,7 @@ jobs:
             "${DEPLOY_USER}@${DEPLOY_HOST}" \
             "umask 077; mkdir -p '${DEPLOY_PATH}/shared/.incoming'"
           scp -P "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
-            "${RUNNER_TEMP}/${PACKAGE_NAME}" \
+            "${RUNNER_TEMP}/deploy-vetritual-modern/${PACKAGE_NAME}" \
             "${DEPLOY_USER}@${DEPLOY_HOST}:${remote_package}"
           scp -P "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
             scripts/deploy-wordpress.sh \

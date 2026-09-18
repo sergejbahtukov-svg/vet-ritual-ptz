@@ -20,6 +20,7 @@ function vr_setup_theme() {
         array(
             'primary' => __('Основное меню', 'vetritual-modern'),
             'footer_services' => __('Меню услуг в подвале', 'vetritual-modern'),
+            'footer_legal' => __('Правовые документы', 'vetritual-modern'),
         )
     );
 }
@@ -523,6 +524,7 @@ add_action('admin_enqueue_scripts', 'vr_enqueue_theme_settings_media');
 
 function vr_render_theme_assets() {
     wp_enqueue_style('vetritual-theme-style', get_template_directory_uri() . '/assets/css/theme.css', array(), VR_THEME_VERSION);
+    wp_enqueue_style('vetritual-legal-style', get_template_directory_uri() . '/assets/css/legal.css', array('vetritual-theme-style'), '1.0');
     wp_enqueue_script('vetritual-theme-js', get_template_directory_uri() . '/assets/js/theme.js', array(), VR_THEME_VERSION, true);
     wp_localize_script(
         'vetritual-theme-js',

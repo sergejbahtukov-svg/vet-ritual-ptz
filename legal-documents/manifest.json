@@ -1,0 +1,36 @@
+[
+  {
+    "slug": "privacy-policy",
+    "title": "Политика в отношении обработки персональных данных",
+    "menu_label": "Политика обработки персональных данных",
+    "description": "Политика в отношении обработки персональных данных ИП Мясникова Кирилла Львовича. Текст документа и файлы PDF и Word.",
+    "html": "privacy-policy.html",
+    "files": {
+      "pdf": {
+        "name": "privacy-policy.pdf",
+        "sha256": "338cff7d0d04ea98e9b096797f7d95398e4b54e1cd64b7790df24a200257a8b3"
+      },
+      "docx": {
+        "name": "privacy-policy.docx",
+        "sha256": "28041ff1656618182d14040ffcad0bf44626db314e890af2ed2db7cd876637f8"
+      }
+    }
+  },
+  {
+    "slug": "personal-data-consent",
+    "title": "Согласие на обработку персональных данных",
+    "menu_label": "Согласие на обработку персональных данных",
+    "description": "Согласие на обработку персональных данных ИП Мясникова Кирилла Львовича. Текст документа и файлы PDF и Word.",
+    "html": "personal-data-consent.html",
+    "files": {
+      "pdf": {
+        "name": "personal-data-consent.pdf",
+        "sha256": "7e31e9629fff77a66a634f2e76f7791e6948b15fff61c8630c7b9ac0d6333778"
+      },
+      "docx": {
+        "name": "personal-data-consent.docx",
+        "sha256": "2c96784d2b6de61179f61bbf8ca374e6f08edda974fe8df3469076d4a459dcfa"
+      }
+    }
+  }
+]

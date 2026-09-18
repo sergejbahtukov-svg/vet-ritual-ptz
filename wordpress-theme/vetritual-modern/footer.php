@@ -68,7 +68,14 @@ $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_pag
       <span><?php echo esc_html($address); ?></span>
     </div>
   </div>
-  <div class="vr-shell vr-footer__bottom"><?php echo esc_html($copyright); ?></div>
+  <div class="vr-shell vr-footer__bottom">
+    <span><?php echo esc_html($copyright); ?></span>
+    <?php if (has_nav_menu('footer_legal')) : ?>
+      <nav aria-label="<?php esc_attr_e('Правовые документы', 'vetritual-modern'); ?>">
+        <?php wp_nav_menu(array('theme_location' => 'footer_legal', 'container' => false, 'menu_class' => 'vr-footer__menu vr-footer__legal', 'depth' => 1, 'fallback_cb' => false)); ?>
+      </nav>
+    <?php endif; ?>
+  </div>
 </footer>
 
 <?php if ($cookie_mode !== 'disabled' && ! empty($cookie_banner_text)) : ?>
@@ -76,6 +83,11 @@ $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_pag
     <div class="vr-cookie-banner__body">
       <p><strong><?php echo esc_html($cookie_banner_heading); ?></strong></p>
       <p><?php echo wp_kses_post($cookie_banner_text); ?></p>
+      <?php if (has_nav_menu('footer_legal')) : ?>
+        <nav aria-label="<?php esc_attr_e('Документы об обработке персональных данных', 'vetritual-modern'); ?>">
+          <?php wp_nav_menu(array('theme_location' => 'footer_legal', 'container' => false, 'menu_class' => 'vr-cookie-banner__links', 'depth' => 1, 'fallback_cb' => false)); ?>
+        </nav>
+      <?php endif; ?>
     </div>
     <button class="vr-cookie-banner__button" type="button" data-vr-cookie-accept><?php echo esc_html($cookie_accept); ?></button>
   </div>

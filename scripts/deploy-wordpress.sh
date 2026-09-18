@@ -274,6 +274,7 @@ deploy_release() {
   remove_redundant_service_intro_content "$root"
   restore_approved_price_catalog "$root"
   fix_individual_cremation_price_order "$root"
+  wp --path="$root" eval-file "$release/legal-documents/publish.php" "$release/legal-documents"
   write_state "$state_file" switched "$sha" "$previous_target" "$release"
 
   wp --path="$root" cache flush --quiet
