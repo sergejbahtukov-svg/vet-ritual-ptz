@@ -525,6 +525,10 @@ add_action('admin_enqueue_scripts', 'vr_enqueue_theme_settings_media');
 function vr_render_theme_assets() {
     wp_enqueue_style('vetritual-theme-style', get_template_directory_uri() . '/assets/css/theme.css', array(), VR_THEME_VERSION);
     wp_enqueue_style('vetritual-legal-style', get_template_directory_uri() . '/assets/css/legal.css', array('vetritual-theme-style'), '1.0');
+    if (is_page_template('page-legal.php')) {
+        // Keep every menu item reachable on short landscape phone viewports.
+        wp_add_inline_style('vetritual-legal-style', '@media (max-width: 980px) { .page-template-page-legal .vr-nav.is-open { max-height: calc(100vh - 94px); max-height: calc(100dvh - 94px); overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; } }');
+    }
     wp_enqueue_script('vetritual-theme-js', get_template_directory_uri() . '/assets/js/theme.js', array(), VR_THEME_VERSION, true);
     wp_localize_script(
         'vetritual-theme-js',
