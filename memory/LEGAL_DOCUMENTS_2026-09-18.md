@@ -10,3 +10,4 @@
 - Browser checks: 360, 768, 1280 px, no page overflow; wide legal tables scroll inside their wrappers. Legal page text bypasses theme reveal animation so long content remains visible.
 - Deployment runs the idempotent importer after theme activation and existing database backup. Subsequent releases preserve editor changes and do not reimport files. Core/config are not modified.
 - Working branch: `codex/legal-documents`, based on current production rather than the older dirty primary checkout.
+- Production outcome: release `27243723966c05df1d0b1b518d3527d3221c1d96`, Actions run `35356225262`, success. Both pages returned 200; full text checks and SHA-256 of all four downloads passed; all 14 internal links returned 200 and missing route 404. Both public pages were inspected at 360 px with visible content and no horizontal overflow.
