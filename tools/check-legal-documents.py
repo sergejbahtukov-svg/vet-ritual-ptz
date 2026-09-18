@@ -31,13 +31,16 @@ for document in manifest:
         page = Page(response.read().decode('utf-8'))
     original = Page((root / document['html']).read_text(encoding='utf-8'))
     assert normalize(''.join(original.text)) in normalize(''.join(page.text)), 'Document text mismatch'
-    for extension, expected in document['files'].items():
-        links = [url for url in page.links if url.endswith('/' + expected['name'])]
-        assert len(links) == 1, 'Download link missing or duplicated'
-        with urlopen(links[0], timeout=30) as response:
-            assert hashlib.sha256(response.read()).hexdigest() == expected['sha256'], 'File checksum mismatch'
+    assert not any(url.endswith(('.pdf', '.docx')) for url in page.links), 'Unexpected download link'
+    assert not any(text.strip() == 'в ИП МЯСНИКОВ КИРИЛЛ ЛЬВОВИЧ' for text in page.text), 'Unexpected subtitle'
+    for expected in document['files'].values():
+        try:
+            urlopen(base + 'wp-content/uploads/2026/09/' + expected['name'], timeout=30)
+            raise AssertionError('Old public document still accessible')
+        except HTTPError as error:
+            assert error.code in (404, 410)
     urls.update(url for url in page.links if url.startswith(base) and '/wp-content/' not in url)
-    print(document['slug'] + ': text and both downloads MATCH')
+    print(document['slug'] + ': text MATCH; download links absent; old public files unavailable')
 for url in sorted(urls):
     with urlopen(url, timeout=30) as response:
         assert response.status == 200

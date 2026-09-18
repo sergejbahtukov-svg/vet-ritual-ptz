@@ -10,8 +10,58 @@ $manifest = json_decode(file_get_contents($directory . '/manifest.json'), true);
 if (! is_array($manifest) || count($manifest) !== 2) {
     throw new RuntimeException('Invalid legal document manifest.');
 }
+
+function vr_publish_legal_html_only($manifest, $directory) {
+    $migration = 'vr_legal_documents_html_only_20260918_v2';
+    if (get_option($migration)) { return; }
+    $updates = array();
+    $attachments = array();
+    $uploads = wp_upload_dir();
+    $uploads_root = realpath($uploads['basedir']);
+    foreach ($manifest as $document) {
+        $page = get_page_by_path($document['slug']);
+        if (! $page instanceof WP_Post || ! get_post_meta($page->ID, '_vr_legal_document', true)) {
+            throw new RuntimeException('Expected managed legal page is missing.');
+        }
+        $content = preg_replace('/<div class="vr-legal-downloads">.*?<\/div>\s*/s', '', $page->post_content, 1);
+        if ($document['slug'] === 'privacy-policy') {
+            $content = preg_replace('/\A\s*<p>в ИП МЯСНИКОВ КИРИЛЛ ЛЬВОВИЧ<\/p>\s*/u', '', $content, 1);
+        }
+        $updates[] = array('ID' => $page->ID, 'post_content' => wp_slash($content));
+        foreach ($document['files'] as $file) {
+            // Retain a verified original in the release package before removing its public copy.
+            $backup = $directory . '/' . basename($file['name']);
+            if (! is_file($backup) || hash_file('sha256', $backup) !== $file['sha256']) {
+                throw new RuntimeException('Original document backup is missing or changed.');
+            }
+            $matches = get_posts(array('post_type' => 'attachment', 'post_status' => 'inherit', 'meta_key' => '_vr_legal_sha256', 'meta_value' => $file['sha256'], 'numberposts' => -1));
+            foreach ($matches as $attachment) {
+                $path = realpath(get_attached_file($attachment->ID));
+                if (! $uploads_root || ! $path || strpos(wp_normalize_path($path), trailingslashit(wp_normalize_path($uploads_root))) !== 0 || hash_file('sha256', $path) !== $file['sha256']) {
+                    throw new RuntimeException('Refusing to remove an unexpected attachment.');
+                }
+                $attachments[$attachment->ID] = $path;
+            }
+        }
+    }
+    foreach ($updates as $update) {
+        $result = wp_update_post($update, true);
+        if (is_wp_error($result)) { throw new RuntimeException($result->get_error_message()); }
+        $description = get_post_meta($result, '_vr_meta_description', true);
+        update_post_meta($result, '_vr_meta_description', str_replace('Текст документа и файлы PDF и Word.', 'Полный текст документа.', $description));
+    }
+    foreach ($attachments as $id => $path) {
+        if (! wp_delete_attachment($id, true) || is_file($path)) {
+            throw new RuntimeException('Could not remove public document attachment.');
+        }
+    }
+    update_option($migration, gmdate('c'), false);
+    WP_CLI::success('Legal pages updated; download links and verified public attachments removed.');
+}
+
 $migration = 'vr_legal_documents_20260918_v1';
 if (get_option($migration)) {
+    vr_publish_legal_html_only($manifest, $directory);
     WP_CLI::success('Legal documents already published; editor changes preserved.');
     return;
 }
@@ -33,7 +83,7 @@ require_once ABSPATH . 'wp-admin/includes/image.php';
 $pages = array();
 foreach ($manifest as $document) {
     $downloads = array();
-    foreach ($document['files'] as $format => $file) {
+    foreach (! empty($document['publish_downloads']) ? $document['files'] : array() as $format => $file) {
         $existing = get_posts(array('post_type' => 'attachment', 'post_status' => 'inherit', 'meta_key' => '_vr_legal_sha256', 'meta_value' => $file['sha256'], 'numberposts' => 1));
         if ($existing) {
             $attachment_id = $existing[0]->ID;
@@ -53,7 +103,7 @@ foreach ($manifest as $document) {
         $label = $format === 'pdf' ? 'Открыть PDF' : 'Скачать Word';
         $downloads[] = '<a href="' . esc_url($url) . '"' . ($format === 'pdf' ? ' target="_blank" rel="noopener"' : ' download') . '>' . esc_html($label) . '</a>';
     }
-    $content = '<div class="vr-legal-downloads">' . implode("\n", $downloads) . '</div>' . "\n";
+    $content = $downloads ? '<div class="vr-legal-downloads">' . implode("\n", $downloads) . '</div>' . "\n" : '';
     $content .= file_get_contents($directory . '/' . $document['html']);
     $existing = get_page_by_path($document['slug']);
     if ($existing instanceof WP_Post && $existing->post_status === 'publish' && ! get_post_meta($existing->ID, '_vr_legal_document', true)) {
@@ -91,4 +141,5 @@ foreach ($pages as $page) {
 $locations['footer_legal'] = (int) $menu_id;
 set_theme_mod('nav_menu_locations', $locations);
 update_option($migration, gmdate('c'), false);
-WP_CLI::success('Published two legal pages and four original files.');
+vr_publish_legal_html_only($manifest, $directory);
+WP_CLI::success('Published two legal pages.');

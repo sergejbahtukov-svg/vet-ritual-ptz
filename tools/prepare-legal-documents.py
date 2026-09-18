@@ -29,6 +29,8 @@ for stem, slug, title, label in specs:
             text = paragraph.text.strip()
             if not text or text == title:
                 continue
+            if slug == 'privacy-policy' and text == 'в ИП МЯСНИКОВ КИРИЛЛ ЛЬВОВИЧ':
+                continue
             needle = re.sub(r'\s+', '', text)[:60]
             position = pdf_text.find(needle, pdf_position)
             numbering = paragraph._p.pPr.numPr if paragraph._p.pPr is not None else None
@@ -58,6 +60,6 @@ for stem, slug, title, label in specs:
         target = destination / (slug + '.' + extension)
         shutil.copyfile(source / (stem + '.' + extension), target)
         files[extension] = {'name': target.name, 'sha256': hashlib.sha256(target.read_bytes()).hexdigest()}
-    manifest.append({'slug': slug, 'title': title, 'menu_label': label, 'description': title + ' ИП Мясникова Кирилла Львовича. Текст документа и файлы PDF и Word.', 'html': slug + '.html', 'files': files})
+    manifest.append({'slug': slug, 'title': title, 'menu_label': label, 'description': title + ' ИП Мясникова Кирилла Львовича. Полный текст документа.', 'html': slug + '.html', 'publish_downloads': False, 'files': files})
     print(slug, len(blocks), 'blocks', len(doc.tables), 'tables')
 (destination / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
