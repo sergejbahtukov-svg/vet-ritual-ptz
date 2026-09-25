@@ -56,6 +56,51 @@ state_value() {
   awk -F= -v wanted="$key" '$1 == wanted { print substr($0, index($0, "=") + 1); exit }' "$state_file"
 }
 
+update_individual_cremation_prices_20260925() {
+  local root="$1"
+
+  wp --path="$root" eval '
+    $migration = "vr_individual_cremation_prices_20260925";
+    if (get_option($migration, false)) { return; }
+    $group = get_page_by_path("individualnaya-krematsiya", OBJECT, "vr_price_group");
+    if (! $group instanceof WP_Post) {
+      WP_CLI::error("Individual cremation price group is missing.");
+    }
+    $prices = array(
+      "Попугай, крыса" => "4 500 руб.",
+      "до 5 кг" => "8 000 руб.",
+      "до 10 кг" => "8 500 руб.",
+      "до 20 кг" => "9 000 руб.",
+      "до 30 кг" => "11 000 руб.",
+      "до 40 кг" => "13 000 руб.",
+      "до 50 кг" => "15 000 руб.",
+      "от 50 кг" => "от 18 000 руб.",
+    );
+    $before = get_post_meta($group->ID, "_vr_price_rows", true);
+    if (! is_array($before) || count($before) !== count($prices)) {
+      WP_CLI::error("Unexpected individual cremation price rows.");
+    }
+    $rows = $before;
+    $seen = array();
+    foreach ($rows as &$row) {
+      $label = $row["label"] ?? "";
+      if (! isset($prices[$label]) || isset($seen[$label])) {
+        WP_CLI::error("Unexpected or duplicate price label.");
+      }
+      $row["value"] = $prices[$label];
+      $seen[$label] = true;
+    }
+    unset($row);
+    add_option($migration . "_previous_rows", $before, "", false);
+    update_post_meta($group->ID, "_vr_price_rows", $rows);
+    if (get_post_meta($group->ID, "_vr_price_rows", true) !== $rows) {
+      WP_CLI::error("Price verification failed.");
+    }
+    update_option($migration, "1", false);
+    WP_CLI::success("Individual cremation prices updated for 2026-09-25.");
+  ' --quiet
+}
+
 remove_redundant_service_intro_content() {
   local root="$1"
 
@@ -274,6 +319,7 @@ deploy_release() {
   remove_redundant_service_intro_content "$root"
   restore_approved_price_catalog "$root"
   fix_individual_cremation_price_order "$root"
+  update_individual_cremation_prices_20260925 "$root"
   wp --path="$root" eval-file "$release/legal-documents/publish.php" "$release/legal-documents"
   write_state "$state_file" switched "$sha" "$previous_target" "$release"
 
