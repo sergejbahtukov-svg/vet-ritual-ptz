@@ -16,7 +16,7 @@ get_header();
       <?php get_template_part('template-parts/content-services'); ?>
     <?php elseif ($slug === 'tseny') : ?>
       <?php if (trim((string) get_the_content(null, false, get_the_ID())) !== '') : ?>
-        <section class="vr-section">
+        <section class="vr-section vr-prices-intro">
           <div class="vr-shell vr-text-page">
             <?php get_template_part('template-parts/content-page', null, array('content' => apply_filters('the_content', get_the_content(null, false, get_the_ID())))); ?>
           </div>

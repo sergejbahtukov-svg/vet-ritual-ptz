@@ -1,0 +1,179 @@
+/* Shared mobile type scale and alignment; desktop styles stay in theme.css. */
+@media (max-width: 640px) {
+  :root {
+    --vr-title-section: 26px;
+    --vr-title-subsection: 22px;
+    --vr-title-card: 20px;
+    --vr-mobile-gutter: 20px;
+  }
+
+  .vr-shell {
+    padding-inline: var(--vr-mobile-gutter);
+  }
+
+  .vr-page-hero:not(.vr-page-hero--error) .vr-shell {
+    width: 100%;
+    padding-inline: var(--vr-mobile-gutter);
+  }
+
+  .vr-section__head {
+    margin-bottom: 24px;
+  }
+
+  .vr-hero h1,
+  .vr-page-hero h1 {
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: pretty;
+  }
+
+  .vr-hero p:not(.vr-kicker),
+  .vr-page-hero p:not(.vr-kicker) {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-top: 14px;
+  }
+
+  body.vr-site .vr-button {
+    min-height: 48px;
+    font-size: 15px;
+    line-height: 1.3;
+    padding: 12px 16px;
+  }
+
+  .vr-section__head h2,
+  .vr-about h2,
+  .vr-feature-grid h2,
+  .vr-process h2,
+  .vr-contact h2 {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-align: left;
+  }
+
+  .vr-kicker,
+  .vr-hero .vr-kicker,
+  .vr-page-hero .vr-kicker {
+    font-size: 11px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  .vr-motion-ready .vr-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .vr-process strong {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  .vr-services p,
+  .vr-service-card p,
+  .vr-reviews p,
+  .vr-feature-grid p,
+  .vr-feature-card li,
+  .vr-options p,
+  .vr-note-list li,
+  .vr-included li,
+  .vr-contact p,
+  .vr-about__copy p,
+  .vr-text-page p,
+  .vr-text-page li,
+  .vr-process span {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .vr-service-card h3,
+  .vr-reviews h3,
+  .vr-price-card h3,
+  .vr-promise h3 {
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .vr-text-page {
+    width: calc(100% - 40px);
+    padding: 20px;
+  }
+
+  .vr-text-page > :first-child { margin-top: 0; }
+  .vr-text-page > :last-child { margin-bottom: 0; }
+
+  .vr-prices-intro {
+    padding: 28px 0 0;
+  }
+
+  .vr-prices-intro .vr-text-page {
+    width: 100%;
+    padding: 0 var(--vr-mobile-gutter);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .vr-prices-intro + #prices {
+    padding-top: 32px;
+  }
+
+  .vr-price-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .vr-price-card {
+    min-width: 0;
+    padding: 20px 16px;
+    box-shadow: none;
+  }
+
+  .vr-price-card h3 {
+    margin: 0 0 8px;
+    text-wrap: pretty;
+  }
+
+  .vr-price-note {
+    margin: 0 0 18px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .vr-price-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 0;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .vr-price-row strong {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vr-price-row:last-child { padding-bottom: 0; }
+
+  .vr-footnote {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .vr-page-hero--prices {
+    min-height: 0;
+    padding-top: 36px;
+    padding-bottom: calc(min(218px, 46vw) + 36px);
+  }
+}
