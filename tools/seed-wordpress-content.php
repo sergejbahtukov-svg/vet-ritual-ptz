@@ -502,10 +502,13 @@ $price_groups = array(
             'menu_order' => 10,
         ),
         'rows' => array(
-            array('label' => 'Кошка', 'value' => '3 000–3 500 руб.'),
-            array('label' => 'Собаки 5–10 кг', 'value' => '4 000–5 000 руб.'),
-            array('label' => 'Собаки 11–20 кг', 'value' => '5 000–6 000 руб.'),
-            array('label' => 'Собаки от 20 кг', 'value' => 'от 7 000 руб.'),
+            array('label' => 'до 5 кг', 'value' => '3 500–4 000 руб.'),
+            array('label' => 'до 10 кг', 'value' => '4 000–5 000 руб.'),
+            array('label' => 'до 20 кг', 'value' => '5 000–6 000 руб.'),
+            array('label' => 'до 30 кг', 'value' => '6 500–7 000 руб.'),
+            array('label' => 'до 40 кг', 'value' => '7 500–8 000 руб.'),
+            array('label' => 'до 50 кг', 'value' => '8 500–9 000 руб.'),
+            array('label' => 'до 60 кг', 'value' => 'от 9 500–10 000 руб.'),
         ),
     ),
     'obschaya-krematsiya' => array(

@@ -56,6 +56,44 @@ state_value() {
   awk -F= -v wanted="$key" '$1 == wanted { print substr($0, index($0, "=") + 1); exit }' "$state_file"
 }
 
+update_euthanasia_prices_20261001() {
+  local root="$1"
+
+  wp --path="$root" eval '
+    $migration = "vr_euthanasia_prices_20261001";
+    if (get_option($migration, false)) { return; }
+    $group = get_page_by_path("usyplenie", OBJECT, "vr_price_group");
+    if (! $group instanceof WP_Post) {
+      WP_CLI::error("Euthanasia price group is missing.");
+    }
+    $rows = array(
+      array("label" => "до 5 кг", "value" => "3 500–4 000 руб."),
+      array("label" => "до 10 кг", "value" => "4 000–5 000 руб."),
+      array("label" => "до 20 кг", "value" => "5 000–6 000 руб."),
+      array("label" => "до 30 кг", "value" => "6 500–7 000 руб."),
+      array("label" => "до 40 кг", "value" => "7 500–8 000 руб."),
+      array("label" => "до 50 кг", "value" => "8 500–9 000 руб."),
+      array("label" => "до 60 кг", "value" => "от 9 500–10 000 руб."),
+    );
+    $before = get_post_meta($group->ID, "_vr_price_rows", true);
+    if ($before === $rows) {
+      update_option($migration, "1", false);
+      return;
+    }
+    $old_labels = array("Кошка", "Собаки 5–10 кг", "Собаки 11–20 кг", "Собаки от 20 кг");
+    if (! is_array($before) || array_column($before, "label") !== $old_labels) {
+      WP_CLI::error("Unexpected euthanasia price rows; no changes made.");
+    }
+    add_option($migration . "_previous_rows", $before, "", false);
+    update_post_meta($group->ID, "_vr_price_rows", $rows);
+    if (get_post_meta($group->ID, "_vr_price_rows", true) !== $rows) {
+      WP_CLI::error("Euthanasia price verification failed.");
+    }
+    update_option($migration, "1", false);
+    WP_CLI::success("Euthanasia prices updated for 2026-10-01.");
+  ' --quiet
+}
+
 update_individual_cremation_prices_20260925() {
   local root="$1"
 
@@ -320,6 +358,7 @@ deploy_release() {
   restore_approved_price_catalog "$root"
   fix_individual_cremation_price_order "$root"
   update_individual_cremation_prices_20260925 "$root"
+  update_euthanasia_prices_20261001 "$root"
   wp --path="$root" eval-file "$release/legal-documents/publish.php" "$release/legal-documents"
   write_state "$state_file" switched "$sha" "$previous_target" "$release"
 

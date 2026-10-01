@@ -8,6 +8,9 @@ $site_city = vr_theme_setting('site_city', 'Петрозаводск и Каре
 $phone = vr_theme_setting('phone_main', '+7 953 533-16-00');
 $phone_href = preg_replace('/[^0-9+]/', '', $phone);
 $address = vr_theme_setting('address_text', 'Республика Карелия, г. Петрозаводск, пр. Энергетиков, 33');
+$legal_name = vr_theme_setting('legal_name', 'ИП Мясников Кирилл Львович');
+$legal_inn = vr_theme_setting('legal_inn', '100128309405');
+$legal_ogrnip = vr_theme_setting('legal_ogrnip', '323100000032260');
 $footer_note = vr_theme_setting('footer_secondary_text', 'Внимательное сопровождение и поддержка в сложный момент');
 $footer_disclaimer = vr_theme_setting('footer_disclaimer', 'Информация на сайте носит информационный характер и не является публичной офертой.');
 $cookie_mode = vr_theme_setting('cookie_consent_mode', 'disabled');
@@ -66,6 +69,9 @@ $contact_heading = $contact_page instanceof WP_Post ? get_the_title($contact_pag
       <h2><?php echo esc_html($contact_heading); ?></h2>
       <a href="tel:<?php echo esc_attr($phone_href); ?>"><?php echo esc_html($phone); ?></a>
       <span><?php echo esc_html($address); ?></span>
+      <span><?php echo esc_html($legal_name); ?></span>
+      <span>ИНН <?php echo esc_html($legal_inn); ?></span>
+      <span>ОГРНИП <?php echo esc_html($legal_ogrnip); ?></span>
     </div>
   </div>
   <div class="vr-shell vr-footer__bottom">
