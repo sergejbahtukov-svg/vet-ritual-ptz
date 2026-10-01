@@ -1,39 +1,17 @@
-# PROJECT
+# Проект Vet Ritual
 
-## Суть проекта
-- Миграция сайта с Webasyst (текущая тема `vetritual-modern`) на WordPress.
-- Требуется сохранить:
-  - структуру URL,
-  - SEO-настройки,
-  - блоки контента главной страницы и служебных страниц,
-  - поведение аналитических интеграций.
+Действующий сайт работает на WordPress: https://vet-ritual-ptz.ru/.
 
-## Участники и артефакты
-- Базовая площадка: Webasyst локально (`C:\xampp\webasyst-local\wa-data\public\site\themes\vetritual-modern\`).
-- Исходный сайт: `https://vetritual.lvh.me/`.
-- Директория сборки/архивов: `deploy-vetritual-modern/`.
-- Базовая база знаний перехода: `memory/*`.
-- Режим валидации: сначала локальный Webasyst (как источник истины), потом WP staging.
+## Код и данные
 
-## Что входит в scope миграции
-- Шаблоны Webasyst:
-  - `index.html`
-  - `header.html`
-  - `footer.html`
-  - `home.html`
-  - `about.html`
-  - `page.html`
-  - `error.html`
-  - JS: `js/theme.js`, `js/integrations.js`
-- Бизнес-логика:
-  - маршрутизация по slug из `page.html`,
-  - блоки услуг и цены,
-  - динамический header/footer,
-  - cookie-consent + ленивый запуск аналитики,
-  - OG/meta/Schema в `index.html`.
+- Тема: `wordpress-theme/vetritual-modern/`.
+- Локальная установка: `C:\xampp\htdocs\vetritual-wp`.
+- Контент хранится в WordPress Pages, Menus, Media Library и типах записей `vr_*`.
+- Глобальные контакты, реквизиты и интеграции хранятся в настройках темы.
+- Начальные данные для новой установки описаны в `tools/seed-wordpress-content.php`. Для действующего сайта использовать точечные операции.
 
-## Что не входит в scope
-- Внедрение интернет-магазина.
-- Полный e-mail / CRM интеграционный слой за пределами текущих интеграций.
-- Новое UI/дизайн-редизайн, т.е. перенос по максимуму 1:1.
+## Публикация
 
+- Код темы выпускает `.github/workflows/deploy-wordpress.yml` через `scripts/deploy-wordpress.sh`.
+- Перед заменой темы сценарий сохраняет резервную копию базы.
+- После выпуска проверяются главная, цены, основные услуги, контакты и 404.

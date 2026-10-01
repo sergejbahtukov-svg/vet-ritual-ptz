@@ -1,6 +1,3 @@
-vetritual-modern.zip
-vetritual-modern.tar.gz
-
 # WordPress runtime data and deployment credentials never belong in Git.
 .env
 .env.*

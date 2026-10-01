@@ -1,25 +1,16 @@
-# SITE — сайт и инфраструктура
+# Сайт и инфраструктура
 
-## Живые проверки (источник правды)
-- Проверочный URL:
-  - `https://vetritual.lvh.me/`
-  - fallback: `http://vetritual.lvh.me/` если HTTPS блокируется
-- Source of truth для текущего этапа:
-  - `C:\xampp\webasyst-local\wa-data\public\site\themes\vetritual-modern\`
+## Адреса
 
-## Разделы проекта
-- Исходники WordPress-ветки: `wordpress-theme/` (подготовительный артефакт).
-- Source в локально обслуживаемом Webasyst: `vetritual-modern/` (рабочая зона).
-- Архивы релиза только в `deploy-vetritual-modern/`.
+- Публичный WordPress: https://vet-ritual-ptz.ru/.
+- Локальный WordPress: http://localhost/vetritual-wp/.
+- Исходники темы: `wordpress-theme/vetritual-modern/`.
+- Активная локальная тема: `C:\xampp\htdocs\vetritual-wp\wp-content\themes\vetritual-modern`.
 
-## Риск-важности для миграции
-- Наиболее важны URL стабильность, корректность `page.html` роутинга, и поведение SEO-блоков.
-- Изменения проверяются только через локальную Webasyst точку, а не через `preview.html`.
+## Основные страницы
 
-## Не определено
-- Рекомендуемая архитектура кеширования/CI/CD для финального деплоя — `не определено`.
-- План staged rollout в проде — `не определено`.
+`/`, `/o-nas/`, `/uslugi/`, `/usyplenie-zhivotnyh/`, `/krematsyja-zhyvotnyh/`, `/vyvoz-zhivotnyh/`, `/tseny/`, `/kontakty/`.
 
-## Текущий статус
-- Обновление структуры сайта под WordPress идёт по рабочему workflow и не меняет production‑продукт без gate.
+## Проверка
 
+Использовать локальный WordPress для проверки шаблонов и контента. Для выпуска проверять те же страницы на публичном HTTPS-сайте. Цены берутся из `vr_price_group`, реквизиты футера — из глобальных настроек темы.
